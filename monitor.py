@@ -2,7 +2,7 @@
 
 import json
 import web3
-
+from time import sleep
 from web3 import Web3,HTTPProvider
 
 w3 = Web3(HTTPProvider('https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287',request_kwargs={'timeout':60}))
@@ -21,11 +21,13 @@ case_Number = int(case_Number)
 print()
 print("checking statuts of case " + str(case_Number))
 print("...")
+sleep(2)
 
 jurors_drawn = kleros_contract.functions.disputes(case_Number).call()
 jurors_drawn = int(jurors_drawn[5])
 print("this case had " + str(jurors_drawn) + " jurors")
 print("...")
+sleep(1)
 j = jurors_drawn
 
 def get_juror_votes(j):
