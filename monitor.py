@@ -29,13 +29,9 @@ print("...")
 j = jurors_drawn
 
 def get_juror_votes(j):
-  if j == 3:
+  if j == 3 or j == 5:
     appeal = 0
-  elif j == 5:
-    appeal = 0
-  elif j == 7:
-    appeal = 1
-  elif j == 11:
+  elif j == 7 or j == 11:
     appeal = 1
   else:
     print("i haven't coded that part yet")
