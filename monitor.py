@@ -27,48 +27,56 @@ jurors_drawn = kleros_contract.functions.disputes(case_Number).call()
 jurors_drawn = int(jurors_drawn[5])
 print("this case had " + str(jurors_drawn) + " jurors")
 print("...")
-sleep(1)
 j = jurors_drawn
 
 def get_juror_votes(j):
+
   if j == 3 or j == 5:
     appeal = 0
   elif j == 7 or j == 11:
     appeal = 1
+  elif j == 15 or j == 23:
+    appeal = 2  
   else:
     print("i haven't coded that part yet")
+  
+  jurorVotes = []
+  for i in range(j):
+    vote = kleros_contract.functions.getVote(case_Number,appeal,i).call()
+    vote = vote[2]
+    jurorVotes.append(vote)
+  
+  print()
+  votesYes = jurorVotes.count(1)
+  print("the amount of yes votes is : ", votesYes)
 
-  if appeal == 0:
-    first_Juror = kleros_contract.functions.getVote(case_Number,appeal,0).call()
-    second_Juror = kleros_contract.functions.getVote(case_Number,appeal,1).call()
-    third_Juror = kleros_contract.functions.getVote(case_Number,appeal,2).call()
-
-    juror_vote_list = [first_Juror[2], second_Juror[2], third_Juror[2]]
-
-  elif appeal == 1:
-    first_Juror = kleros_contract.functions.getVote(case_Number,appeal,0).call()
-    second_Juror = kleros_contract.functions.getVote(case_Number,appeal,1).call()
-    third_Juror = kleros_contract.functions.getVote(case_Number,appeal,2).call()
-    forth_Juror = kleros_contract.functions.getVote(case_Number,appeal,3).call()
-    five_Juror = kleros_contract.functions.getVote(case_Number,appeal,4).call()
-    six_Juror = kleros_contract.functions.getVote(case_Number,appeal,5).call()
-    seven_Juror = kleros_contract.functions.getVote(case_Number,appeal,6).call()
-    eight_Juror = kleros_contract.functions.getVote(case_Number,appeal,7).call()
-    nine_Juror = kleros_contract.functions.getVote(case_Number,appeal,7).call()
-    ten_Juror = kleros_contract.functions.getVote(case_Number,appeal,7).call()
-    eleven_Juror = kleros_contract.functions.getVote(case_Number,appeal,7).call()
-    juror_vote_list = [first_Juror[2], second_Juror[2], third_Juror[2], forth_Juror[2], five_Juror[2], six_Juror[2], seven_Juror[2], eight_Juror[2], nine_Juror[2], ten_Juror[2], eleven_Juror[2]]
-
+  print()
+  
+  VotesNo = jurorVotes.count(2)
+  print("the amount of No votes is : ", VotesNo)
+  print()
+  
+  HaventVotedyet = jurorVotes.count(0)
+  print("the remaining pending votes number is : ", HaventVotedyet)
+  print()
+  
+  if votesYes > j // 2 or VotesNo > j // 2:
+    print("This case have reached an absolute majority !")
   else:
-    print("i haven't coded that yet")
-  juror_vote_list.sort()
+    print("The fate of this case is still undecided")  
+
+  print()
+  
+  jurorVotes.sort()
+  
   index = (j // 2) + 1
-  if juror_vote_list[index] == 1:
+  if jurorVotes[index] == 1:
     print("Winning choice is Yes")
-  elif juror_vote_list[index] == 2:
+  elif jurorVotes[index] == 2:
     print("Winning choice is No")
   else:
-    print("i haven't coded that yet")
+    print("try again later to know if the case reached a majority !")
+
 
 get_juror_votes(j)
 
