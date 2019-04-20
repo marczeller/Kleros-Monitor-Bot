@@ -8,5 +8,6 @@ cd Kleros-Monitor-Bot/
 chmod 755 monitor.py
 ./monitor.py
 ```
-Just input your Kleros.io case number and the bot will do the fun part.
+Just input your [Kleros.io](https://kleros.io) case number and the bot will do the fun part.
 
+Kleros is a Decentralized Dispute Resolution System to learn [more](https://blog.kleros.io/)
