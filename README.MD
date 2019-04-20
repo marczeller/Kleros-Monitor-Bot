@@ -10,4 +10,4 @@ chmod 755 monitor.py
 ```
 Just input your [Kleros.io](https://kleros.io) case number and the bot will do the fun part.
 
-Kleros is a Decentralized Dispute Resolution System to learn [more](https://blog.kleros.io/)
+Kleros is a Decentralized Dispute Resolution System to learn more [read their blog posts](https://blog.kleros.io/)
