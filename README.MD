@@ -10,6 +10,10 @@ chmod 755 monitor.py
 ```
 Just input your [Kleros.io](https://kleros.io) case number and the bot will do the fun part.
 
+your monitor should look like this during the installation process :
+
+![installation exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/installation%20exemple.JPG)
+
 Kleros is a Decentralized Dispute Resolution System to learn more [read their blog posts](https://blog.kleros.io/)
 
 # Donations
