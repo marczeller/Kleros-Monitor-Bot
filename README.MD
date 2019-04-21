@@ -12,7 +12,7 @@ Just input your [Kleros.io](https://kleros.io) case number and the bot will do t
 
 Kleros is a Decentralized Dispute Resolution System to learn more [read their blog posts](https://blog.kleros.io/)
 
-#Donations
+# Donations
 the best support is opening up issues and proposing PRs this is a prototype MVP, we can do much better!!
 
 For the other kind of support : marczeller.eth (0x010afb8548a5D1a3a3D62f58CA0a5A1329974206)
