@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
-from time import sleep
 from web3 import Web3,HTTPProvider
 
+print("Welcome to Kleros Monitor Bot")
+print("Lemme monitor the Ethereum Blockchain for you ...")
 ### this is my public infura API, feel free to use yours
 w3 = Web3(HTTPProvider('https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287',request_kwargs={'timeout':60}))
 
@@ -24,17 +25,11 @@ abi = abi
 case_Number = input("what is your case number ? ")
 case_Number = int(case_Number)
 
-###probably useless, might remove that part later
-print()
-print("checking statuts of case " + str(case_Number))
-print("...")
-sleep(2)
-
 ### Call kleros Smart-contract to get the total number of Jurors on current round
 
 jurors_drawn = kleros_contract.functions.disputes(case_Number).call()
 jurors_drawn = int(jurors_drawn[5])
-print("this case had " + str(jurors_drawn) + " jurors")
+print("this case had " + str(jurors_drawn) + " jurors drawn on last round")
 print("...")
 j = jurors_drawn
 
@@ -46,7 +41,7 @@ def get_juror_votes(j):
   elif j == 7 or j == 11:
     appeal = 1
   elif j == 15 or j == 23:
-    appeal = 2  
+    appeal = 2    
   else:
     print("i haven't coded that part yet")
 ### loop that retrieve all jurors votes and put it in a list  
@@ -56,28 +51,35 @@ def get_juror_votes(j):
     vote = vote[2]
     jurorVotes.append(vote)
   
-  print()
   ###user-oriented, give information of votes
   votesYes = jurorVotes.count(1)
-  print("the amount of yes votes is : ", votesYes)
+  votesYes_ratio = (votesYes / j) * 100
 
-  print()
-  
-  VotesNo = jurorVotes.count(2)
-  print("the amount of No votes is : ", VotesNo)
-  print()
+  print("the current amount of yes votes is : ", votesYes)
+  print("That's ", "%.2f" % votesYes_ratio, "%" + " of the votes")
+
+  votesNo = jurorVotes.count(2)
+  votesNo_ratio = (votesNo / j) * 100
+
+  print("the current amount of No votes is : ", votesNo)
+  print("That's ", "%.2f" % votesNo_ratio, "%" + " of the votes")
+  print("...")
   
   HaventVotedyet = jurorVotes.count(0)
-  print("the remaining pending votes number is : ", HaventVotedyet)
-  print()
+  if HaventVotedyet > 0:
+    print("the remaining pending votes number is : ", HaventVotedyet)
+  else:
+    print("Seems eveyone voted on that case !")
+
+  print("...")
   
   ###User-oriented, give information on majority reached or not
-  if votesYes > j // 2 or VotesNo > j // 2:
+  if votesYes > j // 2 or votesNo > j // 2:
     print("This case have reached an absolute majority !")
   else:
     print("The fate of this case is still undecided")  
 
-  print()
+  print("...")
   
   ###simple way to define winner, probably will bug on some cases, need better logic
   jurorVotes.sort()
@@ -92,4 +94,3 @@ def get_juror_votes(j):
 
 ###main function call
 get_juror_votes(j)
-
