@@ -12,11 +12,35 @@ Just input your [Kleros.io](https://kleros.io) case number and the bot will do t
 
 your monitor should look like this during the installation process :
 
-![installation exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/installation%20exemple.JPG)
+[installation exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/installation%20exemple.JPG)
 
-Kleros is a Decentralized Dispute Resolution System to learn more [read their blog posts](https://blog.kleros.io/)
+
+# common bug fix
+
+*You don't have web3 :*
+
+![Bug exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/Bug%20exemple.JPG)
+
+we gonna assume that you don't anything required, let's do that.
+it's a bit longer but don't worry you only need to do that one
+
+```
+sudo apt update
+sudo apt upgrade
+sudo apt install python3-pip
+pip3 install web3
+```
+*I'm on windows OS i can't do fancy stuff like this ! :*
+
+Yes you do, Windows10 has a fancy ubuntu emulator.
+just check the windows store, type "Ubuntu" and select Ubuntu 18.04 LTS.
+you'll just need to follow the "install web3" process and done.
+
+# what is Kleros ?
+
+Kleros is a Decentralized Dispute Resolution System to learn more about it, [read their blog posts](https://blog.kleros.io/)
 
 # Donations
-the best support is opening up issues and proposing PRs this is a prototype MVP, we can do much better!!
+the best kind of support is opening up issues and proposing PRs this is a prototype MVP, we can do much better!!
 
 For the other kind of support : marczeller.eth (0x010afb8548a5D1a3a3D62f58CA0a5A1329974206)
