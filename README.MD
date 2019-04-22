@@ -12,7 +12,7 @@ Just input your [Kleros.io](https://kleros.io) case number and the bot will do t
 
 your monitor should look like this during the installation process :
 
-[installation exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/installation%20exemple.JPG)
+![installation exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/installation%20exemple.JPG)
 
 
 # common bug fix
@@ -22,7 +22,7 @@ your monitor should look like this during the installation process :
 ![Bug exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/Bug%20exemple.JPG)
 
 we gonna assume that you don't anything required, let's do that.
-it's a bit longer but don't worry you only need to do that one
+it's a bit longer but don't worry you only need to do that once
 
 ```
 sudo apt update
