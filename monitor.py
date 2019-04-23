@@ -19,7 +19,7 @@ j = jurors_drawn
 
 ### Main function, needs optimazation
 def get_juror_votes(j):
-### this is stupid as fuck, needs better logic, T²CR cases starts with n = 3 and Badge request starts with n = 5 then n*2+1 at each appeal
+### this is stupid as fuck, needs better logic, T2CR cases starts with n = 3 and Badge request starts with n = 5 then n*2+1 at each appeal
   if j == 3 or j == 5:
     appeal = 0
   elif j == 7 or j == 11:
