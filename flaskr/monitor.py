@@ -9,12 +9,12 @@ from flask import (
 
 bp = Blueprint('monitor', __name__, url_prefix='/')
 
-@bp.route('/', methods=['GET'])
-def call():
+@bp.route('/disputes/<dispute_id>', methods=['GET'])
+def call(dispute_id):
     node = 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
     kleros = Kleros(node)
-    case_Number = 17
+    case_Number = int(dispute_id)
 
     # Call kleros Smart-contract to get the total number of Jurors on current round
 
