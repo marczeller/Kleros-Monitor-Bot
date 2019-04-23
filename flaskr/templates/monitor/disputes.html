@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Dispute {{ output['dispute_id']}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <table border=1>
+    <tr><td>Jurors</td><td align=right>{{ output['juror_count'] }}</td></tr>
+    <tr><td>Yes</td><td align=right>{{ output['yes'] }}</td></tr>
+    <tr><td>No</td><td align=right>{{ output['no'] }}</td></tr>
+    <tr><td>Pending</td><td align=right>{{ output['pending'] }}</td></tr>
+    <tr><td>Decided</td><td align=right>{{ output['majority'] }}</td></tr>
+    <tr><td>Final</td><td align=right>{{ output['outcome'] }}</td></tr>
+  </table>
+
+{% endblock %}

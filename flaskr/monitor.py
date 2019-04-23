@@ -9,7 +9,7 @@ from flask import (
 
 bp = Blueprint('monitor', __name__, url_prefix='/')
 
-@bp.route('/disputes/<dispute_id>', methods=['GET'])
+@bp.route('/dispute/<dispute_id>', methods=['GET'])
 def call(dispute_id):
     node = 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
@@ -24,11 +24,11 @@ def call(dispute_id):
     # ("%s jurors drawn on last round" % jurors_drawn)
     j = jurors_drawn
     ###main function call
-    return get_juror_votes(j, kleros, case_Number)
-
+    output = get_juror_votes(j, kleros, case_Number)
+    return render_template('monitor/disputes.html', output=output)
 ### Main function, needs optimazation
 def get_juror_votes(j, kleros, case_Number):
-  output = ''
+  output = {'dispute_id': case_Number, 'juror_count': j}
 
   if j == 3 or j == 5:
     appeal = 0
@@ -48,33 +48,30 @@ def get_juror_votes(j, kleros, case_Number):
   votesYes = jurorVotes.count(1)
   votesYes_ratio = (votesYes / j) * 100
 
-  output += ("Yes votes: %s (%.2f %%)<br>" % (votesYes, votesYes_ratio))
+  output['yes'] = "%s (%.2f %%)" % (votesYes, votesYes_ratio)
 
   votesNo = jurorVotes.count(2)
   votesNo_ratio = (votesNo / j) * 100
 
-  output += ("No votes:  %s (%.2f %%)<br>" % (votesNo, votesNo_ratio))
+  output['no'] = "%s (%.2f %%)" % (votesNo, votesNo_ratio)
 
   HaventVotedyet = jurorVotes.count(0)
-  if HaventVotedyet > 0:
-    output += ("Pending votes: %s<br>" % HaventVotedyet)
-  else:
-    output += ("Eveyone voted.<br>")
+  output['pending'] = HaventVotedyet
 
   ###User-oriented, give information on majority reached or not
   if votesYes > j // 2 or votesNo > j // 2:
-    output += ("Absolute majority was reached<br>")
+    output['majority'] = ("Yes")
   else:
-    output += ("Case is still undecided<br>")
+    output['majority'] = ("No")
 
   ###simple way to define winner, probably will bug on some cases, need better logic
   jurorVotes.sort()
 
   index = (j // 2) + 1
   if jurorVotes[index] == 1:
-      output += ("Outcome: Yes<br>")
+      output['outcome'] = ("Yes")
   elif jurorVotes[index] == 2:
-      output += ("Outcome: No<br>")
+      output['outcome'] = ("No")
   else:
-    output += ("Try again later to know if the case reached a majority.<br>")
+    output['outcome'] = ("Undecided")
   return output
