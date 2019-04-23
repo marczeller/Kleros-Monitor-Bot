@@ -28,7 +28,7 @@ def get_juror_votes(j):
     appeal = 2
   else:
     print("i haven't coded that part yet")
-### loop that retrieve all jurors votes and put it in a list
+### loop that retrieves all jurors votes and puts them in a list
   jurorVotes = []
   for i in range(j):
     vote = kleros.get_vote(case_Number, appeal, i)
