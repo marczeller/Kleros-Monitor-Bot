@@ -69,9 +69,18 @@ def get_juror_votes(j):
     print("Try again later to know if the case reached a majority.")
   case_closed = dispute['ruled']
   if case_closed == True:
-      print("The case is closed PNK and ETH was distributed to jurors")
+    subcourt = dispute['sub_court_id']
+    if subcourt == 2:
+      PNK_at_stake = j * 3750
+      ETH_fee = j * 0.065
+    elif subcourt == 3:
+      PNK_at_stake = j * 40000
+      ETH_fee = j * 0.55
+    print("The case is closed, a total of %s PNK was at stake and %s ETH was distributed to jurors" % (PNK_at_stake, ETH_fee))
   else:
       print("This case is still open, Stay tuned")
+  
+      
 
 ###main function call
 get_juror_votes(j)
