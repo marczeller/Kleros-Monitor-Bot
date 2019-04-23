@@ -27,7 +27,7 @@ def get_juror_votes(j):
   elif j == 15 or j == 23:
     appeal = 2
   else:
-    print("i haven't coded that part yet")
+    print("I haven't coded that part yet")
 ### loop that retrieves all jurors votes and puts them in a list
   jurorVotes = []
   for i in range(j):
