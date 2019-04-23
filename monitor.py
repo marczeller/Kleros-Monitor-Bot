@@ -9,7 +9,7 @@ kleros = Kleros(node)
 
 case_Number = int(sys.argv[1])
 
-### Call kleros Smart-contract to get the total number of Jurors on current round
+# Call kleros Smart-contract to get the total number of Jurors on current round
 
 dispute = kleros.dispute(case_Number)
 jurors_drawn = dispute['draws_in_round']
