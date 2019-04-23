@@ -9,7 +9,7 @@ kleros = Kleros(node)
 
 case_Number = int(sys.argv[1])
 
-# Call kleros Smart-contract to get the total number of Jurors on current round
+### Call kleros Smart-contract to get the total number of Jurors on current round
 
 dispute = kleros.dispute(case_Number)
 jurors_drawn = dispute['draws_in_round']
@@ -67,6 +67,11 @@ def get_juror_votes(j):
       print("Outcome: No")
   else:
     print("Try again later to know if the case reached a majority.")
+  case_closed = dispute['ruled']
+  if case_closed == True:
+      print("The case is closed PNK and ETH was distributed to jurors")
+  else:
+      print("This case is still open, Stay tuned")
 
 ###main function call
 get_juror_votes(j)
