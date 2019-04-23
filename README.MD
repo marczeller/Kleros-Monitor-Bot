@@ -6,12 +6,11 @@ Simple and stupid Kleros case monitor bot
 ```
 git clone https://github.com/marczeller/Kleros-Monitor-Bot.git
 cd Kleros-Monitor-Bot/
-chmod 755 monitor.py
-./monitor.py
+./monitor.py CASENUMBER
 ```
 Just input your [Kleros.io](https://kleros.io) case number and the bot will do the fun part.
 
-your monitor window should look like this during the installation process :
+your monitor window should look like this during the installation process exemple with CASENUMBER 17:
 
 ![installation exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/installation%20exemple.JPG)
 
