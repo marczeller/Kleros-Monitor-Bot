@@ -1,11 +1,21 @@
 #!/usr/bin/python3
 
+<<<<<<< HEAD
 import sys
 from kleros import Kleros
 
 node = 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
 kleros = Kleros(node)
+=======
+from web3 import Web3,HTTPProvider
+import sys
+from kleros_contract import Kleros
+
+w3 = Web3(HTTPProvider('https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287',request_kwargs={'timeout':60}))
+
+kleros = Kleros(w3)
+>>>>>>> 75d7316a61f0d7bcb16b2f04f0008b165b890b73
 
 case_Number = int(sys.argv[1])
 
@@ -30,9 +40,16 @@ def get_juror_votes(j):
     print("i haven't coded that part yet")
 ### loop that retrieve all jurors votes and put it in a list
   jurorVotes = []
+<<<<<<< HEAD
   for i in range(j):
     vote = kleros.get_vote(case_Number, appeal, i)
     jurorVotes.append(vote['choice'])
+=======
+  for i in range(j):  
+    vote = kleros.contract.functions.getVote(case_Number,appeal,i).call()
+    vote = vote[2]
+    jurorVotes.append(vote)
+>>>>>>> 75d7316a61f0d7bcb16b2f04f0008b165b890b73
   
   ###user-oriented, give information of votes
   votesYes = jurorVotes.count(1)
@@ -44,7 +61,11 @@ def get_juror_votes(j):
   votesNo_ratio = (votesNo / j) * 100
 
   print("No votes:  %s (%.2f %%)" % (votesNo, votesNo_ratio))
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 75d7316a61f0d7bcb16b2f04f0008b165b890b73
   HaventVotedyet = jurorVotes.count(0)
   if HaventVotedyet > 0:
     print("Pending votes: %s" % HaventVotedyet)
@@ -55,7 +76,11 @@ def get_juror_votes(j):
   if votesYes > j // 2 or votesNo > j // 2:
     print("Absolute majority was reached")
   else:
+<<<<<<< HEAD
     print("Case is still undecided")
+=======
+    print("Case is still undecided")  
+>>>>>>> 75d7316a61f0d7bcb16b2f04f0008b165b890b73
 
   ###simple way to define winner, probably will bug on some cases, need better logic
   jurorVotes.sort()
