@@ -21,7 +21,6 @@ def dispute(dispute_id):
     output = get_juror_votes(j, dispute, int(dispute_id))
     return render_template('monitor/dispute.html', output=output)
 
-
 ### Main function, needs optimazation
 def get_juror_votes(j, kleros, case_Number):
   output = {
