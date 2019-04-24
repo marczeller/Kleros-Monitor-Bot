@@ -36,10 +36,11 @@ class KlerosDispute(Kleros):
         }
         return self.data
 
-    def get_votes(self, dispute_id, appeal = 0):
+    # TODO need to get rid of appeal: find a way
+    def get_votes(self, appeal = 0):
         self.votes = []
         for vote_id in range(self.data['draws_in_round']):
-            self.votes.append(KlerosVote(dispute_id, appeal, vote_id, connection = self.connection))
+            self.votes.append(KlerosVote(self.dispute_id, appeal, vote_id, connection = self.connection))
         return self.votes
 
 class KlerosVote(Kleros):

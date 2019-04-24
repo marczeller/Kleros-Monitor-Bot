@@ -29,7 +29,7 @@ def get_juror_votes(j):
 ### loop that retrieves all jurors votes and puts them in a list
   jurorVotes = []
 
-  for vote in dispute.get_votes(case_Number, appeal):
+  for vote in dispute.get_votes(appeal):
     jurorVotes.append(vote.data['choice'])
 
   ###user-oriented, give information of votes
