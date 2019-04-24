@@ -11,25 +11,16 @@ dispute = KlerosDispute(case_Number, node=node)
 
 ### Call kleros Smart-contract to get the total number of Jurors on current round
 
-j = dispute.data['draws_in_round']
-
-print("%s jurors drawn on last round" % j)
+print("%s jurors drawn on last round" % dispute.rounds[-1])
 
 # TODO Move this to kleros.py as a function of KlerosDispute
-def get_juror_votes(j):
-### this is stupid as fuck, needs better logic, T2CR cases starts with n = 3 and Badge request starts with n = 5 then n*2+1 at each appeal
-  if j == 3 or j == 5:
-    appeal = 0
-  elif j == 7 or j == 11:
-    appeal = 1
-  elif j == 15 or j == 23:
-    appeal = 2
-  else:
-    print("I haven't coded that part yet")
+def get_juror_votes():
+  j = dispute.rounds[-1]
+
 ### loop that retrieves all jurors votes and puts them in a list
   jurorVotes = []
 
-  for vote in dispute.get_votes(appeal):
+  for vote in dispute.get_votes():
     jurorVotes.append(vote.choice)
 
   ###user-oriented, give information of votes
@@ -66,9 +57,11 @@ def get_juror_votes(j):
   else:
     print("Try again later to know if the case reached a majority.")
 
-def At_stake(j): # TODO Move this to kleros.py as a function of KlerosDispute
+def At_stake(): # TODO Move this to kleros.py as a function of KlerosDispute
   case_closed = dispute.data['ruled']
   subcourt = dispute.data['sub_court_id']
+  j = dispute.rounds[-1]
+
   if subcourt == 2:
       PNK_at_stake = j * 3750
       ETH_fee = j * 0.065
@@ -82,5 +75,5 @@ def At_stake(j): # TODO Move this to kleros.py as a function of KlerosDispute
   else:
     print("The case is still open, %s PNK are at stake and %s ETH will be distributed to jurors" % (PNK_at_stake, ETH_fee))
 
-get_juror_votes(j)
-At_stake(j)
+get_juror_votes()
+At_stake()
