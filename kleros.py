@@ -23,6 +23,7 @@ class KlerosDispute(Kleros):
         self.get_dispute()
         self.get_dispute_meta()
 
+    # votesLengths uint256[], tokensAtStakePerJuror uint256[], totalFeesForJurors uint256[], votesInEachRound uint256[], repartitionsInEachRound uint256[], penaltiesInEachRound uint256[]
     def get_dispute_meta(self):
         data = self.connection.functions.getDispute(self.dispute_id).call()
         self.rounds = data[0]
@@ -41,9 +42,8 @@ class KlerosDispute(Kleros):
         }
         return self.data
 
-    # TODO need to get rid of appeal: find a way
-    def get_votes(self, appeal = -1):
-        if appeal == -1:
+    def get_votes(self, appeal = None):
+        if appeal == None:
             appeal = len(self.rounds) - 1
         self.votes = []
         for vote_id in range(self.data['draws_in_round']):
