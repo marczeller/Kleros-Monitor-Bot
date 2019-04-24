@@ -7,20 +7,24 @@ class Kleros:
 
     def __init__(self, node):
         w3 = Web3(HTTPProvider(node)) #TODO Exceptions, errors
-        self.contract = w3.eth.contract(
+        self.connection = w3.eth.contract(
             address = Web3.toChecksumAddress(self.kleros_address),
             abi = self.abi
         )
 
 class KlerosDispute(Kleros):
 
-    def __init__(self, node, dispute_id):
-        Kleros.__init__(self, node)
-        self.data = self.dispute(dispute_id)
+    def __init__(self, dispute_id, connection = None, node = None ):
+        if connection == None:
+            Kleros.__init__(self, node)
+        else:
+            self.connection = connection
+        self.dispute_id = dispute_id
+        self.get_dispute()
 
-    def dispute(self, case_number):
-        raw_dispute = self.contract.functions.disputes(case_number).call()
-        dispute = {
+    def get_dispute(self):
+        raw_dispute = self.connection.functions.disputes(self.dispute_id).call()
+        self.data = {
             'sub_court_id'       : int(raw_dispute[0]),
             'arbitrated'         : raw_dispute[1],
             'number_of_choices'  : int(raw_dispute[2]),
@@ -30,10 +34,24 @@ class KlerosDispute(Kleros):
             'commits_in_round'   : int(raw_dispute[6]),
             'ruled'              : bool(raw_dispute[7])
         }
-        return dispute
+        return self.data
+
+    def get_votes(self, dispute_id, appeal = 0):
+        self.votes = []
+        for vote_id in range(self.data['draws_in_round']):
+            self.votes.append(KlerosVote(dispute_id, appeal, vote_id, connection = self.connection))
+        return self.votes
+
+class KlerosVote(Kleros):
+    def __init__(self, dispute_id, appeal, vote_id, connection = None, node = None ):
+        if connection == None:
+            Kleros.__init__(self, node)
+        else:
+            self.connection = connection
+        self.data = self.get_vote(dispute_id, appeal, vote_id)
 
     def get_vote(self, case_number, appeal = 0, vote_id = 0):
-        raw_vote = self.contract.functions.getVote(case_number, appeal, vote_id).call()
+        raw_vote = self.connection.functions.getVote(case_number, appeal, vote_id).call()
         vote = {
             'account' : raw_vote[0],
             'commit'  : raw_vote[1],

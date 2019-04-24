@@ -1,20 +1,19 @@
 #!/usr/bin/python3
 
 import sys
-from kleros import Kleros, KlerosDispute
+from kleros import Kleros, KlerosDispute, KlerosVote
 
 # TODO Move to ENV
 node = 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
 case_Number = int(sys.argv[1])
-dispute = KlerosDispute(node, case_Number)
+dispute = KlerosDispute(case_Number, node=node)
 
 ### Call kleros Smart-contract to get the total number of Jurors on current round
 
-jurors_drawn = dispute.data['draws_in_round']
+j = dispute.data['draws_in_round']
 
-print("%s jurors drawn on last round" % jurors_drawn)
-j = jurors_drawn
+print("%s jurors drawn on last round" % j)
 
 # TODO Move this to kleros.py as a function of KlerosDispute
 def get_juror_votes(j):
@@ -29,9 +28,9 @@ def get_juror_votes(j):
     print("I haven't coded that part yet")
 ### loop that retrieves all jurors votes and puts them in a list
   jurorVotes = []
-  for i in range(j):
-    vote = dispute.get_vote(case_Number, appeal, i)
-    jurorVotes.append(vote['choice'])
+
+  for vote in dispute.get_votes(case_Number, appeal):
+    jurorVotes.append(vote.data['choice'])
 
   ###user-oriented, give information of votes
   votesYes = jurorVotes.count(1)
