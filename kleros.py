@@ -53,10 +53,7 @@ class KlerosVote(Kleros):
 
     def get_vote(self, case_number, appeal = 0, vote_id = 0):
         raw_vote = self.connection.functions.getVote(case_number, appeal, vote_id).call()
-        vote = {
-            'account' : raw_vote[0],
-            'commit'  : raw_vote[1],
-            'choice'  : int(raw_vote[2]),
-            'voted'   : bool(raw_vote[3])
-        }
-        return vote
+        self.account = raw_vote[0]
+        self.commit = raw_vote[1]
+        self.choice = int(raw_vote[2])
+        self.vote = bool(raw_vote[3])

@@ -30,7 +30,7 @@ def get_juror_votes(j):
   jurorVotes = []
 
   for vote in dispute.get_votes(appeal):
-    jurorVotes.append(vote.data['choice'])
+    jurorVotes.append(vote.choice)
 
   ###user-oriented, give information of votes
   votesYes = jurorVotes.count(1)
