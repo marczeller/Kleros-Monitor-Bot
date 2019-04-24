@@ -1,9 +1,6 @@
 #!/usr/bin/python3
 
-import sys
-from kleros import Kleros
-from kleros import KlerosDispute
-
+from kleros import Kleros, KlerosDispute
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -22,7 +19,7 @@ def dispute(dispute_id):
 
     ###main function call
     output = get_juror_votes(j, dispute, int(dispute_id))
-    return render_template('monitor/disputes.html', output=output)
+    return render_template('monitor/dispute.html', output=output)
 
 
 ### Main function, needs optimazation
