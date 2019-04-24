@@ -1,23 +1,22 @@
 #!/usr/bin/python3
 
 import sys
-from kleros import Kleros
+from kleros import Kleros, KlerosDispute
 
+# TODO Move to ENV
 node = 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
-kleros = Kleros(node)
-
 case_Number = int(sys.argv[1])
+dispute = KlerosDispute(node, case_Number)
 
 ### Call kleros Smart-contract to get the total number of Jurors on current round
 
-dispute = kleros.dispute(case_Number)
-jurors_drawn = dispute['draws_in_round']
+jurors_drawn = dispute.data['draws_in_round']
 
 print("%s jurors drawn on last round" % jurors_drawn)
 j = jurors_drawn
 
-### Main function, needs optimazation
+# TODO Move this to kleros.py as a function of KlerosDispute
 def get_juror_votes(j):
 ### this is stupid as fuck, needs better logic, T2CR cases starts with n = 3 and Badge request starts with n = 5 then n*2+1 at each appeal
   if j == 3 or j == 5:
@@ -31,7 +30,7 @@ def get_juror_votes(j):
 ### loop that retrieves all jurors votes and puts them in a list
   jurorVotes = []
   for i in range(j):
-    vote = kleros.get_vote(case_Number, appeal, i)
+    vote = dispute.get_vote(case_Number, appeal, i)
     jurorVotes.append(vote['choice'])
 
   ###user-oriented, give information of votes
@@ -68,9 +67,9 @@ def get_juror_votes(j):
   else:
     print("Try again later to know if the case reached a majority.")
 
-def At_stake(j):
-  case_closed = dispute['ruled']
-  subcourt = dispute['sub_court_id']
+def At_stake(j): # TODO Move this to kleros.py as a function of KlerosDispute
+  case_closed = dispute.data['ruled']
+  subcourt = dispute.data['sub_court_id']
   if subcourt == 2:
       PNK_at_stake = j * 3750
       ETH_fee = j * 0.065
@@ -82,7 +81,7 @@ def At_stake(j):
   if case_closed == True:
     print("The case is closed, a total of %s PNK was at stake and %s ETH was distributed to jurors" % (PNK_at_stake, ETH_fee))
   else:
-    print("The case is still open, %s PNK are at stake and %s ETH will be distributed to jurors" % (PNK_at_stake, ETH_fee)) 
+    print("The case is still open, %s PNK are at stake and %s ETH will be distributed to jurors" % (PNK_at_stake, ETH_fee))
 
 get_juror_votes(j)
 At_stake(j)
