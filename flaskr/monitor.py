@@ -2,6 +2,8 @@
 
 import sys
 from kleros import Kleros
+from kleros import KlerosDispute
+
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -11,17 +13,15 @@ bp = Blueprint('monitor', __name__, url_prefix='/')
 
 @bp.route('/dispute/<dispute_id>', methods=['GET'])
 def dispute(dispute_id):
+
     node = 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
-    kleros = Kleros(node)
-    case_Number = int(dispute_id)
-
     # Call kleros Smart-contract to get the total number of Jurors on current round
-    dispute = kleros.dispute(case_Number)
-    j = dispute['draws_in_round']
+    dispute = KlerosDispute(node, int(dispute_id))
+    j = dispute.data['draws_in_round']
 
     ###main function call
-    output = get_juror_votes(j, kleros, case_Number)
+    output = get_juror_votes(j, dispute, int(dispute_id))
     return render_template('monitor/disputes.html', output=output)
 
 
