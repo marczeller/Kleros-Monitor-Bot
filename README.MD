@@ -6,6 +6,7 @@ Simple and stupid Kleros case monitor bot
 ```
 git clone https://github.com/marczeller/Kleros-Monitor-Bot.git
 cd Kleros-Monitor-Bot/
+export ETH_NODE_URL="https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287"
 ./monitor.py CASENUMBER
 ```
 Just input your [Kleros.io](https://kleros.io) case number and the bot will do the fun part.
