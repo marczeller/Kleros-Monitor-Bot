@@ -5,8 +5,8 @@ class Kleros:
 
     kleros_address = '0x988b3A538b618C7A603e1c11Ab82Cd16dbE28069'
 
-    def __init__(self, node):
-        w3 = Web3(HTTPProvider(node)) #TODO Exceptions, errors
+    def __init__(self, node_url):
+        w3 = Web3(HTTPProvider(node_url)) #TODO Exceptions, errors
         self.connection = w3.eth.contract(
             address = Web3.toChecksumAddress(self.kleros_address),
             abi = self.abi
@@ -14,9 +14,9 @@ class Kleros:
 
 class KlerosDispute(Kleros):
 
-    def __init__(self, dispute_id, connection = None, node = None ):
+    def __init__(self, dispute_id, connection = None, node_url = None ):
         if connection == None:
-            Kleros.__init__(self, node)
+            Kleros.__init__(self, node_url)
         else:
             self.connection = connection
         self.dispute_id = dispute_id
@@ -27,6 +27,11 @@ class KlerosDispute(Kleros):
     def get_dispute_meta(self):
         data = self.connection.functions.getDispute(self.dispute_id).call()
         self.rounds = data[0]
+
+    def get_vote_counter(self, appeal = None):
+        if appeal == None: appeal = len(self.rounds) - 1
+        data = self.connection.functions.getVoteCounter(self.dispute_id, appeal).call()
+        return data[1]
 
     def get_dispute(self):
         raw_dispute = self.connection.functions.disputes(self.dispute_id).call()
@@ -43,17 +48,16 @@ class KlerosDispute(Kleros):
         return self.data
 
     def get_votes(self, appeal = None):
-        if appeal == None:
-            appeal = len(self.rounds) - 1
+        if appeal == None: appeal = len(self.rounds) - 1
         self.votes = []
         for vote_id in range(self.data['draws_in_round']):
             self.votes.append(KlerosVote(self.dispute_id, appeal, vote_id, connection = self.connection))
         return self.votes
 
 class KlerosVote(Kleros):
-    def __init__(self, dispute_id, appeal, vote_id, connection = None, node = None ):
+    def __init__(self, dispute_id, appeal, vote_id, connection = None, node_url = None ):
         if connection == None:
-            Kleros.__init__(self, node)
+            Kleros.__init__(self, node_url)
         else:
             self.connection = connection
         self.data = self.get_vote(dispute_id, appeal, vote_id)
