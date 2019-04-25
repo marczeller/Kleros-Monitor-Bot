@@ -53,8 +53,8 @@ def at_stake(): # TODO Move this to kleros.py as a function of KlerosDispute
     else:
         return
     if case_closed:
-        print("The case is closed, a total of %s PNK was at stake and %s ETH was distributed to jurors" % (PNK_at_stake, ETH_fee))
+        print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_fee))
     else:
-        print("The case is still open, %s PNK are at stake and %s ETH will be distributed to jurors" % (PNK_at_stake, ETH_fee))
+        print("The case is still open, %s PNK are at stake and %.3f ETH will be distributed to jurors" % (PNK_at_stake, ETH_fee))
 
 at_stake()
