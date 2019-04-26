@@ -52,23 +52,21 @@ class KlerosDispute(Kleros):
         return self.votes
 
     def get_PNK_at_stake(self):
-        self.drawnJurors = self.draws_in_round
-        self.subcourtID = self.sub_court_id
-        if self.subcourtID == 2:
-            self.PNK_at_stake = self.drawnJurors * 3750
+        if self.sub_court_id == 2:
+            self.PNK_at_stake = self.drawn_in_round * 3750
             return self.PNK_at_stake
-        elif self.subcourtID == 3:
-            self.PNK_at_stake = self.drawnJurors * 40000
+        elif self.sub_court_id == 3:
+            self.PNK_at_stake = self.draws_in_round * 40000
             return self.PNK_at_stake
         else:
             return 0
 
     def get_ETH_at_stake(self):
-        if self.subcourtID == 2:
-            self.ETH_at_stake = self.drawnJurors * 0.065
+        if self.sub_court_id == 2:
+            self.ETH_at_stake = self.draws_in_round * 0.065
             return self.ETH_at_stake
-        elif self.subcourtID == 3:
-            self.ETH_at_stake = self.drawnJurors * 0.55
+        elif self.sub_court_id == 3:
+            self.ETH_at_stake = self.draws_in_round * 0.55
             return self.ETH_at_stake
         else:
             return 0                  
