@@ -54,6 +54,40 @@ class KlerosDispute(Kleros):
             self.votes.append(KlerosVote(self.dispute_id, appeal, vote_id, connection = self.connection))
         return self.votes
 
+    def case_state(self):
+      self.case_closed = self.data['ruled']
+      return self.case_closed
+
+    def get_subcourt(self):
+      self.subcourtID = self.data['sub_court_id']
+      return self.subcourtID
+
+    def get_PNK_at_stake(self):
+        self.drawnJurors = self.data['draws_in_round']
+        self.subcourtID = self.get_subcourt()
+        if self.subcourtID == 2:
+            self.PNK_at_stake = self.drawnJurors * 3750
+            return self.PNK_at_stake
+        elif self.subcourtID == 3:
+            self.PNK_at_stake = self.drawnJurors * 40000
+            return self.PNK_at_stake
+        else:
+            return 0
+
+    def get_ETH_at_stake(self):
+        self.drawn_Jurors = self.data['draws_in_round']
+        self.subcourt_ID = self.get_subcourt()
+        if self.subcourt_ID == 2:
+            self.ETH_at_stake = self.drawn_Jurors * 0.065
+            return self.ETH_at_stake
+        elif self.subcourt_ID == 3:
+            self.ETH_at_stake = self.drawn_Jurors * 0.55
+            return self.ETH_at_stake
+        else:
+            return 0                  
+
+
+
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, appeal, vote_id, connection = None, node_url = None ):
         if connection == None:
