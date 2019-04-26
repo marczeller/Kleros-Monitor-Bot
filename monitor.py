@@ -21,8 +21,8 @@ votesRefuse_ratio = (votesRefuse / jurors) * 100
 pending_votes = jurors - votesYes - votesNo - votesRefuse
 case_state_bool = dispute.ruled
 subcourt_id = dispute.sub_court_id
-PNK_at_stake = dispute.get_PNK_at_stake()
-ETH_at_Stake = dispute.get_ETH_at_stake()
+PNK_at_stake = dispute.get_PNK_at_stake() / 10**18
+ETH_at_Stake = dispute.get_ETH_at_stake() / 10**18
 
 print("%s jurors drawn on last round" % jurors)
 print("Yes votes: %s (%.2f %%)" % (votesYes, votesYes_ratio))
