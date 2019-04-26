@@ -35,36 +35,25 @@ class KlerosDispute(Kleros):
 
     def get_dispute(self):
         raw_dispute = self.connection.functions.disputes(self.dispute_id).call()
-        self.data = {
-            'sub_court_id'       : int(raw_dispute[0]),
-            'arbitrated'         : raw_dispute[1],
-            'number_of_choices'  : int(raw_dispute[2]),
-            'period'             : int(raw_dispute[3]),
-            'last_period_change' : int(raw_dispute[4]),
-            'draws_in_round'     : int(raw_dispute[5]),
-            'commits_in_round'   : int(raw_dispute[6]),
-            'ruled'              : bool(raw_dispute[7])
-        }
-        return self.data
+        self.sub_court_id = int(raw_dispute[0])
+        self.arbitrated = raw_dispute[1]
+        self.number_of_choices = int(raw_dispute[2])
+        self.period = int(raw_dispute[3])
+        self.last_period_change = int(raw_dispute[4])
+        self.draws_in_round = int(raw_dispute[5])
+        self.commits_in_round = int(raw_dispute[6])
+        self.ruled = bool(raw_dispute[7])
 
     def get_votes(self, appeal = None):
         if appeal == None: appeal = len(self.rounds) - 1
         self.votes = []
-        for vote_id in range(self.data['draws_in_round']):
+        for vote_id in range(self.draws_in_round):
             self.votes.append(KlerosVote(self.dispute_id, appeal, vote_id, connection = self.connection))
         return self.votes
 
-    def case_state(self):
-      self.case_closed = self.data['ruled']
-      return self.case_closed
-
-    def get_subcourt(self):
-      self.subcourtID = self.data['sub_court_id']
-      return self.subcourtID
-
     def get_PNK_at_stake(self):
-        self.drawnJurors = self.data['draws_in_round']
-        self.subcourtID = self.get_subcourt()
+        self.drawnJurors = self.draws_in_round
+        self.subcourtID = self.sub_court_id
         if self.subcourtID == 2:
             self.PNK_at_stake = self.drawnJurors * 3750
             return self.PNK_at_stake
@@ -75,13 +64,11 @@ class KlerosDispute(Kleros):
             return 0
 
     def get_ETH_at_stake(self):
-        self.drawn_Jurors = self.data['draws_in_round']
-        self.subcourt_ID = self.get_subcourt()
-        if self.subcourt_ID == 2:
-            self.ETH_at_stake = self.drawn_Jurors * 0.065
+        if self.subcourtID == 2:
+            self.ETH_at_stake = self.drawnJurors * 0.065
             return self.ETH_at_stake
-        elif self.subcourt_ID == 3:
-            self.ETH_at_stake = self.drawn_Jurors * 0.55
+        elif self.subcourtID == 3:
+            self.ETH_at_stake = self.drawnJurors * 0.55
             return self.ETH_at_stake
         else:
             return 0                  

@@ -17,8 +17,8 @@ votesYes_ratio = (votesYes / jurors) * 100
 votesNo = votes[2]
 votesNo_ratio = (votesNo / jurors) * 100
 pending_votes = jurors - votesYes - votesNo
-case_state_bool = dispute.case_state()
-subcourt_id = dispute.get_subcourt()
+case_state_bool = dispute.ruled
+subcourt_id = dispute.sub_court_id
 PNK_at_stake = dispute.get_PNK_at_stake()
 ETH_at_Stake = dispute.get_ETH_at_stake() 
 
