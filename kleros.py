@@ -27,6 +27,8 @@ class KlerosDispute(Kleros):
     def get_dispute_meta(self):
         data = self.connection.functions.getDispute(self.dispute_id).call()
         self.rounds = data[0]
+        self.pnk_staked = data[1]
+        self.eth_staked = data[2]
 
     def get_vote_counter(self, appeal = None):
         if appeal == None: appeal = len(self.rounds) - 1
@@ -51,27 +53,13 @@ class KlerosDispute(Kleros):
             self.votes.append(KlerosVote(self.dispute_id, appeal, vote_id, connection = self.connection))
         return self.votes
 
-    def get_PNK_at_stake(self):
-        if self.sub_court_id == 2:
-            self.PNK_at_stake = self.drawn_in_round * 3750
-            return self.PNK_at_stake
-        elif self.sub_court_id == 3:
-            self.PNK_at_stake = self.draws_in_round * 40000
-            return self.PNK_at_stake
-        else:
-            return 0
+    def get_PNK_at_stake(self, appeal = None):
+        if appeal == None: appeal = len(self.rounds) - 1
+        return self.pnk_staked[appeal]
 
-    def get_ETH_at_stake(self):
-        if self.sub_court_id == 2:
-            self.ETH_at_stake = self.draws_in_round * 0.065
-            return self.ETH_at_stake
-        elif self.sub_court_id == 3:
-            self.ETH_at_stake = self.draws_in_round * 0.55
-            return self.ETH_at_stake
-        else:
-            return 0                  
-
-
+    def get_ETH_at_stake(self, appeal = None):
+        if appeal == None: appeal = len(self.rounds) - 1
+        return self.eth_staked[appeal]
 
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, appeal, vote_id, connection = None, node_url = None ):
