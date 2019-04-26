@@ -11,7 +11,7 @@ export ETH_NODE_URL="https://mainnet.infura.io/v3/31c378f901bf46c08674e655e66402
 ```
 Just input your [Kleros.io](https://kleros.io) case number and the bot will do the fun part.
 
-your monitor window should look like this during the installation process exemple with CASENUMBER 17:
+your monitor window should look like this during the installation process exemple with CASENUMBER = 17:
 
 ![installation exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/installation%20exemple.JPG)
 
