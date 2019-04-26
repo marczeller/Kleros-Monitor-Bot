@@ -16,15 +16,18 @@ votesYes = votes[1]
 votesYes_ratio = (votesYes / jurors) * 100
 votesNo = votes[2]
 votesNo_ratio = (votesNo / jurors) * 100
-pending_votes = jurors - votesYes - votesNo
+votesRefuse = votes[0]
+votesRefuse_ratio = (votesRefuse / jurors) * 100
+pending_votes = jurors - votesYes - votesNo - votesRefuse
 case_state_bool = dispute.ruled
 subcourt_id = dispute.sub_court_id
 PNK_at_stake = dispute.get_PNK_at_stake()
-ETH_at_Stake = dispute.get_ETH_at_stake() 
+ETH_at_Stake = dispute.get_ETH_at_stake()
 
 print("%s jurors drawn on last round" % jurors)
 print("Yes votes: %s (%.2f %%)" % (votesYes, votesYes_ratio))
 print("No votes : %s (%.2f %%)" % (votesNo, votesNo_ratio))
+print("Refused to arbitrate : %s (%.2f %%)" % (votesRefuse, votesRefuse_ratio))
 
 if pending_votes > 0:
     print("Pending votes: %s" % pending_votes)
@@ -38,7 +41,7 @@ elif votesNo > votesYes:
 else:
     print("Outcome: Undecided")
 
-if votesYes > jurors // 2 or votesNo > jurors // 2:
+if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
     print("Absolute majority was reached")
 else:
     print("Case is still undecided")
@@ -46,4 +49,3 @@ if case_state_bool == True:
   print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
 else:
   print("The case is still open, %s PNK are at stake and %.3f ETH will be distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
-
