@@ -17,6 +17,10 @@ votesYes_ratio = (votesYes / jurors) * 100
 votesNo = votes[2]
 votesNo_ratio = (votesNo / jurors) * 100
 pending_votes = jurors - votesYes - votesNo
+case_state_bool = dispute.case_state()
+subcourt_id = dispute.get_subcourt()
+PNK_at_stake = dispute.get_PNK_at_stake()
+ETH_at_Stake = dispute.get_ETH_at_stake() 
 
 print("%s jurors drawn on last round" % jurors)
 print("Yes votes: %s (%.2f %%)" % (votesYes, votesYes_ratio))
@@ -38,23 +42,8 @@ if votesYes > jurors // 2 or votesNo > jurors // 2:
     print("Absolute majority was reached")
 else:
     print("Case is still undecided")
+if case_state_bool == True:
+  print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
+else:
+  print("The case is still open, %s PNK are at stake and %.3f ETH will be distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
 
-def at_stake(): # TODO Move this to kleros.py as a function of KlerosDispute
-    case_closed = dispute.data['ruled']
-    subcourt = dispute.data['sub_court_id']
-    j = dispute.rounds[-1]
-
-    if subcourt == 2:
-            PNK_at_stake = j * 3750
-            ETH_fee = j * 0.065
-    elif subcourt == 3:
-            PNK_at_stake = j * 40000
-            ETH_fee = j * 0.55
-    else:
-        return
-    if case_closed:
-        print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_fee))
-    else:
-        print("The case is still open, %s PNK are at stake and %.3f ETH will be distributed to jurors" % (PNK_at_stake, ETH_fee))
-
-at_stake()
