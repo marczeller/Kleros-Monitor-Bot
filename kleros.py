@@ -14,9 +14,9 @@ class Kleros:
 
 class KlerosDispute(Kleros):
 
-    def __init__(self, dispute_id, connection = None, node_url = None ):
-        if connection == None: Kleros.__init__(self, node_url)
-        else: self.connection = connection
+    def __init__(self, dispute_id, kleros = None, node_url = None ):
+        if kleros == None: Kleros.__init__(self, node_url)
+        else: self.connection = kleros.connection
         self.dispute_id = dispute_id
         self.get_dispute()
         self.get_dispute_meta()
@@ -60,9 +60,9 @@ class KlerosDispute(Kleros):
         return self.eth_staked[appeal]
 
 class KlerosVote(Kleros):
-    def __init__(self, dispute_id, appeal, vote_id, connection = None, node_url = None ):
-        if connection == None: Kleros.__init__(self, node_url)
-        else: self.connection = connection
+    def __init__(self, dispute_id, appeal, vote_id, kleros = None, node_url = None ):
+        if kleros == None: Kleros.__init__(self, node_url)
+        else: self.connection = kleros.connection
         self.data = self.get_vote(dispute_id, appeal, vote_id)
 
     def get_vote(self, case_number, appeal = 0, vote_id = 0):
