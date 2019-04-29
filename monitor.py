@@ -23,8 +23,11 @@ case_state_bool = dispute.ruled
 subcourt_id = dispute.sub_court_id
 PNK_at_stake = dispute.get_PNK_at_stake() / 10**18
 ETH_at_Stake = dispute.get_ETH_at_stake() / 10**18
+PNK_per_juror = PNK_at_stake / jurors
+ETH_per_juror = ETH_at_Stake / jurors
 
 print("%s jurors drawn on last round" % jurors)
+print("Each juror has staked %s PNK and might earn %.3f ETH on this case" % (PNK_per_juror, ETH_per_juror))
 print("Yes votes: %s (%.2f %%)" % (votesYes, votesYes_ratio))
 print("No votes : %s (%.2f %%)" % (votesNo, votesNo_ratio))
 print("Refused to arbitrate : %s (%.2f %%)" % (votesRefuse, votesRefuse_ratio))
