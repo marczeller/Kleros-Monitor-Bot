@@ -25,6 +25,10 @@ PNK_at_stake = dispute.get_PNK_at_stake() / 10**18
 ETH_at_Stake = dispute.get_ETH_at_stake() / 10**18
 PNK_per_juror = PNK_at_stake / jurors
 ETH_per_juror = ETH_at_Stake / jurors
+losers = (votesYes + votesRefuse + pending_votes)
+ETH_distribution = (losers * ETH_per_juror) / (jurors - losers)
+PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
+
 
 print("%s jurors drawn on last round" % jurors)
 print("Each juror has staked %s PNK and might earn %.3f ETH on this case" % (PNK_per_juror, ETH_per_juror))
@@ -46,22 +50,17 @@ else:
 
 if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
     print("Absolute majority was reached")
-else:
-    print("Case is still undecided")
-    #TO DO move that to KlerosVote
-if case_closed_bool == True:
-    print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
+
     if votesYes > jurors // 2:
-  	  losers = (votesYes + votesRefuse + pending_votes)
-  	  ETH_distribution = (losers * ETH_per_juror) / (jurors - losers)
-  	  PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
-  	  print("Majority jurors who voted YES will receive %s PNK and %.3f ETH each" % (PNK_distribution, ETH_distribution))
+  	  print("Majority jurors who voted YES will receive %.f PNK and %.3f ETH each" % (PNK_distribution, ETH_distribution))
     
     elif votesNo > jurors // 2:
-  	  losers = votesYes + votesRefuse + pending_votes
-  	  ETH_distribution = (losers * ETH_per_juror) / (jurors - losers)
-  	  PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
-  	  print("Majority jurors who voted NO will receive %s PNK and %.3f ETH each" % (PNK_distribution, ETH_distribution))
+  	  print("Majority jurors who voted NO will receive %.f PNK and %.3f ETH each" % (PNK_distribution, ETH_distribution))
 else:
-	print("The case is still open, %s PNK are at stake and %.3f ETH will be distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
-	
+    print("Case is still undecided")
+
+if case_closed_bool == True:
+    print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
+    
+else:
+	print("The case is still open, stay tuned for possible appeals")
