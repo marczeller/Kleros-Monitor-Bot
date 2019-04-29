@@ -52,10 +52,10 @@ if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
     print("Absolute majority was reached")
 
     if votesYes > jurors // 2:
-  	  print("Majority jurors who voted YES will receive %.f PNK and %.3f ETH each" % (PNK_distribution, ETH_distribution))
+  	  print("Majority jurors who voted YES receive %.f PNK and %.3f ETH each" % (PNK_distribution, ETH_distribution))
     
     elif votesNo > jurors // 2:
-  	  print("Majority jurors who voted NO will receive %.f PNK and %.3f ETH each" % (PNK_distribution, ETH_distribution))
+  	  print("Majority jurors who voted NO receive %.f PNK and %.3f ETH each" % (PNK_distribution, ETH_distribution))
 else:
     print("Case is still undecided")
 
