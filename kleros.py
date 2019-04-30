@@ -76,14 +76,16 @@ class KlerosDispute(Kleros):
     def define_losers(self):
         majority = self.draws_in_round // 2
         votes = self.get_vote_counter()
-        self.losers = 0
+        self.losers = self.draws_in_round
 
         if votes[2] > majority:
-            self.losers = self.draws_in_round - votes[2]
+            self.losers -= votes[2]
         elif votes[1] > majority:
-            self.losers = self.draws_in_round - votes[1]
+            self.losers -= votes[1]
         elif votes[0] > majority:
-            self.losers = self.draws_in_round - votes[0]
+            self.losers -= votes[0]
+        else:
+            self.losers = 0
 
         return self.losers
 
