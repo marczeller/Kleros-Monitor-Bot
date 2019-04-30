@@ -25,6 +25,9 @@ PNK_at_stake = dispute.get_PNK_at_stake()
 ETH_at_Stake = dispute.get_ETH_at_stake()
 PNK_per_juror = PNK_at_stake / jurors
 ETH_per_juror = ETH_at_Stake / jurors
+fromage = dispute.pending_vote()
+
+print("ceci est un fromage : %s" % (fromage))
 
 #TO DO MOVE winning_side() TO KLEROS.PY AS A METHOD OF KlerosVote
 
