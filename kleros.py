@@ -61,7 +61,15 @@ class KlerosDispute(Kleros):
 
     def current_ruling(self):
         self.ruling = self.connection.functions.currentRuling(self.dispute_id).call()
-        return self.ruling        
+        return self.ruling
+    
+    def dispute_status(self):
+        self.current_status = self.connection.functions.disputeStatus(self.dispute_id).call()
+        return self.current_status
+
+    def pending_vote(self):
+        self.pending_votes = self.draws_in_round - (self.get_vote_counter()[0] + self.get_vote_counter()[1] + self.get_vote_counter()[2])
+        return self.pending_votes
 
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, appeal, vote_id, kleros = None, node_url = None ):

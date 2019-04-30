@@ -16,8 +16,27 @@ class TestKleros(object):
         assert type(kleros_dispute) is KlerosDispute
 
     def test_ruling_no(self):
-       kleros_dispute = KlerosDispute(16, kleros = TestKleros.kleros)
-       assert kleros_dispute.current_ruling() == 2
+        kleros_dispute = KlerosDispute(16, kleros = TestKleros.kleros)
+        assert kleros_dispute.current_ruling() == 2
+    
     def test_ruling_yes(self):   
-       kleros_dispute = KlerosDispute(45, kleros = TestKleros.kleros)
-       assert kleros_dispute.current_ruling() == 1
+        kleros_dispute = KlerosDispute(45, kleros = TestKleros.kleros)
+        assert kleros_dispute.current_ruling() == 1
+    
+    def test_closed_dispute(self):
+        kleros_dispute = KlerosDispute(16, kleros = TestKleros.kleros)
+        assert kleros_dispute.dispute_status() == 2
+    
+    def test_open_dispute(self):
+    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
+    	assert kleros_dispute.dispute_status() == 1
+
+    def pending_vote_zero(self):
+    	kleros_dispute = KlerosDispute(42, kleros = TestKleros.kleros)
+    	assert KlerosDispute.pending_vote() == 0
+
+    def pending_votes(self):
+    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
+    	assert KlerosDispute.pending_vote() > 0
+
+
