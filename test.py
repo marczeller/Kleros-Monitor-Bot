@@ -6,58 +6,34 @@ from kleros import Kleros, KlerosDispute, KlerosVote
 
 class TestKleros(object):
     kleros = Kleros(os.environ["ETH_NODE_URL"])
+    disputes = {}
+    for i in (1, 16, 17, 42, 45, 52, 60):
+        disputes[i] = KlerosDispute(i, kleros = kleros)
 
     def test_connection(self):
-        assert type(TestKleros.kleros) is Kleros
-        assert type(TestKleros.kleros.connection).__name__ == 'Contract'
+        assert type(self.kleros) is Kleros
+        assert type(self.kleros.connection).__name__ == 'Contract'
 
     def test_dispute_rounds(self):
-        kleros_dispute = KlerosDispute(1, kleros = TestKleros.kleros)
-        assert type(kleros_dispute) is KlerosDispute
+        assert type(self.disputes[1]) is KlerosDispute
 
-    def test_ruling_no(self):
-        kleros_dispute = KlerosDispute(16, kleros = TestKleros.kleros)
-        assert kleros_dispute.current_ruling() == 2
-
-    def test_ruling_yes(self):
-        kleros_dispute = KlerosDispute(45, kleros = TestKleros.kleros)
-        assert kleros_dispute.current_ruling() == 1
+    def test_ruling(self):
+        assert self.disputes[16].current_ruling() == 2
+        assert self.disputes[45].current_ruling() == 1
 
     def test_closed_dispute(self):
-        kleros_dispute = KlerosDispute(16, kleros = TestKleros.kleros)
-        assert kleros_dispute.dispute_status() == 2
-
-    def test_open_dispute(self):
-    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
-    	assert kleros_dispute.dispute_status() == 1
-
-    def test_pending_vote_zero(self):
-    	kleros_dispute = KlerosDispute(42, kleros = TestKleros.kleros)
-    	assert kleros_dispute.pending_vote() == 0
+        assert self.disputes[16].dispute_status() == 2
+        assert self.disputes[17].dispute_status() == 1
 
     def test_pending_votes(self):
-    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
-    	assert kleros_dispute.pending_vote() == 3
+    	assert self.disputes[42].pending_vote() == 0
+    	assert self.disputes[17].pending_vote() == 3
 
     def test_define_losers(self):
-    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
-    	assert kleros_dispute.define_losers() == 4
+    	assert self.disputes[17].define_losers() == 4
+    	assert self.disputes[52].define_losers() == 0
 
-    def test_define_zero_losers(self):
-    	kleros_dispute = KlerosDispute(52, kleros = TestKleros.kleros)
-    	assert kleros_dispute.define_losers() == 0
-
-    def test_define_no_win(self):
-    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
-    	assert kleros_dispute.define_win_choice() == "NO"
-
-    def test_define_yes_win(self):
-    	kleros_dispute = KlerosDispute(45, kleros = TestKleros.kleros)
-    	assert kleros_dispute.define_win_choice() == "YES"
-
-    def test_define_refuse_win(self):
-    	kleros_dispute = KlerosDispute(60, kleros = TestKleros.kleros)
-    	assert kleros_dispute.define_win_choice() == "Refuse to Arbitrate"	
-
-
-
+    def test_define_win(self):
+    	assert self.disputes[17].define_win_choice() == "NO"
+    	assert self.disputes[45].define_win_choice() == "YES"
+    	assert self.disputes[60].define_win_choice() == "Refuse to Arbitrate"
