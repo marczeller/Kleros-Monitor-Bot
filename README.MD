@@ -13,7 +13,7 @@ Just input your [Kleros.io](https://kleros.io) case number and the bot will do t
 
 your monitor window should look like this during the installation process exemple with CASENUMBER = 17:
 
-![setup_exemple_new.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/setup_exemple_new.JPG)
+![setup_exemple_last.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/setup_exemple_last.JPG)
 
 
 # common bug fix
