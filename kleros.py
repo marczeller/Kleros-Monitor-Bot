@@ -86,7 +86,7 @@ class KlerosDispute(Kleros):
 
     def get_ETH_per_juror(self, appeal = None):
         if appeal == None: appeal = len(self.rounds) - 1
-        self.ETH_per_juror = (self.ETH_at_stake) / self.draws_in_round
+        self.ETH_per_juror = self.get_ETH_at_stake() / self.draws_in_round
         return self.ETH_per_juror
 
     def get_PNK_per_juror(self, appeal = None):
