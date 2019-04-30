@@ -18,13 +18,15 @@ votesNo = votes[2]
 votesNo_ratio = (votesNo / jurors) * 100
 votesRefuse = votes[0]
 votesRefuse_ratio = (votesRefuse / jurors) * 100
-pending_votes = jurors - votesYes - votesNo - votesRefuse
+pending_votes = dispute.pending_vote()
 case_closed_bool = dispute.ruled
 subcourt_id = dispute.sub_court_id
 PNK_at_stake = dispute.get_PNK_at_stake()
 ETH_at_Stake = dispute.get_ETH_at_stake()
 PNK_per_juror = PNK_at_stake / jurors
 ETH_per_juror = ETH_at_Stake / jurors
+losers = dispute.define_losers()
+choice = dispute.define_win_choice()
 
 #TO DO MOVE winning_side() TO KLEROS.PY AS A METHOD OF KlerosVote
 
@@ -71,4 +73,4 @@ if case_closed_bool == True:
     print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
     
 else:
-	print("The case is still open, stay tuned for possible appeals")
+	print("The case is still open, stay tuned for possible appeals")    
