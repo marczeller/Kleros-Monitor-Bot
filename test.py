@@ -46,6 +46,14 @@ class TestKleros(object):
     def test_define_zero_losers(self):
     	kleros_dispute = KlerosDispute(52, kleros = TestKleros.kleros)
     	assert kleros_dispute.define_losers() == 0
-    	
+
+    def test_define_no_win(self):
+    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
+    	assert kleros_dispute.define_win_choice() == "NO"
+
+    def test_define_yes_win(self):
+    	kleros_dispute = KlerosDispute(45, kleros = TestKleros.kleros)
+    	assert kleros_dispute.define_win_choice() == "YES"	
+
 
 
