@@ -1,6 +1,6 @@
 # Kleros-Monitor-Bot
-Simple and stupid Kleros case monitor bot
-
+Simple Kleros case monitor bot
+check kleros.py if you want to build stuff to customize your monitoring
 
 # Setup
 ```
@@ -42,6 +42,6 @@ you'll just need to follow the *You don't have web3 :* process then follow the r
 Kleros is a Decentralized Dispute Resolution System to learn more about it, [read their blog posts](https://blog.kleros.io/)
 
 # Donations
-the best kind of support is opening up issues and proposing PRs this is a prototype MVP, we can do much better!!
+the best kind of support is opening up issues and proposing PRs
 
 For the other kind of support : marczeller.eth (0x010afb8548a5D1a3a3D62f58CA0a5A1329974206)
