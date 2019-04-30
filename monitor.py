@@ -23,8 +23,8 @@ case_closed_bool = dispute.ruled
 subcourt_id = dispute.sub_court_id
 PNK_at_stake = dispute.get_PNK_at_stake()
 ETH_at_Stake = dispute.get_ETH_at_stake()
-PNK_per_juror = PNK_at_stake / jurors
-ETH_per_juror = ETH_at_Stake / jurors
+PNK_per_juror = dispute.get_PNK_per_juror()
+ETH_per_juror = dispute.get_ETH_per_juror()
 losers = dispute.define_losers()
 win_choice = dispute.define_win_choice()
 
@@ -48,7 +48,7 @@ else:
 
 if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
     print("Absolute majority was reached")
-
+#TO DO move this to Kleros.py
     ETH_distribution = ((losers * ETH_per_juror) / jurors) + ETH_per_juror
     PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
     print("Majority jurors who voted %s receive %.f PNK and %.3f ETH each" % (win_choice, PNK_distribution, ETH_distribution))
