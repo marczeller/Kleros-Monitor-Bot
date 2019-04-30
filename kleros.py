@@ -74,14 +74,17 @@ class KlerosDispute(Kleros):
         return self.pending_votes
 
     def define_losers(self):
-        if self.get_vote_counter()[2] > self.draws_in_round // 2:
-          self.losers = (self.get_vote_counter()[1] + self.get_vote_counter()[0] + self.pending_vote())
-        elif self.get_vote_counter()[1] > self.draws_in_round // 2:
-          self.losers = (self.get_vote_counter()[2] + self.get_vote_counter()[0] + self.pending_vote())
-        elif self.get_vote_counter()[0] > self.draws_in_round // 2:
-          self.losers = (self.get_vote_counter()[1] + self.get_vote_counter()[2] + self.pending_vote())
-        else:
-            self.losers = 0
+        majority = self.draws_in_round // 2
+        votes = self.get_vote_counter()
+        self.losers = 0
+
+        if votes[2] > majority:
+            self.losers = self.draws_in_round - votes[2]
+        elif votes[1] > majority:
+            self.losers = self.draws_in_round - votes[1]
+        elif votes[0] > majority:
+            self.losers = self.draws_in_round - votes[0]
+
         return self.losers
 
     def get_ETH_per_juror(self, appeal = None):
