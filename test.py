@@ -39,7 +39,7 @@ class TestKleros(object):
     	assert self.disputes[60].winning_choice() == 0
 
     def test_ETH_per_juror(self):
-    	assert self.disputes[17].get_ETH_per_juror() == 0.55
+    	assert self.disputes[17].get_ETH_per_juror() == 550000000000000000
 
     def test_PNK_per_juror(self):
     	assert self.disputes[17].get_PNK_per_juror() == 40000000000000000000000
