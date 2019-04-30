@@ -26,7 +26,12 @@ ETH_at_Stake = dispute.get_ETH_at_stake()
 PNK_per_juror = PNK_at_stake / jurors
 ETH_per_juror = ETH_at_Stake / jurors
 losers = dispute.define_losers()
-win_choice = dispute.define_win_choice()
+vote_choices = {
+    0: 'Undecided',
+    1: 'Yes',
+    2: 'No'
+}
+winner = vote_choices[dispute.winning_choice()]
 
 print("%s jurors drawn on last round" % jurors)
 print("Each juror has staked %s PNK and might earn %.3f ETH on this case" % (PNK_per_juror, ETH_per_juror))
@@ -51,12 +56,12 @@ if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
 
     ETH_distribution = ((losers * ETH_per_juror) / jurors) + ETH_per_juror
     PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
-    print("Majority jurors who voted %s receive %.f PNK and %.3f ETH each" % (win_choice, PNK_distribution, ETH_distribution))
+    print("Majority jurors who voted %s receive %.f PNK and %.3f ETH each" % (winner, PNK_distribution, ETH_distribution))
 else:
-    print("No earnings information available yet.")    
+    print("No earnings information available yet.")
 
 if case_closed_bool == True:
     print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
-    
+
 else:
-	print("The case is still open, stay tuned for possible appeals")    
+	print("The case is still open, stay tuned for possible appeals")

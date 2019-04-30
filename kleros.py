@@ -62,7 +62,7 @@ class KlerosDispute(Kleros):
     def current_ruling(self):
         self.ruling = self.connection.functions.currentRuling(self.dispute_id).call()
         return self.ruling
-    
+
     def dispute_status(self):
         self.current_status = self.connection.functions.disputeStatus(self.dispute_id).call()
         return self.current_status
@@ -81,19 +81,10 @@ class KlerosDispute(Kleros):
         else:
             self.losers = 0
         return self.losers
-    
-    def define_win_choice(self):
-        if self.dispute_status() is not None:  
-          if self.current_ruling() == 1:
-            self.win_choice = "YES"
-          elif self.current_ruling() == 2:
-            self.win_choice = "NO"
-          elif self.current_ruling() == 0:
-            self.win_choice = "Refuse to Arbitrate"
-        else:
-            self.win_choice = "None"
-        return self.win_choice 
 
+    def winning_choice(self):
+        if self.dispute_status() is None: return None
+        return self.current_ruling()
 
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, appeal, vote_id, kleros = None, node_url = None ):

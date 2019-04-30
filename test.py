@@ -7,7 +7,7 @@ from kleros import Kleros, KlerosDispute, KlerosVote
 class TestKleros(object):
     kleros = Kleros(os.environ["ETH_NODE_URL"])
     disputes = {}
-    for i in (1, 16, 17, 42, 45, 52, 60):
+    for i in (16, 17, 42, 45, 52, 60):
         disputes[i] = KlerosDispute(i, kleros = kleros)
 
     def test_connection(self):
@@ -15,7 +15,7 @@ class TestKleros(object):
         assert type(self.kleros.connection).__name__ == 'Contract'
 
     def test_dispute_rounds(self):
-        assert type(self.disputes[1]) is KlerosDispute
+        assert type(self.disputes[16]) is KlerosDispute
 
     def test_ruling(self):
         assert self.disputes[16].current_ruling() == 2
@@ -34,6 +34,6 @@ class TestKleros(object):
     	assert self.disputes[52].define_losers() == 0
 
     def test_define_win(self):
-    	assert self.disputes[17].define_win_choice() == "NO"
-    	assert self.disputes[45].define_win_choice() == "YES"
-    	assert self.disputes[60].define_win_choice() == "Refuse to Arbitrate"
+    	assert self.disputes[17].winning_choice() == 2
+    	assert self.disputes[45].winning_choice() == 1
+    	assert self.disputes[60].winning_choice() == 0
