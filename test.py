@@ -59,5 +59,13 @@ class TestKleros(object):
     	kleros_dispute = KlerosDispute(60, kleros = TestKleros.kleros)
     	assert kleros_dispute.define_win_choice() == "Refuse to Arbitrate"	
 
+    def test_ETH_per_juror(self):
+    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
+    	assert kleros_dispute.get_ETH_per_juror() == 0.55
+
+    def test_PNK_per_juror(self):
+    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
+    	assert kleros_dispute.get_PNK_per_juror() == 40000
+
 
 
