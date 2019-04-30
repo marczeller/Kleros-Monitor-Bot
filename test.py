@@ -38,3 +38,14 @@ class TestKleros(object):
     def test_pending_votes(self):
     	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
     	assert kleros_dispute.pending_vote() == 3
+
+    def test_define_losers(self):
+    	kleros_dispute = KlerosDispute(17, kleros = TestKleros.kleros)
+    	assert kleros_dispute.define_losers() == 4
+
+    def test_define_zero_losers(self):
+    	kleros_dispute = KlerosDispute(52, kleros = TestKleros.kleros)
+    	assert kleros_dispute.define_losers() == 0
+    	
+
+

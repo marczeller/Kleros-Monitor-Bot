@@ -71,6 +71,16 @@ class KlerosDispute(Kleros):
         self.pending_votes = self.draws_in_round - (self.get_vote_counter()[0] + self.get_vote_counter()[1] + self.get_vote_counter()[2])
         return self.pending_votes
 
+    def define_losers(self):
+        if self.get_vote_counter()[2] > self.draws_in_round // 2:
+          self.losers = (self.get_vote_counter()[1] + self.get_vote_counter()[0] + self.pending_vote())
+        elif self.get_vote_counter()[1] > self.draws_in_round // 2:
+          self.losers = (self.get_vote_counter()[2] + self.get_vote_counter()[0] + self.pending_vote())
+        elif self.get_vote_counter()[0] > self.draws_in_round // 2:
+          self.losers = (self.get_vote_counter()[1] + self.get_vote_counter()[2] + self.pending_vote())
+        return self.losers  
+
+
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, appeal, vote_id, kleros = None, node_url = None ):
         if kleros == None: Kleros.__init__(self, node_url)
