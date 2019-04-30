@@ -14,3 +14,10 @@ class TestKleros(object):
     def test_dispute_rounds(self):
         kleros_dispute = KlerosDispute(1, kleros = TestKleros.kleros)
         assert type(kleros_dispute) is KlerosDispute
+
+    def test_ruling_no(self):
+       kleros_dispute = KlerosDispute(16, kleros = TestKleros.kleros)
+       assert kleros_dispute.current_ruling() == 2
+    def test_ruling_yes(self):   
+       kleros_dispute = KlerosDispute(45, kleros = TestKleros.kleros)
+       assert kleros_dispute.current_ruling() == 1

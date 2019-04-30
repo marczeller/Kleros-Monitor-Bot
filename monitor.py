@@ -21,8 +21,8 @@ votesRefuse_ratio = (votesRefuse / jurors) * 100
 pending_votes = jurors - votesYes - votesNo - votesRefuse
 case_closed_bool = dispute.ruled
 subcourt_id = dispute.sub_court_id
-PNK_at_stake = dispute.get_PNK_at_stake() / 10**18
-ETH_at_Stake = dispute.get_ETH_at_stake() / 10**18
+PNK_at_stake = dispute.get_PNK_at_stake()
+ETH_at_Stake = dispute.get_ETH_at_stake()
 PNK_per_juror = PNK_at_stake / jurors
 ETH_per_juror = ETH_at_Stake / jurors
 
@@ -37,7 +37,7 @@ def winning_side():
         win = "NO"
     elif votesRefuse > jurors // 2:
         losers = (votesNo + votesYes + pending_votes)
-        win = "Refuse to Aribitrate"    
+        win = "Refuse to Arbitrate"    
     else:
         print ("This case didn't reached consensus")
     ETH_distribution = ((losers * ETH_per_juror) / jurors) + ETH_per_juror

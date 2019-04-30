@@ -53,11 +53,15 @@ class KlerosDispute(Kleros):
 
     def get_PNK_at_stake(self, appeal = None):
         if appeal == None: appeal = len(self.rounds) - 1
-        return self.pnk_staked[appeal] * self.draws_in_round
+        return (self.pnk_staked[appeal] * self.draws_in_round) / 10 ** 18
 
     def get_ETH_at_stake(self, appeal = None):
         if appeal == None: appeal = len(self.rounds) - 1
-        return self.eth_staked[appeal]
+        return self.eth_staked[appeal] / 10 ** 18
+
+    def current_ruling(self):
+        self.ruling = self.connection.functions.currentRuling(self.dispute_id).call()
+        return self.ruling        
 
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, appeal, vote_id, kleros = None, node_url = None ):
