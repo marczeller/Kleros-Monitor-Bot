@@ -53,7 +53,11 @@ class TestKleros(object):
 
     def test_define_yes_win(self):
     	kleros_dispute = KlerosDispute(45, kleros = TestKleros.kleros)
-    	assert kleros_dispute.define_win_choice() == "YES"	
+    	assert kleros_dispute.define_win_choice() == "YES"
+
+    def test_define_refuse_win(self):
+    	kleros_dispute = KlerosDispute(60, kleros = TestKleros.kleros)
+    	assert kleros_dispute.define_win_choice() == "Refuse to Arbitrate"	
 
 
 

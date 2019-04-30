@@ -26,25 +26,7 @@ ETH_at_Stake = dispute.get_ETH_at_stake()
 PNK_per_juror = PNK_at_stake / jurors
 ETH_per_juror = ETH_at_Stake / jurors
 losers = dispute.define_losers()
-choice = dispute.define_win_choice()
-
-#TO DO MOVE winning_side() TO KLEROS.PY AS A METHOD OF KlerosVote
-
-def winning_side():
-    if votesYes > jurors // 2:
-        losers = (votesNo + votesRefuse + pending_votes)
-        win = "YES"
-    elif votesNo > jurors // 2:
-        losers = (votesYes + votesRefuse + pending_votes)
-        win = "NO"
-    elif votesRefuse > jurors // 2:
-        losers = (votesNo + votesYes + pending_votes)
-        win = "Refuse to Arbitrate"    
-    else:
-        print ("This case didn't reached consensus")
-    ETH_distribution = ((losers * ETH_per_juror) / jurors) + ETH_per_juror
-    PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
-    print("Majority jurors who voted %s receive %.f PNK and %.3f ETH each" % (win, PNK_distribution, ETH_distribution))    
+win_choice = dispute.define_win_choice()
 
 print("%s jurors drawn on last round" % jurors)
 print("Each juror has staked %s PNK and might earn %.3f ETH on this case" % (PNK_per_juror, ETH_per_juror))
@@ -67,7 +49,11 @@ else:
 if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
     print("Absolute majority was reached")
 
-    winning_side()
+    ETH_distribution = ((losers * ETH_per_juror) / jurors) + ETH_per_juror
+    PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
+    print("Majority jurors who voted %s receive %.f PNK and %.3f ETH each" % (win_choice, PNK_distribution, ETH_distribution))
+else:
+    print("No earnings information available yet.")    
 
 if case_closed_bool == True:
     print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_at_Stake))

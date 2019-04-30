@@ -78,16 +78,20 @@ class KlerosDispute(Kleros):
           self.losers = (self.get_vote_counter()[2] + self.get_vote_counter()[0] + self.pending_vote())
         elif self.get_vote_counter()[0] > self.draws_in_round // 2:
           self.losers = (self.get_vote_counter()[1] + self.get_vote_counter()[2] + self.pending_vote())
+        else:
+            self.losers = 0
         return self.losers
     
     def define_win_choice(self):
-        if self.dispute_status() > 0:  
+        if self.dispute_status() is not None:  
           if self.current_ruling() == 1:
             self.win_choice = "YES"
           elif self.current_ruling() == 2:
             self.win_choice = "NO"
           elif self.current_ruling() == 0:
             self.win_choice = "Refuse to Arbitrate"
+        else:
+            self.win_choice = "None"
         return self.win_choice 
 
 
