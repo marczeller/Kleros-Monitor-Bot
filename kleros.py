@@ -53,12 +53,12 @@ class KlerosDispute(Kleros):
 
     def get_PNK_at_stake(self, appeal = None):
         if appeal == None: appeal = len(self.rounds) - 1
-        self.PNK_at_stake = (self.pnk_staked[appeal] * self.draws_in_round) / 10 ** 18
+        self.PNK_at_stake = (self.pnk_staked[appeal] * self.draws_in_round)
         return self.PNK_at_stake
 
     def get_ETH_at_stake(self, appeal = None):
         if appeal == None: appeal = len(self.rounds) - 1
-        self.ETH_at_stake = self.eth_staked[appeal] / 10 ** 18
+        self.ETH_at_stake = self.eth_staked[appeal]
         return self.ETH_at_stake
 
     def current_ruling(self):

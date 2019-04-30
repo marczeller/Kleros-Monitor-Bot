@@ -21,10 +21,10 @@ votesRefuse_ratio = (votesRefuse / jurors) * 100
 pending_votes = dispute.pending_vote()
 case_closed_bool = dispute.ruled
 subcourt_id = dispute.sub_court_id
-PNK_at_stake = dispute.get_PNK_at_stake()
-ETH_at_Stake = dispute.get_ETH_at_stake()
-PNK_per_juror = dispute.get_PNK_per_juror()
-ETH_per_juror = dispute.get_ETH_per_juror()
+PNK_at_stake = dispute.get_PNK_at_stake() / 10 ** 18
+ETH_at_Stake = dispute.get_ETH_at_stake() / 10 ** 18
+PNK_per_juror = dispute.get_PNK_per_juror() / 10 ** 18
+ETH_per_juror = dispute.get_ETH_per_juror() / 10 ** 18
 losers = dispute.define_losers()
 vote_choices = {
     0: 'Undecided',
