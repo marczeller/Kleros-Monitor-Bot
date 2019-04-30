@@ -44,12 +44,7 @@ if pending_votes > 0:
 else:
     print("Eveyone voted.")
 
-if votesYes > votesNo:
-    print("Outcome: Yes")
-elif votesNo > votesYes:
-    print("Outcome: No")
-else:
-    print("Outcome: Undecided")
+print("Outcome: %s" % winner)
 
 if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
     print("Absolute majority was reached")
