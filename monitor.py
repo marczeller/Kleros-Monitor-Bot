@@ -88,6 +88,7 @@ def get_total_PNK_stake_juror():
     stake = []
     for i in range(len(unique_jurors)):
         x = dispute.get_juror_PNK_staked(account = unique_jurors[i], subcourtID = subcourt_id) / 10 ** 18
+#dumb as fuck, we need something that iterate every court id until they find the juror stake on the same dispute some jurors can have staked in different subcourts. 
         if x == 0:
             new_subcourt_id = subcourt_id + 1
             x = dispute.get_juror_PNK_staked(account = unique_jurors[i], subcourtID = new_subcourt_id) / 10 ** 18
