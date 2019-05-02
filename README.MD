@@ -15,6 +15,17 @@ your monitor window should look like this during the installation process exempl
 
 ![setup_exemple_last.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/setup_exemple_last.JPG)
 
+### How to get the case ID?
+
+1. Visit the token you want to check: https://tokens.kleros.io/token/0xabe49ddffcac5ab14ca0fad9dc865beae1f1cde898e89a927c9bb4493e024adc
+
+2. Get the long name from URL: `0xabe49ddffcac5ab14ca0fad9dc865beae1f1cde898e89a927c9bb4493e024adc`
+
+
+3. Read contract on Etherscan: https://etherscan.io/address/0xebcf3bca271b26ae4b162ba560e243055af0e679#readContract
+
+![](etherscan_dispute_id.png?raw=true)
+
 
 # common bug fix
 
