@@ -1,5 +1,5 @@
 # Kleros-Monitor-Bot
-Simple and stupid Kleros case monitor bot
+Simple Kleros case monitor bot
 
 
 # Setup
