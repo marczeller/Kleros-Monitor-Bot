@@ -1,6 +1,14 @@
 # Kleros-Monitor-Bot
 Simple Kleros case monitor bot
 
+# pre-required before cloning
+```
+sudo apt update
+sudo apt upgrade
+sudo apt install python3-pip
+pip3 install web3
+```
+if you're on MacOS replace `apt` by `brew` and launch the bot with `python3 monitor.py CASENUMBER` after setup
 
 # Setup
 ```
@@ -27,26 +35,13 @@ your monitor window should look like this during the installation process exempl
 ![](etherscan_dispute_id.png?raw=true)
 
 
-# common bug fix
+# Windows 10 users :
 
-*You don't have web3 :*
-
-![Bug exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/Bug%20exemple.JPG)
-
-we gonna assume that you don't have anything required, let's do that.
-it's a bit longer but don't worry you only need to do that once
-
-```
-sudo apt update
-sudo apt upgrade
-sudo apt install python3-pip
-pip3 install web3
-```
 *I'm on windows OS i can't do stuff like this ! :*
 
-Yes you do, Windows10 has a fancy ubuntu emulator.
+Windows10 has a fancy ubuntu emulator.
+
 just check the windows store, type "Ubuntu" and select Ubuntu 18.04 LTS.
-you'll just need to follow the *You don't have web3 :* process then follow the regular setup steps.
 
 # what is Kleros ?
 
