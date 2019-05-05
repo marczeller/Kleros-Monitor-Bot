@@ -5,22 +5,28 @@ import os
 from kleros import Kleros, KlerosDispute, KlerosVote
 from collections import Counter, defaultdict
 import pprint
+import time
 
 node_url = os.environ["ETH_NODE_URL"]
 
 pp = pprint.PrettyPrinter(indent=2)
 case_Number = 1
 juror_accounts = []
-while case_Number < 63:
-    dispute = KlerosDispute(case_Number, node_url=node_url)
-    appeal = len(dispute.rounds) - 1
-    jurors = dispute.rounds[-1]
+total_disputes = KlerosDispute.get_total_dispute(Kleros)
 
-    for i in range(jurors):
-    	Votingdata = KlerosVote(case_Number, node_url=node_url, appeal = appeal, vote_id = i)
-    	dude_to_add = Votingdata.account
-    	juror_accounts.append(dude_to_add)        
-    case_Number = case_Number + 1
+while True:
+    if case_Number < total_disputes:
+        dispute = KlerosDispute(case_Number, node_url=node_url)
+        appeal = len(dispute.rounds) - 1
+        jurors = dispute.rounds[-1]
+
+        for i in range(jurors):
+            Votingdata = KlerosVote(case_Number, node_url=node_url, appeal = appeal, vote_id = i)
+            dude_to_add = Votingdata.account
+            juror_accounts.append(dude_to_add)
+        case_Number = case_Number + 1
+
+    time.sleep(KlerosDispute.loop_time)
 
 unique_jurors = dict(Counter(juror_accounts))
 new_unique_jurors = defaultdict(list)
