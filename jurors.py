@@ -10,19 +10,18 @@ import requests
 case_Number = 0
 node_url = os.environ["ETH_NODE_URL"]
 kleros = Kleros(node_url)
-dispute = KlerosDispute(case_Number, kleros=kleros)
 pp = pprint.PrettyPrinter(indent=2)
 juror_accounts = []
 total_dispute = kleros.last_dispute_id()
 print (total_dispute)
 
 while case_Number <= total_dispute:
-    dispute = KlerosDispute(case_Number, node_url=node_url)
+    dispute = KlerosDispute(case_Number, kleros=kleros)
     appeal = len(dispute.rounds) - 1
     jurors = dispute.rounds[-1]
 
     for i in range(jurors):
-    	Votingdata = KlerosVote(case_Number, node_url=node_url, appeal = appeal, vote_id = i)
+    	Votingdata = KlerosVote(case_Number, kleros=kleros, appeal = appeal, vote_id = i)
     	juror_accounts.append(Votingdata.account)
     case_Number = case_Number + 1
 
