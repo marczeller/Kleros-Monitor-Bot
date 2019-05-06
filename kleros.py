@@ -6,11 +6,17 @@ class Kleros:
     kleros_address = '0x988b3A538b618C7A603e1c11Ab82Cd16dbE28069'
 
     def __init__(self, node_url):
-        w3 = Web3(HTTPProvider(node_url)) #TODO Exceptions, errors
-        self.connection = w3.eth.contract(
+        self.w3 = Web3(HTTPProvider(node_url)) #TODO Exceptions, errors
+        self.connection = self.w3.eth.contract(
             address = Web3.toChecksumAddress(self.kleros_address),
             abi = self.abi
         )
+
+    def last_dispute_id(self):
+        filter = self.connection.events.DisputeCreation.createFilter(fromBlock=7303699,
+            argument_filters={"topic0": "0x141dfc18aa6a56fc816f44f0e9e2f1ebc92b15ab167770e17db5b084c10ed995"} )
+        self.last_dispute_id = filter.get_all_entries()[-1]['args']['_disputeID']
+        return self.last_dispute_id
 
 class KlerosDispute(Kleros):
 
