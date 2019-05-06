@@ -1,6 +1,18 @@
 # Kleros-Monitor-Bot
 Simple Kleros case monitor bot
+<<<<<<< HEAD
 check kleros.py if you want to build stuff to customize your monitoring
+=======
+
+# pre-required before cloning
+```
+sudo apt update
+sudo apt upgrade
+sudo apt install python3-pip
+pip3 install web3
+```
+if you're on MacOS replace `apt` by `brew` and launch the bot with `python3 monitor.py CASENUMBER` after setup
+>>>>>>> d024229f6ccfa4fa455bdce7ea75f8b6294d6530
 
 # Setup
 ```
@@ -15,27 +27,25 @@ your monitor window should look like this during the installation process exempl
 
 ![setup_exemple_last.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/setup_exemple_last.JPG)
 
+### How to get the case ID?
 
-# common bug fix
+1. Visit the token you want to check: https://tokens.kleros.io/token/0xabe49ddffcac5ab14ca0fad9dc865beae1f1cde898e89a927c9bb4493e024adc
 
-*You don't have web3 :*
+2. Get the long name from URL: `0xabe49ddffcac5ab14ca0fad9dc865beae1f1cde898e89a927c9bb4493e024adc`
 
-![Bug exemple.JPG](https://github.com/marczeller/Kleros-Monitor-Bot/blob/master/Bug%20exemple.JPG)
 
-we gonna assume that you don't have anything required, let's do that.
-it's a bit longer but don't worry you only need to do that once
+3. Read contract on Etherscan: https://etherscan.io/address/0xebcf3bca271b26ae4b162ba560e243055af0e679#readContract
 
-```
-sudo apt update
-sudo apt upgrade
-sudo apt install python3-pip
-pip3 install web3
-```
+![](etherscan_dispute_id.png?raw=true)
+
+
+# Windows 10 users :
+
 *I'm on windows OS i can't do stuff like this ! :*
 
-Yes you do, Windows10 has a fancy ubuntu emulator.
+Windows10 has a fancy ubuntu emulator.
+
 just check the windows store, type "Ubuntu" and select Ubuntu 18.04 LTS.
-you'll just need to follow the *You don't have web3 :* process then follow the regular setup steps.
 
 # what is Kleros ?
 

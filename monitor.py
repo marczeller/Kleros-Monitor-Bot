@@ -3,6 +3,7 @@
 import sys
 import os
 from kleros import Kleros, KlerosDispute, KlerosVote
+from collections import Counter
 
 node_url = os.environ["ETH_NODE_URL"]
 
@@ -13,6 +14,7 @@ print ("\nLast Dispute: %s \n" % kleros.last_dispute_id())
 
 case_Number = int(sys.argv[1])
 dispute = KlerosDispute(case_Number, node_url=node_url)
+appeal = len(dispute.rounds) - 1
 jurors = dispute.rounds[-1]
 votes = dispute.get_vote_counter()
 votesYes = votes[1]
@@ -51,6 +53,7 @@ print("Outcome: %s" % winner)
 
 if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
     print("Absolute majority was reached")
+
 #TO DO move this to Kleros.py
     ETH_distribution = ((losers * ETH_per_juror) / jurors) + ETH_per_juror
     PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
@@ -63,3 +66,41 @@ if case_closed_bool == True:
 
 else:
 	print("The case is still open, stay tuned for possible appeals")
+
+# TO DO move this to kleros.py
+
+def get_account_list():
+    juror_accounts = []
+    for i in range(jurors):
+        Votingdata = KlerosVote(case_Number, node_url=node_url, appeal = appeal, vote_id = i)
+        juror_accounts.append(Votingdata.account)
+    return juror_accounts
+
+raw_account_list = get_account_list()
+
+def get_sorted_list():
+    unique_jurors = dict(Counter(raw_account_list))
+    clean_list = []
+    for i in unique_jurors:
+        clean_list.append(i)
+    return clean_list
+
+unique_jurors = get_sorted_list()
+
+def get_total_PNK_stake_juror():
+    stake = []
+    for i in range(len(unique_jurors)):
+        x = dispute.get_juror_PNK_staked(account = unique_jurors[i], subcourtID = subcourt_id) / 10 ** 18
+#dumb as fuck, we need something that iterate every court id until they find the juror stake on the same dispute some jurors can have staked in different subcourts. 
+        if x == 0:
+            new_subcourt_id = subcourt_id + 1
+            x = dispute.get_juror_PNK_staked(account = unique_jurors[i], subcourtID = new_subcourt_id) / 10 ** 18
+        stake.append(x)
+    total = 0
+    for i in stake:
+        total = total + i
+    return total
+
+total_stake = get_total_PNK_stake_juror()
+
+print("Jurors of this case have staked a total of %.f PNK on Kleros" % (total_stake))
