@@ -1,8 +1,7 @@
 # Kleros-Monitor-Bot
 Simple Kleros case monitor bot
-<<<<<<< HEAD
+
 check kleros.py if you want to build stuff to customize your monitoring
-=======
 
 # pre-required before cloning
 ```
@@ -12,7 +11,6 @@ sudo apt install python3-pip
 pip3 install web3
 ```
 if you're on MacOS replace `apt` by `brew` and launch the bot with `python3 monitor.py CASENUMBER` after setup
->>>>>>> d024229f6ccfa4fa455bdce7ea75f8b6294d6530
 
 # Setup
 ```
