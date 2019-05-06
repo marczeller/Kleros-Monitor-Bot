@@ -113,6 +113,12 @@ class KlerosDispute(Kleros):
         self.juror_stake = self.connection.functions.stakeOf(account, subcourtID).call()
         return self.juror_stake
 
+    def last_dispute_id(self):
+       filter = self.connection.events.DisputeCreation.createFilter(fromBlock=7303699,
+           argument_filters={"topic0": "0x141dfc18aa6a56fc816f44f0e9e2f1ebc92b15ab167770e17db5b084c10ed995"} )
+       last_dispute_id = filter.get_all_entries()[-1]['args']['_disputeID']
+       return last_dispute_id
+
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, appeal, vote_id, kleros = None, node_url = None ):
         if kleros == None: Kleros.__init__(self, node_url)
