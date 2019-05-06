@@ -43,6 +43,3 @@ class TestKleros(object):
 
     def test_PNK_per_juror(self):
     	assert self.disputes[17].get_PNK_per_juror() == 40000000000000000000000
-
-    def test_dispute_count(self):
-        assert self.kleros.dispute_count == 2
