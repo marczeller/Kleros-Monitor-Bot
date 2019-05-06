@@ -16,7 +16,7 @@ if you're on MacOS replace `apt` by `brew` and launch the bot with `python3 moni
 ```
 git clone https://github.com/marczeller/Kleros-Monitor-Bot.git
 cd Kleros-Monitor-Bot/
-export ETH_NODE_URL="https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287"
+export ETH_NODE_URL="http://51.75.252.247:8545"
 ./monitor.py CASENUMBER
 ```
 Just input your [Kleros.io](https://kleros.io) case number and the bot will do the fun part.
