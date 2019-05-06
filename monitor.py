@@ -6,6 +6,9 @@ from kleros import Kleros, KlerosDispute, KlerosVote
 
 node_url = os.environ["ETH_NODE_URL"]
 
+kleros = Kleros(os.environ["ETH_NODE_URL"])
+print ("\nLast Dispute: %s \n" % kleros.last_dispute_id())
+
 # 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
 case_Number = int(sys.argv[1])
