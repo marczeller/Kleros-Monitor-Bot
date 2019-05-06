@@ -109,6 +109,10 @@ class KlerosDispute(Kleros):
         if self.dispute_status() is None: return None
         return self.current_ruling()
 
+    def get_juror_PNK_staked(self, account = 0, subcourtID = 0):
+        self.juror_stake = self.connection.functions.stakeOf(account, subcourtID).call()
+        return self.juror_stake
+
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, appeal, vote_id, kleros = None, node_url = None ):
         if kleros == None: Kleros.__init__(self, node_url)
