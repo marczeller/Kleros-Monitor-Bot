@@ -3,3 +3,4 @@ __pycache__
 *cover
 htmlcov
 .coverage
+kleros.db
