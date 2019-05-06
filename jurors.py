@@ -30,6 +30,7 @@ new_unique_jurors = defaultdict(list)
 {new_unique_jurors[v].append(k) for k, v in unique_jurors.items()}
 vote_counter = sum(unique_jurors.values())
 
+print(new_unique_jurors)
 print("A total of %s unique jurors have been picked on Kleros" % len(unique_jurors))
 print("A total of %s disputes have been arbitraged on Kleros" % total_dispute)
 print("Jurors have casted a total of %s votes" % (vote_counter))
