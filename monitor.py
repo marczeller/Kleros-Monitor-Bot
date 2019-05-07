@@ -8,7 +8,6 @@ from collections import Counter
 node_url = os.environ["ETH_NODE_URL"]
 
 kleros = Kleros(os.environ["ETH_NODE_URL"])
-print ("\nLast Dispute: %s \n" % kleros.last_dispute_id())
 
 # 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
@@ -91,7 +90,7 @@ def get_total_PNK_stake_juror():
     stake = []
     for i in range(len(unique_jurors)):
         x = dispute.get_juror_PNK_staked(account = unique_jurors[i], subcourtID = subcourt_id) / 10 ** 18
-#dumb as fuck, we need something that iterate every court id until they find the juror stake on the same dispute some jurors can have staked in different subcourts. 
+#dumb as fuck, we need something that iterate every court id until they find the juror stake on the same dispute some jurors can have staked in different subcourts.
         if x == 0:
             new_subcourt_id = subcourt_id + 1
             x = dispute.get_juror_PNK_staked(account = unique_jurors[i], subcourtID = new_subcourt_id) / 10 ** 18
