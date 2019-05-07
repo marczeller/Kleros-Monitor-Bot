@@ -8,7 +8,6 @@ from collections import Counter
 node_url = os.environ["ETH_NODE_URL"]
 
 kleros = Kleros(os.environ["ETH_NODE_URL"])
-print ("\nLast Dispute: %s \n" % kleros.last_dispute_id())
 
 # 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
@@ -38,28 +37,28 @@ vote_choices = {
 }
 winner = vote_choices[dispute.winning_choice()]
 
-print("%s jurors drawn on last round" % jurors)
-print("Each juror has staked %s PNK and might earn %.3f ETH on this case" % (PNK_per_juror, ETH_per_juror))
+print("%s jurors drawn on last round \n" % jurors)
+print("Each juror has staked %s PNK and might earn %.3f ETH on this case\n" % (PNK_per_juror, ETH_per_juror))
 print("Yes votes: %s (%.2f %%)" % (votesYes, votesYes_ratio))
 print("No votes : %s (%.2f %%)" % (votesNo, votesNo_ratio))
-print("Refused to arbitrate : %s (%.2f %%)" % (votesRefuse, votesRefuse_ratio))
+print("Refused to arbitrate : %s (%.2f %%)\n" % (votesRefuse, votesRefuse_ratio))
 
 if pending_votes > 0:
-    print("Pending votes: %s" % pending_votes)
+    print("Pending votes: %s \n" % pending_votes)
 else:
-    print("Eveyone voted.")
+    print("Eveyone voted. \n")
 
 print("Outcome: %s" % winner)
 
 if votesYes > jurors // 2 or votesNo > jurors // 2 or votesRefuse > jurors // 2:
-    print("Absolute majority was reached")
+    # print("Absolute majority was reached")
 
 #TO DO move this to Kleros.py
     ETH_distribution = ((losers * ETH_per_juror) / jurors) + ETH_per_juror
     PNK_distribution = (losers * PNK_per_juror) / (jurors - losers)
-    print("Majority jurors who voted %s receive %.f PNK and %.3f ETH each" % (winner, PNK_distribution, ETH_distribution))
+    print("Majority jurors who voted %s receive %.f PNK and %.3f ETH each \n" % (winner, PNK_distribution, ETH_distribution))
 else:
-    print("No earnings information available yet.")
+    print("No earnings information available yet.\n")
 
 if case_closed_bool == True:
     print("The case is closed, a total of %s PNK was at stake and %.3f ETH was distributed to jurors" % (PNK_at_stake, ETH_at_Stake))
