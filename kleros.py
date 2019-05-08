@@ -34,6 +34,11 @@ class Kleros:
             self.w3.eth.getBlock(event['blockNumber'])['timestamp']
         )
 
+    def event_creator(self, event):
+        txid = event['transactionHash']
+        tx = self.w3.eth.getTransaction(txid)
+        return tx['from']
+
     def dispute(self, dispute_id):
         return KlerosDispute(dispute_id, kleros = self)
 
@@ -58,7 +63,6 @@ class KlerosDispute(Kleros):
 
     def get_dispute_rounds(self):
         rounds_raw_data = self.contract.functions.getDispute(self.dispute_id).call()
-        print(rounds_raw_data)
         self.rounds = []
         for i in range(0, len(rounds_raw_data[0])):
             round_data = [
@@ -69,12 +73,18 @@ class KlerosDispute(Kleros):
             self.rounds.append(KlerosDisputeRound(self.dispute_id, i, round_data, kleros = self))
         self.last_round = self.rounds[-1]
 
+    # TODO FIXME For some reason, no filtering is done and all events are reteived instead
+    # of the one related to this Dispute.
     def get_creation_event(self):
-        filter = self.contract.events.DisputeCreation.createFilter(fromBlock=self.initial_block,
-            argument_filters={"topic0": self.dispute_creation_event_topic, "topic1": self.dispute_id} )
-        self.creation_event = filter.get_all_entries()[0]
-        self.address = self.creation_event['address']
-        self.txid = self.creation_event['transactionHash']
+        filter = self.contract.events.DisputeCreation.createFilter(
+            fromBlock=self.initial_block,
+            argument_filters={ "topic1": self.dispute_id } )
+        for entry in filter.get_all_entries():
+            if entry.args['_disputeID'] == self.dispute_id:
+                    self.creation_event = entry
+                    break
+        self.address = self.event_creator(self.creation_event)
+        self.txid = self.creation_event['transactionHash'].hex()
         self.creation_date = self.event_date(self.creation_event)
 
     def current_ruling(self):
