@@ -11,15 +11,21 @@ class Dispute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_of_choices = db.Column(db.Integer)
     subcourt_id = db.Column(db.Integer)
-    minimum_jurors = db.Column(db.Integer)
     status = db.Column(db.Integer)
     arbitrated_address = db.Column(db.String)
     current_ruling = db.Column(db.Integer)
     period = db.Column(db.Integer)
     last_period_change = db.Column(db.Integer)
+    ruled = db.Column(db.Boolean)
+    created_by = db.Column(db.String)
+    created_tx = db.Column(db.String)
+    created_date = db.Column(db.DateTime)
+
+class Appeal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    dispute_id = db.Column(db.Integer, db.ForeignKey("dispute.id"), nullable=False)
     draws_in_round = db.Column(db.Integer)
     commits_in_round = db.Column(db.Integer)
-    ruled = db.Column(db.Boolean)
     appeal_start = db.Column(db.Integer)
     appeal_end = db.Column(db.Integer)
     vote_lengths = db.Column(db.Integer)
@@ -28,10 +34,6 @@ class Dispute(db.Model):
     votes_in_each_round = db.Column(db.Integer)
     repartitions_in_each_round = db.Column(db.Integer)
     penalties_in_each_round = db.Column(db.Integer)
-
-class Appeal(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    dispute_id = db.Column(db.Integer, db.ForeignKey("dispute.id"), nullable=False)
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
