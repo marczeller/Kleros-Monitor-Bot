@@ -8,7 +8,7 @@ class TestKleros(object):
     kleros = Kleros(os.environ["ETH_NODE_URL"])
     disputes = {}
     for i in (16, 17, 42, 45, 52, 60):
-        disputes[i] = KlerosDispute(i, contract = kleros.contract)
+        disputes[i] = kleros.dispute(i)
 
     def test_connection(self):
         assert type(self.kleros) is Kleros
