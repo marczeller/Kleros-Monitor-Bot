@@ -10,7 +10,7 @@ dispute_id = 0
 db.drop_all()
 db.create_all()
 
-for dispute_id in range(0,10):
+while(True):
     try:
         kleros_dispute = kleros.dispute(dispute_id)
     except ValueError:
@@ -32,6 +32,6 @@ for dispute_id in range(0,10):
     db.session.add(d)
 
     appeal_id = 0
-    #dispute_id += 1
+    dispute_id += 1
 
 db.session.commit()

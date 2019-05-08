@@ -1,16 +1,24 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Dispute {{ output['dispute_id']}}{% endblock %}</h1>
+  <h1>{% block title %}Disputes{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   <table border=1>
-    <tr><td>Jurors</td><td align=right>{{ output['juror_count'] }}</td></tr>
-    <tr><td>Yes</td><td align=right>{{ output['yes'] }}</td></tr>
-    <tr><td>No</td><td align=right>{{ output['no'] }}</td></tr>
-    <tr><td>Pending</td><td align=right>{{ output['pending'] }}</td></tr>
-    <tr><td>Decided</td><td align=right>{{ output['decided'] }}</td></tr>
-    <tr><td>Final</td><td align=right>{{ output['final'] }}</td></tr>
+    <tr><td>ID</td><td>SubcourtID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
+    {% for dispute in disputes %}
+        <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
+          <td>{{ dispute.id }}</td>
+          <td>{{dispute.subcourt_id}}</td>
+          <td>{{dispute.current_ruling}}</td>
+          <td>{{'Yes' if dispute.ruled else 'No'}}</td>
+          <td>
+            <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
+            <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>&nbsp;
+          </td>
+          <td>{{dispute.created_date}}</td>
+        </tr>
+    {% endfor %}
   </table>
 {% endblock %}
