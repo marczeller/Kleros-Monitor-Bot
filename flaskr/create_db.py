@@ -21,7 +21,10 @@ for dispute_id in range(0,10):
         id = dispute_id,
         created_by = kleros_dispute.address,
         created_date = kleros_dispute.creation_date,
-        created_tx = kleros_dispute.txid
+        created_tx = kleros_dispute.txid,
+        ruled = kleros_dispute.ruled,
+        subcourt_id = kleros_dispute.subcourt_id,
+        current_ruling = kleros_dispute.current_ruling()
 
 #        subcourt_id = kleros_dispute.sub_court_id,
 #        tokens_at_stake_per_juror = kleros_dispute.get_PNK_at_stake() / 10 ** 18
