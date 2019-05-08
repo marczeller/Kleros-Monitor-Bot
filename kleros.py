@@ -52,7 +52,7 @@ class KlerosDispute(Kleros):
 
     def get_dispute_data(self):
         raw_dispute = self.contract.functions.disputes(self.dispute_id).call()
-        self.sub_court_id = int(raw_dispute[0])
+        self.subcourt_id = int(raw_dispute[0])
         self.arbitrated = raw_dispute[1]
         self.number_of_choices = int(raw_dispute[2])
         self.period = int(raw_dispute[3])
