@@ -17,7 +17,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
-@app.route('/', methods=['GET'])
+@app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.all()
 
