@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+import sys
+sys.path.append('lib', 'db')
+
 import os
 from kleros_db_schema import db, Dispute
 from kleros import Kleros, KlerosDispute, KlerosVote

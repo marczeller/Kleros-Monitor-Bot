@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append('lib')
+
 import pytest
 import os
 from web3 import Web3, HTTPProvider

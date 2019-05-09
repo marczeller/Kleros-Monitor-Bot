@@ -4,7 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/kleros.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kleros.db'
 db = SQLAlchemy(app)
 
 class Dispute(db.Model):

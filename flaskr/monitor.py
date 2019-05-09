@@ -1,8 +1,13 @@
 #!/usr/bin/python3
 
+import sys
+sys.path.extend(('lib', 'db'))
+
 from kleros_db_schema import db, Dispute
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/kleros.db'
