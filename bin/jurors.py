@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 import sys
+sys.path.append('lib', 'db')
+
 import os
 from kleros import Kleros, KlerosDispute, KlerosVote
 from collections import Counter, defaultdict
