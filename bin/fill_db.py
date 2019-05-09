@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import sys
-sys.path.extend('lib', 'db')
+sys.path.extend(('lib', 'db'))
 
 import os
 from kleros_db_schema import db, Dispute
