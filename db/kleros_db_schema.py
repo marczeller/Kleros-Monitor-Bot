@@ -21,8 +21,9 @@ class Dispute(db.Model):
     created_tx = db.Column(db.String)
     created_date = db.Column(db.DateTime)
 
-class Appeal(db.Model):
+class Round(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    round_num = db.Column(db.Integer)
     dispute_id = db.Column(db.Integer, db.ForeignKey("dispute.id"), nullable=False)
     draws_in_round = db.Column(db.Integer)
     commits_in_round = db.Column(db.Integer)
@@ -37,7 +38,13 @@ class Appeal(db.Model):
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    appeal_id = db.Column(db.Integer, db.ForeignKey("appeal.id"), nullable=False)
+    round_id = db.Column(db.Integer, db.ForeignKey("round.id"), nullable=False)
+    account = db.Column(db.Integer)
+    commit = db.Column(db.Integer)
+    choice = db.Column(db.Integer)
+    vote = db.Column(db.Integer)
+
+
 
 class Jury(db.Model):
     id = db.Column(db.Integer, primary_key=True)

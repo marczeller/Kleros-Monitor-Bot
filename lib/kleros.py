@@ -117,7 +117,7 @@ class KlerosDisputeRound(Kleros):
     def get_votes(self):
         self.votes = []
         for vote_id in range(self.votes_length):
-            self.votes.append(KlerosVote(self.dispute_id, appeal, vote_id, contract = self.contract))
+            self.votes.append(KlerosVote(self.dispute_id, self.round_id, vote_id, kleros = self))
         return self.votes
 
     def get_vote_counter(self):
@@ -151,13 +151,13 @@ class KlerosDisputeRound(Kleros):
 
 
 class KlerosVote(Kleros):
-    def __init__(self, dispute_id, appeal, vote_id, kleros = None, node_url = None ):
+    def __init__(self, dispute_id, round, vote_id, kleros = None, node_url = None ):
         Kleros.__init__(self, node_url, kleros = kleros)
-        self.data = self.get_vote(dispute_id, appeal, vote_id)
+        self.data = self.get_vote(dispute_id, round, vote_id)
 
     def get_vote(self, case_number, appeal = 0, vote_id = 0):
         raw_vote = self.contract.functions.getVote(case_number, appeal, vote_id).call()
         self.account = raw_vote[0]
-        self.commit = raw_vote[1]
+        self.commit = raw_vote[1].hex()
         self.choice = int(raw_vote[2])
         self.vote = bool(raw_vote[3])
