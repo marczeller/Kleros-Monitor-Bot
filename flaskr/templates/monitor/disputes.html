@@ -9,7 +9,7 @@
     <tr><td>ID</td><td>SubcourtID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
     {% for dispute in disputes %}
         <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
-          <td>{{ dispute.id }}</td>
+          <td><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
           <td>{{dispute.subcourt_id}}</td>
           <td>{{dispute.current_ruling}}</td>
           <td>{{'Yes' if dispute.ruled else 'No'}}</td>

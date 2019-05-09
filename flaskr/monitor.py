@@ -22,3 +22,9 @@ def disputes():
     disputes = Dispute.query.all()
 
     return render_template('monitor/disputes.html', disputes=disputes)
+
+@app.route('/dispute/<int:id>', methods=['GET'])
+def dispute(id):
+    dispute = Dispute.query.get(id)
+
+    return render_template('monitor/dispute.html', dispute=dispute)
