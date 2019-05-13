@@ -30,6 +30,19 @@ def dispute(id):
     votes = []
     for r in rounds:
         r.votes = Vote.query.filter_by(round_id = r.id).all()
+        for v in r.votes:
+            if v.choice == 2: v.vote_str = 'Yes'
+            elif v.choice == 1: v.vote_str = 'No'
+            else: v.vote_str = 'Pending'
+
+            if r.majority_reached:
+                if v.choice == 0: v.color = '#F7DC6F'
+                elif v.choice == r.winning_choice: v.color = '#27AE60'
+                else: v.color = '#E74C3C'
+            else:
+                if v.choice == 0: v.color = '#FCF3CF'
+                elif v.choice == r.winning_choice: v.color = '#D1F2EB'
+                else: v.color = '#F5B7B1'
 
     x = len(rounds)
     return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x)

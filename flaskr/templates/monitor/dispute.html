@@ -18,7 +18,7 @@
   <p><table border=1>
     <tr><td>Round {{r.round_num}}</td></tr>
     {% for v in r.votes %}
-      <tr><td>{{v.account}}</td><td>{{ v.choice}}</td></tr>
+      <tr bgcolor={{v.color}}><td><a href="{{v.account}}">{{v.account}}</a></td><td>{{ v.vote_str }}</td></tr>
     {% endfor %}
   </table></p>
   {% endfor %}

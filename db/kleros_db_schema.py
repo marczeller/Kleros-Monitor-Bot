@@ -35,6 +35,8 @@ class Round(db.Model):
     votes_in_each_round = db.Column(db.Integer)
     repartitions_in_each_round = db.Column(db.Integer)
     penalties_in_each_round = db.Column(db.Integer)
+    winning_choice = db.Column(db.Integer)
+    majority_reached = db.Column(db.Boolean)
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -149,6 +149,20 @@ class KlerosDisputeRound(Kleros):
     def get_ETH_per_juror(self):
         return self.total_fees_for_jurors / self.votes_length
 
+    def get_winning_choice(self):
+        majority = self.votes_length // 2
+        votes = self.get_votes()
+        yes = 0
+        no = 0
+        for v in votes:
+            if v.choice == 1: yes+=1
+            if v.choice == 2: no +=1
+
+        self.winning_choice = 0
+        if yes > no: self.winning_choice = 1
+        if yes < no: self.winning_choice = 2
+
+        self.majority_reached = (yes >= majority or no >= majority)
 
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, round, vote_id, kleros = None, node_url = None ):

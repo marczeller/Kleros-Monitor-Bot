@@ -36,6 +36,7 @@ while(True):
     db.session.add(dispute)
 
     for r in d.rounds:
+        r.get_winning_choice()
         round = Round(
             dispute_id = dispute_id,
             round_num = r.round_id,
@@ -44,7 +45,9 @@ while(True):
             total_fees_for_jurors = r.total_fees_for_jurors,
             commits_in_round = r.votes_count,
             repartitions_in_each_round = r.repartitions,
-            penalties_in_each_round = r.penalties
+            penalties_in_each_round = r.penalties,
+            winning_choice = r.winning_choice,
+            majority_reached = r.majority_reached
         )
         db.session.add(round)
         db.session.commit()
