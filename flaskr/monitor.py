@@ -26,8 +26,13 @@ def disputes():
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):
     dispute = Dispute.query.get(id)
+    rounds = Round.query.filter_by(dispute_id = id).all()
+    votes = []
+    for r in rounds:
+        r.votes = Vote.query.filter_by(round_id = r.id).all()
 
-    return render_template('monitor/dispute.html', dispute=dispute)
+    x = len(rounds)
+    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x)
 
 
 # d = Dispute.query.get(17)

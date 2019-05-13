@@ -1,23 +1,22 @@
 #!/usr/bin/python3
-
+import pprint
 import sys
-sys.path.append('lib', 'db')
+sys.path.extend(('lib', 'db'))
+
+pp = pprint.PrettyPrinter(indent=4)
 
 import os
 from kleros import Kleros, KlerosDispute, KlerosVote
 from collections import Counter
 
 
+#{"name":"_disputeID","type":"uint256"},{"name":"_voteIDs","type":"uint256[]"},{"name":"_choice","type":"uint256"},{"name":"_salt","type":"uint256"}],"name":"castVote
+
+#castVote(uint256,uint256[],uint256,uint256)
+
 node_url = os.environ["ETH_NODE_URL"]
 
 kleros = Kleros(os.environ["ETH_NODE_URL"])
-
-dispute = KlerosDispute(42, kleros = kleros)
-dispute.get_creation_event()
-print("Creation event for 42: %s - %s" % (dispute.creation_event, dispute.creation_date))
-
-
-# 'https://mainnet.infura.io/v3/31c378f901bf46c08674e655e6640287'
 
 case_Number = int(sys.argv[1])
 dispute = KlerosDispute(case_Number, node_url=node_url)

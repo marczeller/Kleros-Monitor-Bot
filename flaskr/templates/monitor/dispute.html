@@ -13,4 +13,14 @@
     <tr><td>Decided</td><td align=right>{{ dispute['decided'] }}</td></tr>
     <tr><td>Final</td><td align=right>{{ dispute['final'] }}</td></tr>
   </table>
+{{x}}
+  {% for r in rounds: %}
+  <p><table border=1>
+    <tr><td>Round {{r.round_num}}</td></tr>
+    {% for v in r.votes %}
+      <tr><td>{{v.account}}</td><td>{{ v.choice}}</td></tr>
+    {% endfor %}
+  </table></p>
+  {% endfor %}
+
 {% endblock %}
