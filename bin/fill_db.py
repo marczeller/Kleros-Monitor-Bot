@@ -20,6 +20,7 @@ while(True):
         break
     print("Creating %s" % dispute_id)
     d.get_creation_event()
+
     dispute = Dispute(
         id = dispute_id,
         created_by = d.address,

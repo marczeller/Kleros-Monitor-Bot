@@ -43,7 +43,7 @@ class Vote(db.Model):
     commit = db.Column(db.Integer)
     choice = db.Column(db.Integer)
     vote = db.Column(db.Integer)
-
+    date = db.Column(db.DateTime)
 
 
 class Jury(db.Model):

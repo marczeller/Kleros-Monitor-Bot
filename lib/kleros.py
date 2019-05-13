@@ -10,7 +10,7 @@ class Kleros:
 
     def __init__(self, node_url, kleros = None):
         if kleros == None:
-            self.w3 = Web3(HTTPProvider(node_url)) #TODO Exceptions, errors
+            self.w3 = Web3(HTTPProvider(node_url, request_kwargs={'timeout': 60})) #TODO Exceptions, errors
             self.contract = self.w3.eth.contract(
                 address = Web3.toChecksumAddress(self.kleros_address),
                 abi = self.abi
