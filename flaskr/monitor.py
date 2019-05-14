@@ -31,8 +31,8 @@ def dispute(id):
     for r in rounds:
         r.votes = Vote.query.filter_by(round_id = r.id).all()
         for v in r.votes:
-            if v.choice == 2: v.vote_str = 'Yes'
-            elif v.choice == 1: v.vote_str = 'No'
+            if v.choice == 1: v.vote_str = 'Yes'
+            elif v.choice == 2: v.vote_str = 'No'
             else: v.vote_str = 'Pending'
 
             if r.majority_reached:
