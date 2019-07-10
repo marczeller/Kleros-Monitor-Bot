@@ -7,6 +7,11 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kleros.db'
 db = SQLAlchemy(app)
 
+class Kleroscan(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    option = db.Column(db.String)
+    value = db.Column(db.String)
+
 class Dispute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_of_choices = db.Column(db.Integer)

@@ -164,6 +164,7 @@ class KlerosDisputeRound(Kleros):
 
         self.majority_reached = (yes >= majority or no >= majority)
 
+
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, round, vote_id, kleros = None, node_url = None ):
         Kleros.__init__(self, node_url, kleros = kleros)
