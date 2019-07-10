@@ -1,23 +1,47 @@
 #!/usr/bin/python3
 
 import sys
+from datetime import datetime
 sys.path.extend(('lib', 'db'))
 
 import os
-from kleros_db_schema import db, Dispute, Round, Vote
+from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan
 from kleros import Kleros, KlerosDispute, KlerosVote
 
 kleros = Kleros(os.environ["ETH_NODE_URL"])
+
+#db.drop_all()
+#db.create_all()
+
+def delete_dispute(dispute):
+    rounds = Round.query.filter(Round.dispute_id == dispute.id)
+    for r in rounds:
+        votes = Vote.query.filter(Vote.round_id == r.id)
+        for v in votes:
+            print("Deleting vote %s" % v.id)
+            db.session.delete(v)
+        print("Deleting round %s" % r.id)
+        db.session.delete(r)
+    print("Deleting Dispute %s" % dispute.id)
+    db.session.delete(dispute)
+    db.session.commit()
+
 dispute_id = 0
 
-db.drop_all()
-db.create_all()
-
 while(True):
+
+    dispute = Dispute.query.get(dispute_id)
+    if dispute != None:
+        if dispute.ruled:
+            dispute_id += 1
+            continue
+        else:
+            delete_dispute(dispute)
     try:
         d = kleros.dispute(dispute_id)
     except ValueError:
         break
+
     print("Creating %s" % dispute_id)
     d.get_creation_event()
 
@@ -33,6 +57,7 @@ while(True):
 #        subcourt_id = kleros_dispute.sub_court_id,
 #        tokens_at_stake_per_juror = kleros_dispute.get_PNK_at_stake() / 10 ** 18
     )
+
     db.session.add(dispute)
 
     for r in d.rounds:
@@ -69,3 +94,8 @@ while(True):
 
     appeal_id = 0
     dispute_id += 1
+
+kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
+kleroscan.value = datetime.utcnow()
+
+db.session.commit()
