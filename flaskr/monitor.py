@@ -3,11 +3,9 @@
 import sys
 sys.path.extend(('lib', 'db'))
 
-from kleros_db_schema import db, Dispute, Round, Vote
+from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
-
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kleros.db'
@@ -21,9 +19,7 @@ from flask import (
 def disputes():
     disputes = Dispute.query.all()
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
-    last_updated = kleroscan.value
-
-    return render_template('monitor/disputes.html', disputes=disputes)
+    return render_template('monitor/disputes.html', disputes=disputes, last_updated=kleroscan.value)
 
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):
@@ -48,8 +44,7 @@ def dispute(id):
 
     x = len(rounds)
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
-    last_updated = kleroscan.value
-    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x)
+    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=kleroscan.value)
 
 
 # d = Dispute.query.get(17)

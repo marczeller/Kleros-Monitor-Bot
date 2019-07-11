@@ -13,7 +13,7 @@
     <tr><td>Decided</td><td align=right>{{ dispute['decided'] }}</td></tr>
     <tr><td>Final</td><td align=right>{{ dispute['final'] }}</td></tr>
   </table>
-{{x}}
+
   {% for r in rounds: %}
   <p><table border=1>
     <tr><td>Round {{r.round_num}} - {{ 'Majority reached' if r.majority_reached else 'No majority' }}</td></tr>
@@ -23,6 +23,6 @@
   </table></p>
   {% endfor %}
 
-<div align=right>Last updated: {{last_updated}}</div>
+  <div align=right>Last updated: {{last_updated}}</div>
 
 {% endblock %}
