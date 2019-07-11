@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Court {{court.name}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <table border=1>
+    <tr><td>ID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
+    {% for dispute in disputes %}
+        <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
+          <td><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
+          <td>{{dispute.current_ruling}}</td>
+          <td>{{'Yes' if dispute.ruled else 'No'}}</td>
+          <td>
+            <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
+            <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>&nbsp;
+          </td>
+          <td>{{dispute.created_date}}</td>
+        </tr>
+    {% endfor %}
+  </table>
+
+  <div align=right>Last updated: {{last_updated}}</div>
+
+{% endblock %}
