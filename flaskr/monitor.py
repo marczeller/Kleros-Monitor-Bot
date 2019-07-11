@@ -20,6 +20,9 @@ from flask import (
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.all()
+    kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
+    last_updated = kleroscan.value
+
 
     return render_template('monitor/disputes.html', disputes=disputes)
 
@@ -45,6 +48,8 @@ def dispute(id):
                 else: v.color = '#F5B7B1'
 
     x = len(rounds)
+    kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
+    last_updated = kleroscan.value
     return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x)
 
 
