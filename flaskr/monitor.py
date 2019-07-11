@@ -20,7 +20,7 @@ from flask import (
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.all()
-
+    
     return render_template('monitor/disputes.html', disputes=disputes)
 
 @app.route('/dispute/<int:id>', methods=['GET'])

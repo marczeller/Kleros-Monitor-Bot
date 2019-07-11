@@ -49,6 +49,17 @@ class KlerosDispute(Kleros):
         self.dispute_id = dispute_id
         self.get_dispute_data()
         self.get_dispute_rounds()
+        self.set_court_name()
+
+    def set_court_name(self):
+        if self.subcourt_id == 2: 
+            self.court_name = 'TCR court' 
+        elif self.subcourt_id == 3: 
+            self.court_name = 'Badge court'
+        elif self.subcourt_id == 0:
+            self.court_name = 'General Court' 
+        else: 
+            self.court_name = "Court #%" % subcourt_id
 
     def get_dispute_data(self):
         raw_dispute = self.contract.functions.disputes(self.dispute_id).call()
@@ -59,7 +70,7 @@ class KlerosDispute(Kleros):
         self.last_period_change = int(raw_dispute[4])
         self.draws_in_round = int(raw_dispute[5])
         self.commits_in_round = int(raw_dispute[6])
-        self.ruled = bool(raw_dispute[7])
+        self.ruled = bool(raw_dispute[7])    
 
     def get_dispute_rounds(self):
         rounds_raw_data = self.contract.functions.getDispute(self.dispute_id).call()
@@ -163,6 +174,8 @@ class KlerosDisputeRound(Kleros):
         if yes < no: self.winning_choice = 2
 
         self.majority_reached = (yes >= majority or no >= majority)
+        self.yes_votes = yes
+        self.no_votes = no
 
 class KlerosVote(Kleros):
     def __init__(self, dispute_id, round, vote_id, kleros = None, node_url = None ):
