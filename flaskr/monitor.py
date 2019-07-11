@@ -3,7 +3,7 @@
 import sys
 sys.path.extend(('lib', 'db'))
 
-from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan
+from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan, Court
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -18,6 +18,17 @@ from flask import (
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.all()
+    print(disputes)
+    for dispute in disputes:
+        court = Court.query.get(dispute.subcourt_id)
+        if court != None:
+            dispute.court_name = court.name
+        else:
+            dispute.court_name = "Court #%" % dispute.subcourt_id
+
+    print(dispute.id)
+    print(dispute.court_name)
+
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
     return render_template('monitor/disputes.html', disputes=disputes, last_updated=kleroscan.value)
 

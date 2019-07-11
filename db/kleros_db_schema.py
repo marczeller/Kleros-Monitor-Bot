@@ -12,6 +12,10 @@ class Kleroscan(db.Model):
     option = db.Column(db.String)
     value = db.Column(db.String)
 
+class Court(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
 class Dispute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_of_choices = db.Column(db.Integer)
