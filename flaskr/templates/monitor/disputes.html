@@ -10,7 +10,7 @@
     {% for dispute in disputes %}
         <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
           <td><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
-          <td>{{dispute.court_name}}</td>
+          <td><a href="{{ url_for('court', id = dispute.subcourt_id)}}">{{dispute.court_name}}</td>
           <td>{{dispute.current_ruling}}</td>
           <td>{{'Yes' if dispute.ruled else 'No'}}</td>
           <td>
@@ -25,3 +25,4 @@
   <div align=right>Last updated: {{last_updated}}</div>
 
 {% endblock %}
+<
