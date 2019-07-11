@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import getopt
 import sys
 from datetime import datetime
 sys.path.extend(('lib', 'db'))
@@ -10,8 +11,22 @@ from kleros import Kleros, KlerosDispute, KlerosVote
 
 kleros = Kleros(os.environ["ETH_NODE_URL"])
 
-#db.drop_all()
-#db.create_all()
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "r", ["rebuild"])
+except getopt.GetoptError as err:
+    print(err) # will print something like "option -a not recognized"
+    usage()
+    sys.exit(2)
+
+def rebuild_db():
+    db.drop_all()
+    db.create_all()
+
+
+for opt, arg in opts:
+    if opt in ('-r', '--rebuild'):
+        rebuild_db()
+
 
 def delete_dispute(dispute):
     rounds = Round.query.filter(Round.dispute_id == dispute.id)
@@ -95,7 +110,15 @@ while(True):
     appeal_id = 0
     dispute_id += 1
 
-kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
-kleroscan.value = datetime.utcnow()
+kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated')
+for k in kleroscan:
+    db.session.delete(k)
+    db.session.commit()
 
+kleroscan = Kleroscan(
+    option = 'last_updated',
+    value = datetime.utcnow()
+)
+
+db.session.add(kleroscan)
 db.session.commit()
