@@ -22,6 +22,7 @@ def court(id):
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
     return render_template('monitor/court.html', court=court, disputes=disputes, last_updated=kleroscan.value)
 
+@app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.all()
