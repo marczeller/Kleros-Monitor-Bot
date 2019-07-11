@@ -15,19 +15,22 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
+@app.route('/court/<int:id>', methods=['GET'])
+def court(id):
+    court = Court.query.get(id)
+    disputes = Dispute.query.filter(Dispute.subcourt_id == court.id)
+    kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
+    return render_template('monitor/court.html', court=court, disputes=disputes, last_updated=kleroscan.value)
+
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.all()
-    print(disputes)
     for dispute in disputes:
         court = Court.query.get(dispute.subcourt_id)
         if court != None:
             dispute.court_name = court.name
         else:
             dispute.court_name = "Court #%" % dispute.subcourt_id
-
-    print(dispute.id)
-    print(dispute.court_name)
 
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
     return render_template('monitor/disputes.html', disputes=disputes, last_updated=kleroscan.value)
