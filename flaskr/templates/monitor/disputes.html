@@ -6,11 +6,11 @@
 
 {% block content %}
   <table border=1>
-    <tr><td>ID</td><td>SubcourtID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
+    <tr><td>ID</td><td>Court</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
     {% for dispute in disputes %}
         <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
           <td><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
-          <td>{{dispute.subcourt_id}}</td>
+          <td>{{dispute.court_name}}</td>
           <td>{{dispute.current_ruling}}</td>
           <td>{{'Yes' if dispute.ruled else 'No'}}</td>
           <td>

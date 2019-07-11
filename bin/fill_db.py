@@ -6,7 +6,7 @@ from datetime import datetime
 sys.path.extend(('lib', 'db'))
 
 import os
-from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan
+from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan, Court
 from kleros import Kleros, KlerosDispute, KlerosVote
 
 kleros = Kleros(os.environ["ETH_NODE_URL"])
@@ -21,12 +21,19 @@ except getopt.GetoptError as err:
 def rebuild_db():
     db.drop_all()
     db.create_all()
-
+    court = Court( id = 0, name = "General Court")
+    db.session.add(court)
+    court = Court(id = 2, name = "TCR Court")
+    db.session.add(court)
+    court = Court(id = 3, name = "Ethfinex Court")
+    db.session.add(court)
+    court = Court(id = 4, name = "ERC20 Court")
+    db.session.add(court)
+    db.session.commit()
 
 for opt, arg in opts:
     if opt in ('-r', '--rebuild'):
         rebuild_db()
-
 
 def delete_dispute(dispute):
     rounds = Round.query.filter(Round.dispute_id == dispute.id)
