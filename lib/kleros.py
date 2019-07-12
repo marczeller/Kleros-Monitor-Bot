@@ -96,6 +96,12 @@ class KlerosDispute(Kleros):
         self.current_status = self.contract.functions.disputeStatus(self.dispute_id).call()
         return self.current_status
 
+    def dispute_is_open(self):
+        return self.current_status == 0 or self.current_status == 1
+            
+    def dispute_is_closed(self):
+        return self.current_status == 2
+
     def winning_choice(self):
         if self.dispute_status() is None: return None
         return self.current_ruling()
