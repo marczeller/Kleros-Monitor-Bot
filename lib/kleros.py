@@ -25,13 +25,35 @@ class Kleros:
         self.last_dispute_id = dispute_events[-1]['args']['_disputeID']
         return self.last_dispute_id
 
+    #TODO Add this to DB
     def get_staking_jurors_list(self):
         self.jurors_staking_events = set()
         self.get_staking_events()
         for staking_event in self.staking_events:
             self.jurors_staking_events.add(staking_event['args']['_address'])
+        self.jurors_list = list(self.jurors_staking_events)
+            
+        return self.jurors_list    
 
-        return list(self.jurors_staking_events)
+    #TODO add this to DB
+    def get_staking_jurors_len(self):
+    
+        self.jurors_len = len(self.jurors_list)
+        return self.jurors_len
+
+    #FIXME IM STUPID AND DO NOT USE ME IM A INFINITE LOOP
+    def get_juror_stakeOf(self):
+        self.staking_dict = []
+        self.court_counter = 0
+        while self.court_counter < 1:
+
+            for i in range(0,len(self.jurors_list)):
+                self.stake = self.contract.functions.stakeOf(self.jurors_list[i], self.court_counter).call()
+                self.staking_dict.append(self.stake)
+                self.court_counter += 1
+                print("done")
+
+        return self.staking_dict
 
     def get_dispute_events(self):
         filter = self.contract.events.DisputeCreation.createFilter(fromBlock=self.initial_block,
