@@ -5,30 +5,53 @@
 {% endblock %}
 
 {% block content %}
-  <table border=1>
-    <tr><td>ID</td><td>Court</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
-    {% for dispute in disputes %}
-        <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
-          <td><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
-          <td><a href="{{ url_for('court', id = dispute.subcourt_id)}}">{{dispute.court_name}}</td>
-          <td>{{dispute.current_ruling}}</td>
-          <td>{{'Yes' if dispute.ruled else 'No'}}</td>
-          <td>
-            <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
-            <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>&nbsp;
-          </td>
-          <td>{{dispute.created_date}}</td>
+
+<div class="table100 ver5 m-b-110">
+  <div class="table100-head">
+    <table>
+      <thead>
+        <tr class="row100 head">
+          <th class="cell100 column5">ID</th>
+          <th class="cell100 column1">Court</th>
+          <th class="cell100 column5">Ruling</th>
+          <th class="cell100 column5">Final</th>
+          <th class="cell100 column1">Creator</th>
+          <th class="cell100 column1">Date</th>
         </tr>
-    {% endfor %}
-  </table>
-  <h1>Kleros Scan Explainer</h1>
-  <h4>ID : Case number, you can check the corresponding disputing by navigating to court.kleros.io/cases/CASE_ID</h4>
-  <h4>Court : Corresponding Kleros Court, you can click on any court and you'll get a list of all corresponding disputes</h4>
-  <h4>Ruling : 0 means "Refuse to arbitrate" 1 means "Yes" 2 means "No"</h4>
-  <h4>Final : indication of dispute resolution status, "Yes" means case closed, "No" means pending resolution or possibility of appeal</h4>
-  <h4>Creator : Public adress and transaction link of the dispute creation</h4>
-  <h4>creation Date : Timestamp of the dispute creation</h4> 
-  <h4>Colors : Green mean case closed, yellow mean ongoing dispute </h4>
+      </thead>
+    </table>
+  </div>
+  <div class="table100-body js-pscroll">
+    <table>
+      <tbody>
+        {% for dispute in disputes %}
+        <tr class="row100 body">
+          <td class="cell100 column5"><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
+          <td class="cell100 column1"><a href="{{ url_for('court', id = dispute.subcourt_id)}}">{{dispute.court_name}}</td>
+          <td class="cell100 column5">{{dispute.current_ruling}}</td>
+          <td class="cell100 column5">{{'Yes' if dispute.ruled else 'No'}}</td>
+          <td class="cell100 column1">
+            <a href="https://etherscan.io/address/{{dispute.created_by}}...">{{dispute.created_by[:12]}}...</a>&nbsp;
+            <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>
+          </td>
+          <td class="cell100 column1">{{dispute.created_date}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+  <h3>Kleros Scan</h3>
+  <p>ID : Case number, you can check the corresponding disputing by navigating to court.kleros.io/cases/CASE_ID</p>
+  <p>Court : Corresponding Kleros Court, you can click on any court and you'll get a list of all corresponding disputes</p>
+  <p>Ruling : 0 means "Refuse to arbitrate" 1 means "Yes" 2 means "No"</p>
+  <p>Final : indication of dispute resolution status, "Yes" means case closed, "No" means pending resolution or possibility of appeal</p>
+  <p>Creator : Public adress and transaction link of the dispute creation</p>
+  <p>creation Date : Timestamp of the dispute creation</p>
+  <p>Colors : Green mean case closed, yellow mean ongoing dispute </p>
   <div align=right>Last updated: {{last_updated}} UTC</div>
 
 {% endblock %}
