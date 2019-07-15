@@ -31,7 +31,7 @@
           <td class="cell100 column5">{{dispute.current_ruling}}</td>
           <td class="cell100 column5">{{'Yes' if dispute.ruled else 'No'}}</td>
           <td class="cell100 column1">
-            <a href="https://etherscan.io/address/{{dispute.created_by}}...">{{dispute.created_by[:12]}}...</a>&nbsp;
+            <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
             <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>
           </td>
           <td class="cell100 column1">{{dispute.created_date}}</td>
