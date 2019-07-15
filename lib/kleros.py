@@ -7,6 +7,7 @@ class Kleros:
     kleros_address = '0x988b3A538b618C7A603e1c11Ab82Cd16dbE28069'
     initial_block = 7303699
     dispute_creation_event_topic = "0x141dfc18aa6a56fc816f44f0e9e2f1ebc92b15ab167770e17db5b084c10ed995"
+    staking_event_topic = "0x8f753321c98641397daaca5e8abf8881fff1fd7a7bc229924a012e2cb61763d5"
 
     def __init__(self, node_url, kleros = None):
         if kleros == None:
@@ -24,10 +25,23 @@ class Kleros:
         self.last_dispute_id = dispute_events[-1]['args']['_disputeID']
         return self.last_dispute_id
 
+    def get_staking_jurors_list(self):
+        self.jurors_staking_events = set()
+        self.get_staking_events()
+        for staking_event in self.staking_events:
+            self.jurors_staking_events.add(staking_event['args']['_address'])
+
+        return list(self.jurors_staking_events)
+
     def get_dispute_events(self):
         filter = self.contract.events.DisputeCreation.createFilter(fromBlock=self.initial_block,
             argument_filters={"topic0": self.dispute_creation_event_topic} )
         self.dispute_events = filter.get_all_entries()
+
+    def get_staking_events(self):
+        filter = self.contract.events.StakeSet.createFilter(fromBlock=self.initial_block,
+            argument_filters={"topic0": self.staking_event_topic} )
+        self.staking_events = filter.get_all_entries()
 
     def event_date(self, event):
         return datetime.utcfromtimestamp(
@@ -91,10 +105,15 @@ class KlerosDispute(Kleros):
         self.ruling = self.contract.functions.currentRuling(self.dispute_id).call()
         return self.ruling
 
-    # TODO Create methods: is_closed() is_open() and other statuses that return bool
     def dispute_status(self):
         self.current_status = self.contract.functions.disputeStatus(self.dispute_id).call()
         return self.current_status
+
+    def dispute_is_open(self):
+        return self.current_status == 0 or self.current_status == 1
+
+    def dispute_is_closed(self):
+        return self.current_status == 2
 
     def winning_choice(self):
         if self.dispute_status() is None: return None
@@ -176,6 +195,3 @@ class KlerosVote(Kleros):
         self.commit = raw_vote[1].hex()
         self.choice = int(raw_vote[2])
         self.vote = bool(raw_vote[3])
-
-class KlerosJuror(Kleros):
-    
