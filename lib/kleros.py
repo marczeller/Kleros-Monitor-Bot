@@ -176,3 +176,6 @@ class KlerosVote(Kleros):
         self.commit = raw_vote[1].hex()
         self.choice = int(raw_vote[2])
         self.vote = bool(raw_vote[3])
+
+class KlerosJuror(Kleros):
+    
