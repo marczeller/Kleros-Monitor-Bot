@@ -13,4 +13,15 @@ k = Kleros(os.environ["ETH_NODE_URL"])
 
 jurorlist = k.get_staking_jurors_list()
 x = len(jurorlist)
-print(x)
+
+y = k.get_staking_jurors_len()
+
+z = k.get_staking_jurors_list()
+
+a = k.get_juror_stakeOf()
+
+f = k.get_len_stacking_dict()
+
+b = k.get_staking_average()
+
+print(b)
