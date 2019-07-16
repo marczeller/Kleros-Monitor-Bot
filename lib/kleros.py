@@ -27,35 +27,19 @@ class Kleros:
         self.last_dispute_id = dispute_events[-1]['args']['_disputeID']
         return self.last_dispute_id
 
-    #TODO Add this to DB
-    def get_staking_jurors_list(self):
-        self.jurors_staking_events = []
-        self.get_staking_events()
-        for staking_event in self.staking_events:
-            staking = {
-                'address' = staking_event['args']['_address'],
-                'address' = staking_event['args']['_address'],
-            self.jurors_staking_events.add(staking_event['args']['_address'])
-        self.jurors_list = list(self.jurors_staking_events)
-
-        return self.jurors_list
-
-    def get_juror_stakes(self, court_id):
-        if self.staking_events == None:
+    def get_juror_stakes(self):
+        if not hasattr(self, 'staking_events'):
             self.get_staking_events()
+        self.juror_stakes = []
         for staking_event in self.staking_events:
             staking = {
-                'address' = staking_event['args']['_address'],
-                'address' = staking_event['args']['_address'],
-            self.jurors_staking_events.add(staking_event['args']['_address'])
+                'address'  : staking_event['args']['_address'],
+                'court_id' : staking_event['args']['_subcourtID'],
+                'amount'   : staking_event['args']['_newTotalStake']
+            }
+            self.juror_stakes.append(staking)
 
-        for i in range(0,len(self.jurors_list)):
-            self.stake = self.contract.functions.stakeOf(self.jurors_list[i], self.court_counter).call()
-            self.staking_dict.append(self.stake)
-            self.court_counter += 1
-            print("done")
-
-        return self.staking_dict
+        return self.juror_stakes
 
     def get_dispute_events(self):
         filter = self.contract.events.DisputeCreation.createFilter(fromBlock=self.initial_block,
