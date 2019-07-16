@@ -40,23 +40,7 @@ class Kleros:
 
         return self.jurors_list
 
-    #TODO add this to DB
-    def get_staking_jurors_len(self):
-
-        self.jurors_len = len(self.jurors_list)
-        return self.jurors_len
-
-    #FIXME IM STUPID AND DO NOT USE ME IM A INFINITE LOOP
     def get_juror_stakes(self, court_id):
-        self.staking_dict = []
-        self.court_counter = 0
-        while self.court_counter < 1:
-
-            for i in range(0,len(self.jurors_list)):
-                self.stake = self.contract.functions.stakeOf(self.jurors_list[i], self.court_counter).call()
-                self.staking_dict.append(self.stake)
-                self.court_counter += 1
-                print("done")
         if self.staking_events == None:
             self.get_staking_events()
         for staking_event in self.staking_events:
@@ -64,6 +48,7 @@ class Kleros:
                 'address' = staking_event['args']['_address'],
                 'address' = staking_event['args']['_address'],
             self.jurors_staking_events.add(staking_event['args']['_address'])
+
         for i in range(0,len(self.jurors_list)):
             self.stake = self.contract.functions.stakeOf(self.jurors_list[i], self.court_counter).call()
             self.staking_dict.append(self.stake)
