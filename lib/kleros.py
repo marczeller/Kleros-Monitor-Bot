@@ -25,7 +25,7 @@ class Kleros:
         self.last_dispute_id = dispute_events[-1]['args']['_disputeID']
         return self.last_dispute_id
 
-    #TODO Add this to DB
+    #RETURN ALL ADDRESS THAT STAKED AT SOME POINT
     def get_staking_jurors_list(self):
         self.jurors_staking_events = set()
         self.get_staking_events()
@@ -35,25 +35,41 @@ class Kleros:
             
         return self.jurors_list    
 
-    #TODO add this to DB
+    #RETURN NUMBER OF JURORS THAT STAKED AT SOME POINT
     def get_staking_jurors_len(self):
     
         self.jurors_len = len(self.jurors_list)
         return self.jurors_len
 
-    #FIXME IM STUPID AND DO NOT USE ME IM A INFINITE LOOP
+    #RETURN ALL NON-ZERO STAKES
     def get_juror_stakeOf(self):
         self.staking_dict = []
         self.court_counter = 0
-        while self.court_counter < 1:
+        while self.court_counter < 5:
 
             for i in range(0,len(self.jurors_list)):
                 self.stake = self.contract.functions.stakeOf(self.jurors_list[i], self.court_counter).call()
-                self.staking_dict.append(self.stake)
-                self.court_counter += 1
-                print("done")
+                if self.stake == 0:
+                	continue
+                else:
+                	self.var = self.stake / 10 ** 18
+                	self.staking_dict.append(self.var)
+            self.court_counter += 1
 
         return self.staking_dict
+    #RETURN NUMBER OF NON-ZERO STAKING JURORS
+    def get_len_stacking_dict(self):
+    	self.get_juror_stakeOf()
+    	self.len_dict = len(self.staking_dict)
+    	return self.len_dict
+
+   	#RETURN AVERAGE STAKE
+    def get_staking_average(self):
+    	self.sum_stakes = sum(self.staking_dict)
+    	self.stake_average = self.sum_stakes / self.len_dict
+    	return self.stake_average
+
+
 
     def get_dispute_events(self):
         filter = self.contract.events.DisputeCreation.createFilter(fromBlock=self.initial_block,
