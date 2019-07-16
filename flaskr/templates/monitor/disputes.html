@@ -1,57 +1,84 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Disputes{% endblock %}</h1>
+  <div class="row">
+    <div class="col">
+      <h4>{% block title %}Disputes{% endblock %}</h4>
+    </div>
+    <div class="col">
+      <div align=right>Last updated: {{last_updated}} UTC</div>
+    </div>
+  </div>
+
+  <style type="text/css">
+    .dataTables_filter, .dataTables_info { display: none; }
+    p { margin-bottom: 5px; }
+    td {
+      color: #808080;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
-
-<div class="table100 ver5 m-b-110">
-  <div class="table100-head">
-    <table>
-      <thead>
-        <tr class="row100 head">
-          <th class="cell100 column5">ID</th>
-          <th class="cell100 column1">Court</th>
-          <th class="cell100 column5">Ruling</th>
-          <th class="cell100 column5">Final</th>
-          <th class="cell100 column1">Creator</th>
-          <th class="cell100 column1">Date</th>
-        </tr>
-      </thead>
-    </table>
-  </div>
-  <div class="table100-body js-pscroll">
-    <table>
-      <tbody>
-        {% for dispute in disputes %}
-        <tr class="row100 body">
-          <td class="cell100 column5"><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
-          <td class="cell100 column1"><a href="{{ url_for('court', id = dispute.subcourt_id)}}">{{dispute.court_name}}</td>
-          <td class="cell100 column5">{{dispute.current_ruling}}</td>
-          <td class="cell100 column5">{{'Yes' if dispute.ruled else 'No'}}</td>
-          <td class="cell100 column1">
-            <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
-            <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>
-          </td>
-          <td class="cell100 column1">{{dispute.created_date}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<div class="row mb-3">
+  <div class="col">
+    <input type="text" class="form-control" id="search-dispute" placeholder="Search anything">
   </div>
 </div>
-
-
-
-  <h3>Kleros Scan</h3>
+<div>
+  <table id="disputes-table" class="table table-hover table-responsive display responsive no-wrap" width="100%">
+    <thead>
+      <tr>
+          <th class="text-uppercase">ID</th>
+          <th class="text-uppercase">Court</th>
+          <th class="text-uppercase">Ruling</th>
+          <th class="text-uppercase">Final</th>
+          <th class="text-uppercase">Creator</th>
+          <th class="text-uppercase">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for dispute in disputes %}
+      <tr onclick="window.location='{{ url_for('dispute', id = dispute.id) }}'" style="cursor: pointer">
+        <td class="text-center"><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
+        <td><a href="{{ url_for('court', id = dispute.subcourt_id)}}">{{dispute.court_name}}</td>
+        <td>{{dispute.current_ruling}}</td>
+        <td>{{'Yes' if dispute.ruled else 'No'}}</td>
+        <td>
+          <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
+          <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>
+        </td>
+        <td>{{dispute.created_date}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="mt-4 mb-5">
+  <hr>
+  <h3 class="mb-2">Kleros Scan</h3>
   <p>ID : Case number, you can check the corresponding disputing by navigating to court.kleros.io/cases/CASE_ID</p>
   <p>Court : Corresponding Kleros Court, you can click on any court and you'll get a list of all corresponding disputes</p>
   <p>Ruling : 0 means "Refuse to arbitrate" 1 means "Yes" 2 means "No"</p>
   <p>Final : indication of dispute resolution status, "Yes" means case closed, "No" means pending resolution or possibility of appeal</p>
   <p>Creator : Public adress and transaction link of the dispute creation</p>
-  <p>creation Date : Timestamp of the dispute creation</p>
+  <p>Creation Date : Timestamp of the dispute creation</p>
   <p>Colors : Green mean case closed, yellow mean ongoing dispute </p>
-  <div align=right>Last updated: {{last_updated}} UTC</div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+      let table_disputes = $('#disputes-table').DataTable({
+        scrollY:        "400px",
+        scrollCollapse: true,
+        paging:         false,
+        info: false,
+      });
+      $('#search-dispute').keyup(function(){
+        table_disputes.search($(this).val()).draw() ;
+      })
+  });
+
+</script>
 
 {% endblock %}
