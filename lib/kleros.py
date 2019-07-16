@@ -57,6 +57,18 @@ class Kleros:
                 self.staking_dict.append(self.stake)
                 self.court_counter += 1
                 print("done")
+        if self.staking_events == None:
+            self.get_staking_events()
+        for staking_event in self.staking_events:
+            staking = {
+                'address' = staking_event['args']['_address'],
+                'address' = staking_event['args']['_address'],
+            self.jurors_staking_events.add(staking_event['args']['_address'])
+        for i in range(0,len(self.jurors_list)):
+            self.stake = self.contract.functions.stakeOf(self.jurors_list[i], self.court_counter).call()
+            self.staking_dict.append(self.stake)
+            self.court_counter += 1
+            print("done")
 
         return self.staking_dict
 
