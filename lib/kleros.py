@@ -9,6 +9,8 @@ class Kleros:
     dispute_creation_event_topic = "0x141dfc18aa6a56fc816f44f0e9e2f1ebc92b15ab167770e17db5b084c10ed995"
     staking_event_topic = "0x8f753321c98641397daaca5e8abf8881fff1fd7a7bc229924a012e2cb61763d5"
 
+    max_court_id = 4 # TODO should not be hardcoded, but I don't know where to get the info
+
     def __init__(self, node_url, kleros = None):
         if kleros == None:
             self.w3 = Web3(HTTPProvider(node_url, request_kwargs={'timeout': 60})) #TODO Exceptions, errors
@@ -27,22 +29,25 @@ class Kleros:
 
     #TODO Add this to DB
     def get_staking_jurors_list(self):
-        self.jurors_staking_events = set()
+        self.jurors_staking_events = []
         self.get_staking_events()
         for staking_event in self.staking_events:
+            staking = {
+                'address' = staking_event['args']['_address'],
+                'address' = staking_event['args']['_address'],
             self.jurors_staking_events.add(staking_event['args']['_address'])
         self.jurors_list = list(self.jurors_staking_events)
-            
-        return self.jurors_list    
+
+        return self.jurors_list
 
     #TODO add this to DB
     def get_staking_jurors_len(self):
-    
+
         self.jurors_len = len(self.jurors_list)
         return self.jurors_len
 
     #FIXME IM STUPID AND DO NOT USE ME IM A INFINITE LOOP
-    def get_juror_stakeOf(self):
+    def get_juror_stakes(self, court_id):
         self.staking_dict = []
         self.court_counter = 0
         while self.court_counter < 1:
