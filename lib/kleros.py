@@ -27,7 +27,7 @@ class Kleros:
         self.last_dispute_id = dispute_events[-1]['args']['_disputeID']
         return self.last_dispute_id
 
-    def get_juror_stakes(self):
+    def get_juror_stakes(self, starting_block = None):
         if not hasattr(self, 'staking_events'):
             self.get_staking_events()
         self.juror_stakes = []
@@ -35,7 +35,9 @@ class Kleros:
             staking = {
                 'address'  : staking_event['args']['_address'],
                 'court_id' : staking_event['args']['_subcourtID'],
-                'amount'   : staking_event['args']['_newTotalStake']
+                'amount'   : staking_event['args']['_newTotalStake'],
+                'block'    : staking_event['blockNumber'],
+                'date'     : self.event_date(staking_event)
             }
             self.juror_stakes.append(staking)
 
@@ -46,8 +48,10 @@ class Kleros:
             argument_filters={"topic0": self.dispute_creation_event_topic} )
         self.dispute_events = filter.get_all_entries()
 
-    def get_staking_events(self):
-        filter = self.contract.events.StakeSet.createFilter(fromBlock=self.initial_block,
+    def get_staking_events(self, starting_block = None):
+        if starting_block == None:
+            starting_block = self.initial_block
+        filter = self.contract.events.StakeSet.createFilter(fromBlock=starting_block,
             argument_filters={"topic0": self.staking_event_topic} )
         self.staking_events = filter.get_all_entries()
 

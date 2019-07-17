@@ -60,9 +60,9 @@ class Juror(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String)
 
-class JurorStakes(db.Model):
+class JurorStake(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    juror_id = db.Column(db.Integer, db.ForeignKey("juror.id"), nullable=False)
+    address = db.Column(db.String)
     court_id = db.Column(db.Integer, db.ForeignKey("court.id"), nullable=False)
     staking_date = db.Column(db.DateTime)
-    staking_amount = db.Column(db.Integer)
+    staking_amount = db.Column(db.Float)
