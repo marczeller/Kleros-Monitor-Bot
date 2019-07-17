@@ -5,6 +5,21 @@
 {% endblock %}
 
 {% block content %}
+
+
+  <table border=1>
+    <tr><td>Address</td><td>Date</td><td>Staking amount</td></tr>
+    {% for juror in jurors %}
+      <tr>
+        <td>{{ juror['address'] }}</td>
+        <td>{{ juror['date'] }}</td>
+        <td>{{ juror['staking_amount'] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <p><hr/></p>
+
   <table border=1>
     <tr><td>ID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
     {% for dispute in disputes %}
