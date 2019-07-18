@@ -16,6 +16,21 @@ class Court(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
+    def jurors(self):
+        jurors_query = db.session.execute("SELECT address, staking_amount, MAX(staking_date) as 'date' \
+            FROM juror_stake \
+            WHERE court_id = :court_id \
+            GROUP BY address \
+            ORDER BY staking_amount DESC", {'court_id': self.id})
+
+        jurors = []
+        for jq in jurors_query:
+            juror = dict(jq.items())
+            if juror['staking_amount'] != 0:
+                jurors.append(juror)
+
+        return jurors
+
 class Dispute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_of_choices = db.Column(db.Integer)
