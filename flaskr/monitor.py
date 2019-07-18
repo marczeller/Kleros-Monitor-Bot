@@ -22,13 +22,15 @@ def court(id):
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
     jurors_query = db.session.execute("SELECT address, staking_amount, MAX(staking_date) as 'date' \
         FROM juror_stake \
-        WHERE court_id = :court_id and staking_amount > 0 \
+        WHERE court_id = :court_id \
         GROUP BY address \
         ORDER BY staking_amount DESC", {'court_id': id})
 
     jurors = []
     for jq in jurors_query:
-        jurors.append(dict(jq.items()))
+        juror = dict(jq.items())
+        if juror['staking_amount'] != 0:
+            jurors.append(juror)
 
     return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=kleroscan.value)
 
