@@ -27,8 +27,7 @@ class Court(db.Model):
         jurors = []
         for jq in jurors_query:
             juror = dict(jq.items())
-            if juror['staking_amount'] != 0:
-                jurors.append(juror)
+            if juror['staking_amount'] != 0: jurors.append(juror)
 
         return jurors
 
