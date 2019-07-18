@@ -6,7 +6,7 @@ from datetime import datetime
 sys.path.extend(('lib', 'db'))
 
 import os
-from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan, Court
+from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan, Court, JurorStake
 from kleros import Kleros, KlerosDispute, KlerosVote
 
 kleros = Kleros(os.environ["ETH_NODE_URL"])
@@ -31,10 +31,6 @@ def rebuild_db():
     db.session.add(court)
     db.session.commit()
 
-for opt, arg in opts:
-    if opt in ('-r', '--rebuild'):
-        rebuild_db()
-
 def delete_dispute(dispute):
     rounds = Round.query.filter(Round.dispute_id == dispute.id)
     for r in rounds:
@@ -47,6 +43,26 @@ def delete_dispute(dispute):
     print("Deleting Dispute %s" % dispute.id)
     db.session.delete(dispute)
     db.session.commit()
+
+def get_db_option(db_key):
+    kleroscan = Kleroscan.query.filter(Kleroscan.option == db_key).first()
+    if kleroscan == None: return None
+    return kleroscan.value
+
+def set_db_option(db_key, db_val):
+    kleroscan = Kleroscan.query.filter(Kleroscan.option == db_key)
+    for k in kleroscan:
+        db.session.delete(k)
+        db.session.commit()
+    kleroscan = Kleroscan(option = db_key, value = db_val)
+    db.session.add(kleroscan)
+    db.session.commit()
+
+
+for opt, arg in opts:
+    if opt in ('-r', '--rebuild'):
+        rebuild_db()
+
 
 dispute_id = 0
 
@@ -117,15 +133,20 @@ while(True):
     appeal_id = 0
     dispute_id += 1
 
-kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated')
-for k in kleroscan:
-    db.session.delete(k)
-    db.session.commit()
+last_block = get_db_option('last_block') or kleros.initial_block
+print("Retrieving juror stakes, starting at block %s" % last_block)
+kleros.get_juror_stakes()
+print ("Done")
 
-kleroscan = Kleroscan(
-    option = 'last_updated',
-    value = datetime.utcnow()
-)
+for stake in kleros.juror_stakes:
+    s = JurorStake(
+        address = stake['address'],
+        court_id = stake['court_id'],
+        staking_amount = stake['amount'] / 10**18,
+        staking_date = stake['date']
+    )
+    db.session.add(s)
+    last_block = stake['block']
 
-db.session.add(kleroscan)
-db.session.commit()
+set_db_option('last_block', last_block)
+set_db_option('last_updated', datetime.utcnow())

@@ -12,8 +12,24 @@
 {% endblock %}
 
 {% block content %}
+
   <div class="mt-3 mb-5">
     <table class="table table-bordered responsive table-sm">
+   <table border=1>
+    <tr><td>Address</td><td>Date</td><td>Staking amount</td></tr>
+    {% for juror in jurors %}
+      <tr>
+        <td>{{ juror['address'] }}</td>
+        <td>{{ juror['date'] }}</td>
+        <td>{{ juror['staking_amount'] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <p><hr/></p>
+<div class="mt-3 mb-5">
+    <table class="table table-bordered responsive table-sm">
+   <table border=1>
       <tr><td>ID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
       {% for dispute in disputes %}
           <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
@@ -29,5 +45,7 @@
       {% endfor %}
     </table>
   </div>
+   <div align=right>Last updated: {{last_updated}} UTC</div>
+
 
 {% endblock %}

@@ -18,9 +18,19 @@ from flask import (
 @app.route('/court/<int:id>', methods=['GET'])
 def court(id):
     court = Court.query.get(id)
-    disputes = Dispute.query.filter(Dispute.subcourt_id == court.id).order_by(Dispute.id.desc())
+    disputes = Dispute.query.filter(Dispute.subcourt_id == id).order_by(Dispute.id.desc())
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
-    return render_template('monitor/court.html', court=court, disputes=disputes, last_updated=kleroscan.value)
+    jurors_query = db.session.execute("SELECT address, staking_amount, MAX(staking_date) as 'date' \
+        FROM juror_stake \
+        WHERE court_id = :court_id and staking_amount > 0 \
+        GROUP BY address \
+        ORDER BY staking_amount DESC", {'court_id': id})
+
+    jurors = []
+    for jq in jurors_query:
+        jurors.append(dict(jq.items()))
+
+    return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=kleroscan.value)
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
