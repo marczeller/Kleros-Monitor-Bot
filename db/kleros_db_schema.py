@@ -17,7 +17,8 @@ class Court(db.Model):
     name = db.Column(db.String)
 
     def jurors(self):
-        jurors_query = db.session.execute("SELECT address, staking_amount, MAX(staking_date) as 'date' \
+        jurors_query = db.session.execute(
+            "SELECT address, staking_amount, MAX(staking_date) as 'date' \
             FROM juror_stake \
             WHERE court_id = :court_id \
             GROUP BY address \
