@@ -6,7 +6,7 @@
       <h4>{% block title %}Court: <span class="font-weight-bold">{{court.name}}</span>{% endblock %}</h4>
     </div>
     <div class="col">
-      <div align=right>Last updated: {{last_updated}} UTC</div>
+      <div align=right>Last updated: <span class="datetime-string">{{last_updated}}</span> UTC</div>
     </div>
   </div>
 {% endblock %}
@@ -30,7 +30,7 @@
     {% for juror in jurors %}
       <tr>
         <td><a href="https://etherscan.io/address/{{ juror['address'] }}">{{ juror['address'] }}</a></td>
-        <td>{{ juror['date'] }}</td>
+        <td class="datetime-string">{{ juror['date'] }}</td>
         <td>{{ juror['staking_amount'] }}</td>
       </tr>
     {% endfor %}
