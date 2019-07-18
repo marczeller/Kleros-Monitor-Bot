@@ -30,10 +30,9 @@ class Court(db.Model):
             if juror['staking_amount'] != 0: jurors.append(juror)
 
         return jurors
-#FIXME
-    def get_len_general_court(self):
-        self.jurorlist = self.Court.query.get(0)
-        return self.number_of_jurors = len(self.jurorlist)
+
+    def jurors_length(self):
+        return(len(self.jurors()))
 
 class Dispute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
