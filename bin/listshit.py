@@ -12,6 +12,10 @@ from kleros import Kleros, KlerosDispute, KlerosVote
 k = Kleros(os.environ["ETH_NODE_URL"])
 
 jurorlist = k.get_juror_stakes()
-
-
-print(jurorlist)
+var = jurorlist[0]
+dude = var["court_id"]
+print(type(var))
+print()
+print(type(jurorlist))
+print()
+print(dude)
