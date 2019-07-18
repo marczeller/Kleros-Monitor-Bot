@@ -1,31 +1,42 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Dispute {{ dispute['id']}}{% endblock %}</h1>
+  <div class="row">
+    <div class="col">
+      <h4>{% block title %}Dispute #{{ dispute['id']}}{% endblock %}</h4>
+    </div>
+    <div class="col">
+      <div align=right>Last updated: {{last_updated}} UTC</div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}
 
-  <table border=1>
-    <tr><td>Jurors</td><td align=right>{{ dispute['number_of_choices'] }}</td></tr>
-    <tr><td>Yes</td><td align=right>{{ dispute['yes'] }}</td></tr>
-    <tr><td>No</td><td align=right>{{ dispute['no'] }}</td></tr>
-    <tr><td>Pending</td><td align=right>{{ dispute['pending'] }}</td></tr>
-    <tr><td>Decided</td><td align=right>{{ dispute['decided'] }}</td></tr>
-    <tr><td>Final</td><td align=right>{{ dispute['final'] }}</td></tr>
-#FIXMEIMSTUPID
-    <tr><td>Check this Case on Kleros</td><a href="https:court.kleros.io/cases/{{ dispute['id']}}"></a></td></tr>
-  </table>
+  <div>
+    <table class="table table-bordered responsive table-sm">
+      <tr><td>Jurors</td><td align=right>{{ dispute['number_of_choices'] }}</td></tr>
+      <tr><td>Yes</td><td align=right>{{ dispute['yes'] }}</td></tr>
+      <tr><td>No</td><td align=right>{{ dispute['no'] }}</td></tr>
+      <tr><td>Pending</td><td align=right>{{ dispute['pending'] }}</td></tr>
+      <tr><td>Decided</td><td align=right>{{ dispute['decided'] }}</td></tr>
+      <tr><td>Final</td><td align=right>{{ dispute['final'] }}</td></tr>
+      <tr><td>Check this Case on Kleros</td><a href="https:court.kleros.io/cases/{{ dispute['id']}}"></a></td></tr>
+    </table>
+  </div>
 
-  {% for r in rounds: %}
-  <p><table border=1>
-    <tr><td>Round {{r.round_num}} - {{ 'Majority reached' if r.majority_reached else 'No majority' }}</td></tr>
-    {% for v in r.votes %}
-      <tr bgcolor={{v.color}}><td><a href="https://etherscan.io/address/{{v.account}}">{{v.account}}</a></td><td>{{ v.vote_str }}</td></tr>
+
+  <div class="mb-5">
+    {% for r in rounds: %}
+    <table class="table table-bordered responsive table-sm">
+      <tr><td>Round {{r.round_num}} - {{ 'Majority reached' if r.majority_reached else 'No majority' }}</td></tr>
+      {% for v in r.votes %}
+        <tr bgcolor={{v.color}}>
+          <td><a href="https://etherscan.io/address/{{v.account}}">{{v.account}}</a></td>
+          <td align="right">{{ v.vote_str }}</td>
+        </tr>
+      {% endfor %}
+    </table>
     {% endfor %}
-  </table></p>
-  {% endfor %}
-
-  <div align=right>Last updated: {{last_updated}} UTC</div>
-
+  </div>
 {% endblock %}
