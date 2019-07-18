@@ -3,6 +3,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+import statistics
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kleros.db'
 db = SQLAlchemy(app)
@@ -31,8 +33,14 @@ class Court(db.Model):
 
         return jurors
 
-    def jurors_length(self):
-        return(len(self.jurors()))
+    def juror_stats(self):
+        amounts = []
+        for juror in self.jurors(): amounts.append(juror['staking_amount'])
+        return {
+            'length': len(amounts),
+            'mean': statistics.mean(amounts),
+            'median': statistics.median(amounts)
+        }
 
 class Dispute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
