@@ -36,12 +36,20 @@
     {% endfor %}
   </table>
 
-  
-
   <p><hr/></p>
 <div class="mt-3 mb-2">
     <table class="table table-bordered responsive table-sm">
-      <tr bgcolor="#9977f2"><td>ID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
+      <tr bgcolor="#9977f2">
+        <td>ID</td>
+        <td>
+          Ruling <i class="fa fa-question-circle cursor-help" 
+            title="0: Refuse to arbitrate <br/> 1: Yes <br/> 2: No"
+            data-toggle="tooltip" data-placement="right" aria-hidden="true"></i>
+        </td>
+        <td>Final</td>
+        <td>Creator</td>
+        <td>Creation Date</td>
+      </tr>
       {% for dispute in disputes %}
           <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
             <td><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>

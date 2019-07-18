@@ -21,3 +21,7 @@ body, html {
 .table-bordered td, .table-bordered th {
       border: 1.5px solid black;
 }
+
+.cursor-help {
+	cursor: help;
+}
