@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block content %}
+
   <div>
     <table class="table table-bordered responsive table-sm">
       <tr><td>Jurors</td><td align=right>{{ dispute['number_of_choices'] }}</td></tr>
@@ -23,6 +24,7 @@
       <tr><td>Check this Case on Kleros</td><a href="https:court.kleros.io/cases/{{ dispute['id']}}"></a></td></tr>
     </table>
   </div>
+
 
   <div class="mb-5">
     {% for r in rounds: %}
