@@ -19,7 +19,7 @@
     <tr><td>Address</td><td>Date</td><td>Staking amount</td></tr>
     {% for juror in jurors %}
       <tr>
-        <td>{{ juror['address'] }}</td>
+        <td><a href="https://etherscan.io/address/{{ juror['address'] }}">{{ juror['address'] }}</a></td>
         <td>{{ juror['date'] }}</td>
         <td>{{ juror['staking_amount'] }}</td>
       </tr>
