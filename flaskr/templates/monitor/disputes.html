@@ -6,7 +6,7 @@
       <h4>{% block title %}Disputes{% endblock %}</h4>
     </div>
     <div class="col">
-      <div align=right>Last updated: {{last_updated}} UTC</div>
+      <div align=right>Last updated: <span class="datetime-string">{{last_updated}}</span> UTC</div>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="row mb-3">
+<div class="row mb-3 mt-1">
   <div class="col">
     <input type="text" class="form-control" id="search-dispute" placeholder="Search anything">
   </div>
@@ -31,7 +31,11 @@
       <tr>
           <th class="text-uppercase">ID</th>
           <th class="text-uppercase">Court</th>
-          <th class="text-uppercase">Ruling</th>
+          <th class="text-uppercase">
+            Ruling <i class="fa fa-question-circle cursor-help ml-1" 
+            title="0: Refuse to arbitrate <br/> 1: Yes <br/> 2: No"
+            data-toggle="tooltip" data-placement="right" aria-hidden="true"></i>
+          </th>
           <th class="text-uppercase">Final</th>
           <th class="text-uppercase">Creator</th>
           <th class="text-uppercase">Date</th>

@@ -1,25 +1,13 @@
 
 (function ($) {
-	"use strict";
-	$('.column100').on('mouseover',function(){
-		var table1 = $(this).parent().parent().parent();
-		var table2 = $(this).parent().parent();
-		var verTable = $(table1).data('vertable')+"";
-		var column = $(this).data('column') + ""; 
+    $('[data-toggle="tooltip"]').tooltip({
+    	'delay': { show: 0, hide: 100 },
+    	'html': true,
+    });   
 
-		$(table2).find("."+column).addClass('hov-column-'+ verTable);
-		$(table1).find(".row100.head ."+column).addClass('hov-column-head-'+ verTable);
+	$(".datetime-string").each(function() {
+		let datetime = $(this).html();
+		let dot_marker_index = datetime.indexOf('.');
+		if (dot_marker_index >= 0) $(this).html(datetime.substring(0, dot_marker_index));
 	});
-
-	$('.column100').on('mouseout',function(){
-		var table1 = $(this).parent().parent().parent();
-		var table2 = $(this).parent().parent();
-		var verTable = $(table1).data('vertable')+"";
-		var column = $(this).data('column') + ""; 
-
-		$(table2).find("."+column).removeClass('hov-column-'+ verTable);
-		$(table1).find(".row100.head ."+column).removeClass('hov-column-head-'+ verTable);
-	});
-    
-
 })(jQuery);
