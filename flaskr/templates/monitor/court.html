@@ -15,7 +15,7 @@
 
   <div class="mt-3 mb-5">
   <table class="table table-bordered responsive table-sm">
-    <tr bgcolor='#FFFCBB'><td>Total Number Of Jurors</td><td>Average Stake</td><td>Median Stake</td></tr>
+    <tr bgcolor='#7d5fc9'><td>Total Number Of Jurors</td><td>Average Stake</td><td>Median Stake</td></tr>
     <tr>
       <td>{{ jurors_stats['length']}}</td>
       <td>{{ jurors_stats['mean']}}</td>
@@ -26,7 +26,7 @@
   <div class="mt-3 mb-5">
   <table class="table table-bordered responsive table-sm">
    
-    <tr><td>Address</td><td>Date</td><td>Staking amount</td></tr>
+    <tr bgcolor="#9977f2"><td>Address</td><td>Date</td><td>Staking amount</td></tr>
     {% for juror in jurors %}
       <tr>
         <td><a href="https://etherscan.io/address/{{ juror['address'] }}">{{ juror['address'] }}</a></td>
@@ -41,7 +41,7 @@
   <p><hr/></p>
 <div class="mt-3 mb-2">
     <table class="table table-bordered responsive table-sm">
-      <tr><td>ID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
+      <tr bgcolor="#9977f2"><td>ID</td><td>Ruling</td><td>Final</td><td>Creator</td><td>Creation Date</td></tr>
       {% for dispute in disputes %}
           <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
             <td><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
