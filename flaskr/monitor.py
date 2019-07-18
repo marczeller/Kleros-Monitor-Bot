@@ -21,8 +21,9 @@ def court(id):
     disputes = Dispute.query.filter(Dispute.subcourt_id == id).order_by(Dispute.id.desc())
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
     jurors = court.jurors()
+    jurors_stats = court.juror_stats()
 
-    return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=kleroscan.value)
+    return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=kleroscan.value, jurors_stats=jurors_stats)
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])

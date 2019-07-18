@@ -24,6 +24,12 @@
         <td>{{ juror['staking_amount'] }}</td>
       </tr>
     {% endfor %}
+    <tr><td>Total Number Of Jurors</td><td>Average Stake</td><td>Median Stake</td></tr>
+    <tr bgcolor='#FFFCBB'>
+      <td>{{ jurors_stats['length']}}</td>
+      <td>{{ jurors_stats['mean']}}</td>
+      <td>{{ jurors_stats['median']}}</td>
+    </tr>
   </table>
 
   <p><hr/></p>
