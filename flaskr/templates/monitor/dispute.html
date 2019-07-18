@@ -6,7 +6,7 @@
       <h4>{% block title %}Dispute #{{ dispute['id']}}{% endblock %}</h4>
     </div>
     <div class="col">
-      <div align=right>Last updated: {{last_updated}} UTC</div>
+      <div align=right>Last updated: <span class="datetime-string">{{last_updated}}</span> UTC</div>
     </div>
   </div>
 {% endblock %}
