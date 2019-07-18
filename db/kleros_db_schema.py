@@ -30,6 +30,10 @@ class Court(db.Model):
                 jurors.append(juror)
 
         return jurors
+#FIXME
+    def get_len_general_court(self):
+        self.jurorlist = self.Court.query.get(0)
+        return self.number_of_jurors = len(self.jurorlist)
 
 class Dispute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
