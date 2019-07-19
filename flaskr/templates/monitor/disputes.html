@@ -81,6 +81,8 @@
         scrollCollapse: true,
         paging:         false,
         info: false,
+        order: [[ 0, "desc" ]]
+
       });
       $('#search-dispute').keyup(function(){
         table_disputes.search($(this).val()).draw() ;

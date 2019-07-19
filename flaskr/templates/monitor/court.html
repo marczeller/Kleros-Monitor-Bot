@@ -70,10 +70,15 @@
 
 <script type="text/javascript">
   $( document ).ready(function() {
+    let is_chart_initialised = false;
     let is_stake_chart_displayed = false;
     $("#toggle-stake-chart").click(function() {
       is_stake_chart_displayed = !is_stake_chart_displayed;
       if (is_stake_chart_displayed === true) {
+        if (is_chart_initialised === false) {
+          initChart();
+          is_chart_initialised = true;
+        }
         $("#stake-chart").show();
         $(this).html("Hide Jurors Stake Distribution");
       } else {
@@ -82,58 +87,59 @@
       };
     });
 
-    var total = {% for juror in jurors %}{{ juror['staking_amount'] }}+{% endfor %}0;
-    console.log(total);
+    function initChart() {
+      var total = {% for juror in jurors %}{{ juror['staking_amount'] }}+{% endfor %}0;
 
-    var config = {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [
+      var config = {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [
+              {% for juror in jurors %}
+                {{ juror['staking_amount'] }},
+              {% endfor %}
+            ],
+            backgroundColor: [
+              {% for juror in jurors %}
+                randomColor(),
+              {% endfor %}
+            ]
+          }],
+          labels: [
             {% for juror in jurors %}
-              {{ juror['staking_amount'] }},
-            {% endfor %}
-          ],
-          backgroundColor: [
-            {% for juror in jurors %}
-              randomColor(),
+              "{{ juror['address'] }}",
             {% endfor %}
           ]
-        }],
-        labels: [
-          {% for juror in jurors %}
-            "{{ juror['address'] }}",
-          {% endfor %}
-        ]
-      },
-      options: {
-        responsive: true,
-        legend: {
-          display: false,
         },
-        tooltips: {
-          enabled: true,
-          mode: 'single',
-          callbacks: {
-            label: function(tooltipItem, data) {
-              var allData = data.datasets[tooltipItem.datasetIndex].data;
-              var tooltipLabel = data.labels[tooltipItem.index];
-              var tooltipData = allData[tooltipItem.index];
-              let percentage = (tooltipData*100 / total).toFixed(2);
-              return tooltipLabel + ": " + tooltipData +  " ("  + percentage + "%)";
+        options: {
+          responsive: true,
+          legend: {
+            display: false,
+          },
+          tooltips: {
+            enabled: true,
+            mode: 'single',
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                var tooltipLabel = data.labels[tooltipItem.index];
+                var tooltipData = allData[tooltipItem.index];
+                let percentage = (tooltipData*100 / total).toFixed(2);
+                return tooltipLabel + ": " + tooltipData +  " ("  + percentage + "%)";
+              }
             }
           }
         }
-      }
-    };
+      };
 
-    var ctx = document.getElementById('stake-pie').getContext('2d');
-    window.myPie = new Chart(ctx, config);
+      var ctx = document.getElementById('stake-pie').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    }
 
     function randomColor() {
-      var r = Math.floor(Math.random() * 255);
-      var g = Math.floor(Math.random() * 255);
-      var b = Math.floor(Math.random() * 255);
+      var r = Math.floor(Math.random() * 155) + 100;
+      var g = Math.floor(Math.random() * 155) + 100;
+      var b = Math.floor(Math.random() * 155) + 100;
       return "rgb(" + r + "," + g + "," + b + ")";
     }
   });
