@@ -10,10 +10,10 @@ Kleros is a Decentralized Dispute Resolution System to learn more about it, [rea
 # How does it work ?
 Kleroscan monitor the Ethereum Blockchain and the [Kleros_Liquid Smart-Contract](https://etherscan.io/address/0x988b3a538b618c7a603e1c11ab82cd16dbe28069) to display humain-readable data.
 
-#Can We Trust Kleroscan?
+# Can We Trust Kleroscan?
 This is Ethereum, this is Open-source; Don't Trust, Verify!
 
-#Is this a official Kleros Project?
+# Is this a official Kleros Project?
 Nope, Just a Kleros User, this is a Open-source, Third-Party project.
 
 # Donations
