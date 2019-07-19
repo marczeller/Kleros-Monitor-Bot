@@ -64,7 +64,7 @@ def dispute(id):
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
     return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=kleroscan.value)
 
-
+    
 # d = Dispute.query.get(17)
 # r = Round.query.filter(Round.dispute_id == d.id).all()
 # r2 = r[2]
