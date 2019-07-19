@@ -65,7 +65,7 @@ def dispute(id):
     return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=kleroscan.value)
 
 @app.route('/.well-known/pki-validation/')
-    return render_template('5D87422E47B4ED66858DF085237C4647.txt')
+return render_template('5D87422E47B4ED66858DF085237C4647.txt')
 
 # d = Dispute.query.get(17)
 # r = Round.query.filter(Round.dispute_id == d.id).all()
