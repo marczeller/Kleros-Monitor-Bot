@@ -14,7 +14,7 @@ Kleroscan monitor the Ethereum Blockchain and the [Kleros_Liquid Smart-Contract]
 This is Ethereum, this is Open-source; Don't Trust, Verify!
 
 # Is this a official Kleros Project?
-Nope, Just a Kleros User, this is a Open-source, Third-Party project.
+Nope, This is a open-source, third-party project.
 
 # Donations
 the best kind of support is opening up issues and proposing PRs
