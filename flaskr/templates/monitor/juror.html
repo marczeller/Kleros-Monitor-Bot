@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <div class="row">
+    <div class="col">
+      <h4>{% block title %}Juror #{{ juror.address }}{% endblock %}</h4>
+    </div>
+    <div class="col">
+      <div align=right>Last updated: <span class="datetime-string">{{last_updated}}</span> UTC</div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+{{ stakings }}
+{% endblock %}
