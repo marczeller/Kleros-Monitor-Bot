@@ -3,7 +3,7 @@
 import sys
 sys.path.extend(('lib', 'db'))
 
-from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan, Court
+from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan, Court, Juror
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -64,7 +64,16 @@ def dispute(id):
     kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
     return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=kleroscan.value)
 
-    
+@app.route('/juror/<string:address>', methods=['GET'])
+def juror(address):
+    juror = Juror.query.filter_by(address=address).first()
+    stakings = juror.stakings()
+    kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
+
+    return render_template('monitor/juror.html', juror=juror, stakings = juror.stakings, last_updated=kleroscan.value)
+
+
+
 # d = Dispute.query.get(17)
 # r = Round.query.filter(Round.dispute_id == d.id).all()
 # r2 = r[2]

@@ -86,6 +86,15 @@ class Juror(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String)
 
+    def stakings(self):
+        stakings_query = JurorStake.query.filter(JurorStake.address == self.address).order_by(JurorStake.staking_date.desc())
+        stakings = []
+        for staking in stakings_query:
+            s = dict(staking.items())
+            stakings.append(s)
+
+        return stakings        
+
 class JurorStake(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String)
