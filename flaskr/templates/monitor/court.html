@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row">
     <div class="col">
-      <h4>{% block title %}{{court.name}}{% endblock %}</h4>
+      <h4>{% block title %}{{court_name}}{% endblock %}</h4>
     </div>
     <div class="col">
       <div align=right>Last updated: <span class="datetime-string">{{last_updated}}</span> UTC</div>
@@ -15,12 +15,16 @@
 
 {% if full_jurors and full_jurors_stats %}
 <div class="mt-3 mb-2" align="center">
-  <button type="button" class="btn btn-primary cursor-clickable mb-3" id="toggle-full-stake-chart">Show Complete Jurors Stake Distribution</button>
+  <button type="button" class="btn btn-primary cursor-clickable mb-3" id="toggle-full-stake-chart">Show Complete Jurors Stake Distribution <i class="fa fa-question-circle cursor-help" 
+            title="Kleros allow jurors staked in specialized court to get drawn in parent courts<br/> Following stats reveal actual number of Jurors and stakes of this court"
+            data-toggle="tooltip" data-placement="right" aria-hidden="true"></i></button>
   <div id="full-stake-chart" class="mb-3" style="display: none;">
     <canvas id="full-stake-pie" height="75px"></canvas>
   </div>
   <table class="table table-bordered responsive table-sm">
-    <tr bgcolor='#7d5fc9'><td>Total Number Of Jurors</td><td>Average Stake</td><td>Median Stake</td></tr>
+    <tr bgcolor='#7d5fc9'><td>Total Number Of Jurors <i class="fa fa-question-circle cursor-help" 
+            title="child courts included"
+            data-toggle="tooltip" data-placement="right" aria-hidden="true"></i></td><td>Average Stake</td><td>Median Stake</td></tr>
     <tr>
       <td>{{ full_jurors_stats['length']}}</td>
       <td>{{ full_jurors_stats['mean']}}</td>
@@ -28,22 +32,11 @@
     </tr>
   </table>
 </div>
-<div class="mt-2 mb-2">
-  <table class="table table-bordered responsive table-sm">   
-    <tr bgcolor="#9977f2"><td>Address</td><!-- <td>Date</td> --><td>Staking amount</td></tr>
-    {% for juror in jurors %}
-      <tr>
-        <td><a href="https://etherscan.io/address/{{ juror['address'] }}">{{ juror['address'] }}</a></td>
-        <!-- <td class="datetime-string">{{ juror['date'] }}</td> -->
-        <td>{{ juror['staking_amount'] }}</td>
-      </tr>
-    {% endfor %}
-  </table>
-</div>
+
 {% endif %}
 
 <div class="mt-3 mb-2" align="center">
-  <button type="button" class="btn btn-primary cursor-clickable mb-3" id="toggle-stake-chart">Show Jurors Stake Distribution</button>
+  <button type="button" class="btn btn-primary cursor-clickable mb-3" id="toggle-stake-chart">Show Court-only Jurors Stake Distribution</button>
   <div id="stake-chart" class="mb-3" style="display: none;">
     <canvas id="stake-pie" height="75px"></canvas>
   </div>
@@ -116,10 +109,8 @@
           $(this).html("Show Complete Jurors Stake Distribution");
         };
       });
-
       function initFullChart() {
         var total = {% for juror in full_jurors %}{{ juror['staking_amount'] }}+{% endfor %}0;
-
         var config = {
           type: 'doughnut',
           data: {
@@ -161,12 +152,10 @@
             }
           }
         };
-
         var ctx = document.getElementById('full-stake-pie').getContext('2d');
         window.myFullPie = new Chart(ctx, config);
       }
     {% endif %}
-
     let is_chart_initialised = false;
     let is_stake_chart_displayed = false;
     $("#toggle-stake-chart").click(function() {
@@ -183,10 +172,8 @@
         $(this).html("Show Jurors Stake Distribution");
       };
     });
-
     function initChart() {
       var total = {% for juror in jurors %}{{ juror['staking_amount'] }}+{% endfor %}0;
-
       var config = {
         type: 'doughnut',
         data: {
@@ -228,11 +215,9 @@
           }
         }
       };
-
       var ctx = document.getElementById('stake-pie').getContext('2d');
       window.myPie = new Chart(ctx, config);
     }
-
     function randomColor() {
       var r = Math.floor(Math.random() * 155) + 100;
       var g = Math.floor(Math.random() * 155) + 100;

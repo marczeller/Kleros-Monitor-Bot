@@ -26,6 +26,14 @@ def court(id):
     jurors = court.jurors()
     jurors_stats = court.juror_stats()
 
+    court_name = {
+    0 : "General Court",
+    1 : "Null",
+    2 : "TCR Court",
+    3 : "Ethfinex Court",
+    4 : "ERC20 Court",
+    }
+
     court_mapping = {
         0: [2, 3, 4],
         2: [3, 4,]
@@ -59,7 +67,7 @@ def court(id):
         full_jurors = sorted(full_jurors, key=lambda j: j['staking_amount'], reverse=True)
 
     return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=kleroscan.value, 
-        jurors_stats=jurors_stats, full_jurors=full_jurors, full_jurors_stats=full_jurors_stats)
+        jurors_stats=jurors_stats, full_jurors=full_jurors, full_jurors_stats=full_jurors_stats, court_name=court_name[id])
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
