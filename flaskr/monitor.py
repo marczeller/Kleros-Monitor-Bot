@@ -69,10 +69,3 @@ def juror(address):
     stakings = juror.stakings()
 
     return render_template('monitor/juror.html', juror=juror, stakings = juror.stakings, last_updated=config.get('updated'))
-
-
-
-# d = Dispute.query.get(17)
-# r = Round.query.filter(Round.dispute_id == d.id).all()
-# r2 = r[2]
-# v = Vote.query.filter(Vote.round_id == r2.id).all()
