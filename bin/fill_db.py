@@ -44,11 +44,11 @@ for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block'))
         if dispute.ruled: continue
         dispute.delete_recursive()
 
-    if not found_open_dispute:
+    dispute_eth.update(kleros_eth.dispute_data(dispute_eth['dispute_id']))
+
+    if (not found_open_dispute) and (not dispute_eth['ruled']):
         found_open_dispute = True
         config.set('dispute_search_block', dispute_eth['block_number'] - 1)
-
-    dispute_eth.update(kleros_eth.dispute_data(dispute_eth['dispute_id']))
 
     print("Creating dispute %s" % dispute_eth['dispute_id'])
 
