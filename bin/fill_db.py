@@ -28,15 +28,16 @@ def rebuild_db():
     db.session.add(Court( id = 3, name = "Ethfinex Court"))
     db.session.add(Court( id = 4, name = "ERC20 Court"))
     config.set('dispute_search_block', KlerosEth.initial_block)
+    config.set('staking_search_block', KlerosEth.initial_block)
     db.session.commit()
 
 for opt, arg in opts:
     if opt in ('-r', '--rebuild'):
         rebuild_db()
 
-found_open_dispute = False
-
 print("Fetching disputes from block %s" % config.get('dispute_search_block'))
+
+found_open_dispute = False
 
 for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block')):
     dispute = Dispute.query.get(dispute_eth['dispute_id'])
@@ -97,5 +98,20 @@ for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block'))
 
             db.session.add(vote)
         db.session.commit()
+
+print("Fetching stakings from block %s" % config.get('staking_search_block'))
+
+for staking_eth in kleros_eth.staking_events(config.get('staking_search_block')):
+    print("Adding staking in block %s" % staking_eth['block_number'])
+    staking = JurorStake(
+        address = staking_eth['address'],
+        court_id = staking_eth['court_id'],
+        staking_date = staking_eth['date'],
+        staking_amount = staking_eth['staked'],
+        txid = staking_eth['txid']
+    )
+    db.session.add(staking)
+
+    config.set('staking_search_block', staking_eth['block_number'] + 1)
 
 config.set('updated', strftime("%Y-%m-%d %H:%M:%S", gmtime()))

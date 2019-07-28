@@ -7,6 +7,8 @@ import statistics
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/kleros.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 class Config(db.Model):
@@ -141,3 +143,4 @@ class JurorStake(db.Model):
     court_id = db.Column(db.Integer, db.ForeignKey("court.id"), nullable=False)
     staking_date = db.Column(db.DateTime)
     staking_amount = db.Column(db.Float)
+    txid = db.Column(db.String)
