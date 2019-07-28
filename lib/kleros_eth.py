@@ -19,20 +19,26 @@ class KlerosEth:
         )
 
     def dispute_events(self, starting_block = initial_block):
-        filter = self.contract.events.DisputeCreation.createFilter(
-            fromBlock=int(starting_block),
-            argument_filters={"topic0": self.dispute_creation_event_topic}
-        )
-        disputes = []
-        for event in filter.get_all_entries():
-            disputes.append({
-                'dispute_id' : event['args']['_disputeID'],
-                'date' : self.event_date(event),
-                'creator': self.event_creator(event),
-                'txid': event['transactionHash'].hex(),
-                'block_number': event['blockNumber']
-            })
-        return disputes
+        try:
+            filter = self.contract.events.DisputeCreation.createFilter(
+                fromBlock=int(starting_block),
+                argument_filters={"topic0": self.dispute_creation_event_topic}
+            )
+            disputes = []
+            for event in filter.get_all_entries():
+                disputes.append({
+                    'dispute_id' : event['args']['_disputeID'],
+                    'date' : self.event_date(event),
+                    'creator': self.event_creator(event),
+                    'txid': event['transactionHash'].hex(),
+                    'block_number': event['blockNumber']
+                })
+            return disputes
+        except ValueError as e:
+            if e['code'] == -32000:
+                return self.dispute_events(initial_block)
+            else:
+                raise
 
     def dispute_data(self, dispute_id):
         raw_dispute = self.contract.functions.disputes(dispute_id).call()
@@ -93,18 +99,24 @@ class KlerosEth:
         }
 
     def staking_events(self, starting_block = initial_block):
-        filter = self.contract.events.StakeSet.createFilter(
-            fromBlock=int(starting_block),
-            argument_filters={"topic0": self.staking_event_topic}
-        )
-        stakings = []
-        for staking in filter.get_all_entries():
-            stakings.append({
-                'address': staking['args']['_address'],
-                'staked': staking['args']['_newTotalStake'],
-                'court_id': staking['args']['_subcourtID'],
-                'txid': staking['transactionHash'].hex(),
-                'date' : self.event_date(staking),
-                'block_number': staking['blockNumber']
-            })
-        return stakings
+        try:
+            filter = self.contract.events.StakeSet.createFilter(
+                fromBlock=int(starting_block),
+                argument_filters={"topic0": self.staking_event_topic}
+            )
+            stakings = []
+            for staking in filter.get_all_entries():
+                stakings.append({
+                    'address': staking['args']['_address'],
+                    'staked': staking['args']['_newTotalStake'] / 10**18,
+                    'court_id': staking['args']['_subcourtID'],
+                    'txid': staking['transactionHash'].hex(),
+                    'date' : self.event_date(staking),
+                    'block_number': staking['blockNumber']
+                })
+            return stakings
+        except ValueError as e:
+            if e['code'] == -32000:
+                return self.staking_events(initial_block)
+            else:
+                raise
