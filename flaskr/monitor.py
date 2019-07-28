@@ -3,13 +3,14 @@
 import sys
 sys.path.extend(('lib', 'db'))
 
-from kleros import db, Dispute, Round, Vote, Kleroscan, Court, Juror
+from kleros import db, Dispute, Round, Vote, Config, Court, Juror
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kleros.db'
 db = SQLAlchemy(app)
+config = Config()
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -19,11 +20,10 @@ from flask import (
 def court(id):
     court = Court.query.get(id)
     disputes = Dispute.query.filter(Dispute.subcourt_id == id).order_by(Dispute.id.desc())
-    kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
     jurors = court.jurors()
     jurors_stats = court.juror_stats()
 
-    return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=kleroscan.value, jurors_stats=jurors_stats)
+    return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=config.get('updated'), jurors_stats=jurors_stats)
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
@@ -36,8 +36,7 @@ def disputes():
         else:
             dispute.court_name = "Court #%" % dispute.subcourt_id
 
-    kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
-    return render_template('monitor/disputes.html', disputes=disputes, last_updated=kleroscan.value)
+    return render_template('monitor/disputes.html', disputes=disputes, last_updated=config.get('updated'))
 
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):
@@ -62,16 +61,14 @@ def dispute(id):
                 else: v.color = '#F5B7B1'
 
     x = len(rounds)
-    kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
-    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=kleroscan.value)
+    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=config.get('updated'))
 
 @app.route('/juror/<string:address>', methods=['GET'])
 def juror(address):
     juror = Juror.query.filter_by(address=address).first()
     stakings = juror.stakings()
-    kleroscan = Kleroscan.query.filter(Kleroscan.option == 'last_updated').first()
 
-    return render_template('monitor/juror.html', juror=juror, stakings = juror.stakings, last_updated=kleroscan.value)
+    return render_template('monitor/juror.html', juror=juror, stakings = juror.stakings, last_updated=config.get('updated'))
 
 
 
