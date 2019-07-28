@@ -6,10 +6,10 @@ from datetime import datetime
 sys.path.extend(('lib', 'db'))
 
 import os
-from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan, Court, JurorStake
-from kleros import Kleros, KlerosDispute, KlerosVote
+from kleros import db, Dispute, Round, Vote, Kleroscan, Court, JurorStake
+from kleros_eth import KlerosEth
 
-kleros = Kleros(os.environ["ETH_NODE_URL"])
+kleros_eth = KlerosEth(os.environ["ETH_NODE_URL"])
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "r", ["rebuild"])
@@ -21,50 +21,73 @@ except getopt.GetoptError as err:
 def rebuild_db():
     db.drop_all()
     db.create_all()
-    court = Court( id = 0, name = "General Court")
-    db.session.add(court)
-    court = Court(id = 2, name = "TCR Court")
-    db.session.add(court)
-    court = Court(id = 3, name = "Ethfinex Court")
-    db.session.add(court)
-    court = Court(id = 4, name = "ERC20 Court")
-    db.session.add(court)
+    db.session.add(Court( id = 0, name = "General Court"))
+    db.session.add(Court( id = 2, name = "TCR Court"))
+    db.session.add(Court( id = 3, name = "Ethfinex Court"))
+    db.session.add(Court( id = 4, name = "ERC20 Court"))
     db.session.commit()
-
-def delete_dispute(dispute):
-    rounds = Round.query.filter(Round.dispute_id == dispute.id)
-    for r in rounds:
-        votes = Vote.query.filter(Vote.round_id == r.id)
-        for v in votes:
-            print("Deleting vote %s" % v.id)
-            db.session.delete(v)
-        print("Deleting round %s" % r.id)
-        db.session.delete(r)
-    print("Deleting Dispute %s" % dispute.id)
-    db.session.delete(dispute)
-    db.session.commit()
-
-def get_db_option(db_key):
-    kleroscan = Kleroscan.query.filter(Kleroscan.option == db_key).first()
-    if kleroscan == None: return None
-    return kleroscan.value
-
-def set_db_option(db_key, db_val):
-    kleroscan = Kleroscan.query.filter(Kleroscan.option == db_key)
-    for k in kleroscan:
-        db.session.delete(k)
-        db.session.commit()
-    kleroscan = Kleroscan(option = db_key, value = db_val)
-    db.session.add(kleroscan)
-    db.session.commit()
-
 
 for opt, arg in opts:
     if opt in ('-r', '--rebuild'):
         rebuild_db()
 
+for dispute_eth in kleros_eth.dispute_events():
+    dispute = Dispute.query.get(dispute_eth['dispute_id'])
+    if dispute.ruled: continue
 
-dispute_id = 0
+    dispute_eth.update(kleros_eth.dispute_data(dispute_eth['dispute_id']))
+
+    dispute.delete_recursive()
+
+    dispute = Dispute(
+        id = dispute_eth['dispute_id'],
+        created_by = dispute_eth['creator'],
+        created_date = dispute_eth['date'],
+        created_tx = dispute_eth['txid'],
+        ruled = dispute_eth['ruled'],
+        subcourt_id = dispute_eth['subcourt_id'],
+        current_ruling = dispute_eth['ruling']
+    )
+
+    db.session.add(dispute)
+    db.session.commit()
+
+    rounds = kleros_eth.dispute_rounds(dispute_eth['dispute_id'])
+
+    for round_num in range(0, len(rounds)):
+        round_eth = rounds[round_num]
+
+        round = Round(
+            dispute_id = dispute_eth['dispute_id'],
+            round_num = round_num,
+            draws_in_round = round_eth['jury_size'],
+            tokens_at_stake_per_juror = round_eth['tokens_at_stake_per_juror'],
+            total_fees_for_jurors = round_eth['total_fees'],
+            commits_in_round = round_eth['votes'],
+            repartitions_in_each_round = round_eth['repartition'],
+            penalties_in_each_round = round_eth['penalties']
+        )
+
+        db.session.add(round)
+        db.session.commit()
+
+        for vote_num in range(0, round.draws_in_round):
+            vote_eth = kleros_eth.vote(dispute_eth['dispute_id'], round_num, vote_num)
+
+            vote = Vote(
+                round_id = round.id,
+                account = vote_eth['address'],
+                commit = vote_eth['commit'],
+                choice = vote_eth['choice'],
+                vote = vote_eth['vote']
+            )
+
+            db.session.add(vote)
+        db.session.commit()
+
+
+
+'''
 
 while(True):
 
@@ -74,8 +97,10 @@ while(True):
             dispute_id += 1
             continue
         else:
-            delete_dispute(dispute)
+            dispute.delete_recursive()
     try:
+        dispute_eth = kleros_eth.
+
         d = kleros.dispute(dispute_id)
     except ValueError:
         break
@@ -150,3 +175,5 @@ for stake in kleros.juror_stakes:
 
 set_db_option('last_block', last_block)
 set_db_option('last_updated', datetime.utcnow())
+
+'''

@@ -3,7 +3,7 @@
 import sys
 sys.path.extend(('lib', 'db'))
 
-from kleros_db_schema import db, Dispute, Round, Vote, Kleroscan, Court, Juror
+from kleros import db, Dispute, Round, Vote, Kleroscan, Court, Juror
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -45,6 +45,7 @@ def dispute(id):
     rounds = Round.query.filter_by(dispute_id = id).all()
     votes = []
     for r in rounds:
+        r.majority_reached = r.majority_reached()
         r.votes = Vote.query.filter_by(round_id = r.id).all()
         for v in r.votes:
             if v.choice == 1: v.vote_str = 'Yes'
@@ -53,11 +54,11 @@ def dispute(id):
 
             if r.majority_reached:
                 if v.choice == 0: v.color = '#F7DC6F'
-                elif v.choice == r.winning_choice: v.color = '#27AE60'
+                elif v.choice == r.winning_choice(): v.color = '#27AE60'
                 else: v.color = '#E74C3C'
             else:
                 if v.choice == 0: v.color = '#FCF3CF'
-                elif v.choice == r.winning_choice: v.color = '#D1F2EB'
+                elif v.choice == r.winning_choice(): v.color = '#D1F2EB'
                 else: v.color = '#F5B7B1'
 
     x = len(rounds)

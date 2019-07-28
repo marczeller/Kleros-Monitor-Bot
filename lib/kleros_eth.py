@@ -72,7 +72,7 @@ class KlerosEth:
             })
         return(rounds)
 
-    def vote_count(self, dispute_id, round):
+    def vote_counts(self, dispute_id, round):
         data = self.contract.functions.getVoteCounter(dispute_id, round).call()
         return {
             'winning_choice': data[0],
