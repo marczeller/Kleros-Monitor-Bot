@@ -19,15 +19,18 @@ class KlerosEth:
         )
 
     def dispute_events(self, starting_block = initial_block):
-        filter = self.contract.events.DisputeCreation.createFilter(fromBlock=starting_block,
-            argument_filters={"topic0": self.dispute_creation_event_topic} )
+        filter = self.contract.events.DisputeCreation.createFilter(
+            fromBlock=int(starting_block),
+            argument_filters={"topic0": self.dispute_creation_event_topic}
+        )
         disputes = []
         for event in filter.get_all_entries():
             disputes.append({
                 'dispute_id' : event['args']['_disputeID'],
                 'date' : self.event_date(event),
                 'creator': self.event_creator(event),
-                'txid': event['transactionHash']
+                'txid': event['transactionHash'],
+                'block_number': event['blockNumber']
             })
         return disputes
 
@@ -100,5 +103,6 @@ class KlerosEth:
                 'court_id': staking['args']['_subcourtID'],
                 'txid': staking['transactionHash'],
                 'date' : self.event_date(staking),
+                'block_number': staking['blockNumber']
             })
         return stakings

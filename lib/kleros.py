@@ -9,17 +9,17 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/kleros.db'
 db = SQLAlchemy(app)
 
-class Kleroscan(db.Model):
+class Config(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     option = db.Column(db.String)
     value = db.Column(db.String)
 
-    def get_option(self, db_key):
+    def get(self, db_key):
         query = self.query.filter(self.__class__.option == db_key).first()
         if query == None: return None
         return query.value
 
-    def set_option(self, db_key, db_val):
+    def set(self, db_key, db_val):
         query = self.query.filter(self.__class__.option == db_key)
         for item in query: db.session.delete(item)
         db.session.commit()

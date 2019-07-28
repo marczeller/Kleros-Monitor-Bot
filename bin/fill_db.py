@@ -3,13 +3,15 @@
 import getopt
 import sys
 from datetime import datetime
+from time import gmtime, strftime
 sys.path.extend(('lib', 'db'))
 
 import os
-from kleros import db, Dispute, Round, Vote, Kleroscan, Court, JurorStake
+from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake
 from kleros_eth import KlerosEth
 
 kleros_eth = KlerosEth(os.environ["ETH_NODE_URL"])
+config = Config()
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "r", ["rebuild"])
@@ -25,19 +27,30 @@ def rebuild_db():
     db.session.add(Court( id = 2, name = "TCR Court"))
     db.session.add(Court( id = 3, name = "Ethfinex Court"))
     db.session.add(Court( id = 4, name = "ERC20 Court"))
+    config.set('dispute_search_block', KlerosEth.initial_block)
     db.session.commit()
 
 for opt, arg in opts:
     if opt in ('-r', '--rebuild'):
         rebuild_db()
 
-for dispute_eth in kleros_eth.dispute_events():
+found_open_dispute = False
+
+print("Fetching disputes from block %s" % config.get('dispute_search_block'))
+
+for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block')):
     dispute = Dispute.query.get(dispute_eth['dispute_id'])
-    if dispute.ruled: continue
+    if dispute != None:
+        if dispute.ruled: continue
+        dispute.delete_recursive()
+
+    if not found_open_dispute:
+        found_open_dispute = True
+        config.set('dispute_search_block', dispute_eth['block_number'] - 1)
 
     dispute_eth.update(kleros_eth.dispute_data(dispute_eth['dispute_id']))
 
-    dispute.delete_recursive()
+    print("Creating dispute %s" % dispute_eth['dispute_id'])
 
     dispute = Dispute(
         id = dispute_eth['dispute_id'],
@@ -84,3 +97,5 @@ for dispute_eth in kleros_eth.dispute_events():
 
             db.session.add(vote)
         db.session.commit()
+
+config.set('updated', strftime("%Y-%m-%d %H:%M:%S", gmtime()))
