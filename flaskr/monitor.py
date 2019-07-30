@@ -3,9 +3,10 @@
 import sys
 sys.path.extend(('lib', 'db'))
 
-from kleros import db, Dispute, Round, Vote, Config, Court, Juror
+from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 import statistics
 
@@ -110,7 +111,11 @@ def dispute(id):
 
 @app.route('/juror/<string:address>', methods=['GET'])
 def juror(address):
-    juror = Juror.query.filter_by(address=address).first()
-    stakings = juror.stakings()
 
-    return render_template('monitor/juror.html', juror=juror, stakings = juror.stakings, last_updated=config.get('updated'))
+    address = address.lower()
+
+    votes = Vote.query.filter(func.lower(Vote.account) == address).order_by(Vote.round_id.desc())
+    stakes = JurorStake.query.filter(func.lower(JurorStake.address) == address).order_by(JurorStake.staking_date.desc())
+    disputes = Dispute.query.filter(func.lower(Dispute.created_by) == address).order_by(Dispute.created_date.desc())
+
+    return render_template('monitor/juror.html', address=address, votes=votes, stakes = stakes, disputes=disputes, last_updated=config.get('updated'))
