@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row">
     <div class="col">
-      <h4>{% block title %}Juror #{{ juror.address }}{% endblock %}</h4>
+      <h4>{% block title %}Juror {{ address }}{% endblock %}</h4>
     </div>
     <div class="col">
       <div align=right>Last updated: <span class="datetime-string">{{last_updated}}</span> UTC</div>
@@ -12,5 +12,36 @@
 {% endblock %}
 
 {% block content %}
-{{ stakings }}
+
+<h2>Disputes Created</h2>
+<div class="mb-5">
+  <table class="table table-bordered responsive table-sm">
+    <tr><td>Dispute</td><td>Date</td>
+    {% for d in disputes: %}
+    <tr><td>Dispute {{d.id}}</td><td>{{ d.created_date }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<h2>Stakings</h2>
+<div class="mb-5">
+  <table class="table table-bordered responsive table-sm">
+    <tr><td>Court</td><td>Amount</td><td>Date</td><td>TxID</td></tr>
+    {% for s in stakes: %}
+      <tr><td>{{s.court_id}}</td><td>{{s.staking_amount}}</td><td>{{ s.staking_date }}</td><td>{{ s.txid }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<h2>Votes</h2>
+<div class="mb-5">
+  <table class="table table-bordered responsive table-sm">
+    <tr><td>Dispute</td><td>Round</td><td>Voted</td><td>Choice</td></tr>
+    {% for v in votes: %}
+      <tr><td>X</td><td>{{v.round_id}}</td><td>{{ v.vote }}</td><td>{{ v.choice }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+
 {% endblock %}
