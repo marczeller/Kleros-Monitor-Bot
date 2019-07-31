@@ -16,9 +16,13 @@
 <h2>Disputes Created</h2>
 <div class="mb-5">
   <table class="table table-bordered responsive table-sm">
-    <tr><td>Dispute</td><td>Date</td>
+    <tr><td>Dispute</td><td>Date</td><td>TxID</td></tr>
     {% for d in disputes: %}
-    <tr><td>Dispute {{d.id}}</td><td>{{ d.created_date }}</td></tr>
+    <tr>
+      <td><a href={{ url_for('dispute', id= d.id) }}>Dispute {{d.id}}</a></td>
+      <td>{{ d.created_date }}</td>
+      <td><a href="https://etherscan.io/tx/{{ d.created_tx }}">{{d.created_tx}}</a></td>
+    </tr>
     {% endfor %}
   </table>
 </div>
@@ -26,9 +30,14 @@
 <h2>Stakings</h2>
 <div class="mb-5">
   <table class="table table-bordered responsive table-sm">
-    <tr><td>Court</td><td>Amount</td><td>Date</td><td>TxID</td></tr>
+    <tr><td>Date</td><td>Court</td><td>Amount</td><td>TxID</td></tr>
     {% for s in stakes: %}
-      <tr><td>{{s.court_id}}</td><td>{{s.staking_amount}}</td><td>{{ s.staking_date }}</td><td>{{ s.txid }}</td></tr>
+      <tr>
+        <td>{{s[0].staking_date}}</td>
+        <td><a href="{{ url_for('court', id=s[1].id )}}">{{s[1].name}}</a></td>
+        <td>{{s[0].staking_amount}}</td>
+        <td><a href="https://etherscan.io/tx/{{s[0].txid}}">{{s[0].txid}}</a></td>
+      </tr>
     {% endfor %}
   </table>
 </div>
@@ -36,9 +45,14 @@
 <h2>Votes</h2>
 <div class="mb-5">
   <table class="table table-bordered responsive table-sm">
-    <tr><td>Dispute</td><td>Round</td><td>Voted</td><td>Choice</td></tr>
+    <tr><td>Dispute</td><td>Round</td><td>Status</td><td>Choice</td></tr>
     {% for v in votes: %}
-      <tr><td>X</td><td>{{v.round_id}}</td><td>{{ v.vote }}</td><td>{{ v.choice }}</td></tr>
+      <tr>
+        <td><a href="{{ url_for('dispute', id=v[1].dispute_id) }}">Dispute {{ v[1].dispute_id }}</a></td>
+        <td>{{v[1].round_num}}</td>
+        <td>{{ "Voted" if v[0].vote else "Abstained"}}</td>
+        <td>{{ v[0].choice }}</td>
+      </tr>
     {% endfor %}
   </table>
 </div>
