@@ -114,8 +114,19 @@ def juror(address):
 
     address = address.lower()
 
-    votes = Vote.query.filter(func.lower(Vote.account) == address).order_by(Vote.round_id.desc())
-    stakes = JurorStake.query.filter(func.lower(JurorStake.address) == address).order_by(JurorStake.staking_date.desc())
+    votes = (db.session.query(Vote, Round)
+        .filter(func.lower(Vote.account) == address)
+        .filter(Vote.round_id == Round.id)
+        .order_by(Vote.round_id.desc())
+        .all()
+    )
+
+    stakes = (db.session.query(JurorStake, Court)
+        .filter(func.lower(JurorStake.address) == address)
+        .filter(Court.id == JurorStake.court_id)
+        .order_by(JurorStake.staking_date.desc())
+        .all())
+
     disputes = Dispute.query.filter(func.lower(Dispute.created_by) == address).order_by(Dispute.created_date.desc())
 
     return render_template('monitor/juror.html', address=address, votes=votes, stakes = stakes, disputes=disputes, last_updated=config.get('updated'))
