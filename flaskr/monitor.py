@@ -121,6 +121,15 @@ def juror(address):
         .all()
     )
 
+    for v in votes:
+        if v[0].vote == 0:
+            v[0].color = '#F7DC6F'
+        else:
+            if v[0].is_winner():
+                v[0].color = '#27AE60'
+            else:
+                v[0].color = '#F5B7B1'
+
     stakes = (db.session.query(JurorStake, Court)
         .filter(func.lower(JurorStake.address) == address)
         .filter(Court.id == JurorStake.court_id)

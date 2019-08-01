@@ -47,10 +47,10 @@
   <table class="table table-bordered responsive table-sm">
     <tr><td>Dispute</td><td>Round</td><td>Status</td><td>Choice</td></tr>
     {% for v in votes: %}
-      <tr>
+      <tr bgcolor={{v[0].color}}>
         <td><a href="{{ url_for('dispute', id=v[1].dispute_id) }}">Dispute {{ v[1].dispute_id }}</a></td>
         <td>{{v[1].round_num}}</td>
-        <td>{{ "Voted" if v[0].vote else "Abstained"}}</td>
+        <td>{{ "Voted" if v[0].vote else "Pending"}}</td>
         <td>{{ v[0].choice }}</td>
       </tr>
     {% endfor %}
