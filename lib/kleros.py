@@ -124,6 +124,11 @@ class Vote(db.Model):
     vote = db.Column(db.Integer)
     date = db.Column(db.DateTime)
 
+    def is_winner(self):
+        round = Round.query.get(self.round_id)
+        if not round.majority_reached(): return False
+        return self.choice == round.winning_choice()
+
 class Juror(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String)
