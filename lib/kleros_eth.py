@@ -35,10 +35,7 @@ class KlerosEth:
                 })
             return disputes
         except ValueError as e:
-            if e['code'] == -32000:
-                return self.dispute_events(initial_block)
-            else:
-                raise
+            return self.dispute_events(initial_block)
 
     def dispute_data(self, dispute_id):
         raw_dispute = self.contract.functions.disputes(dispute_id).call()
@@ -116,7 +113,5 @@ class KlerosEth:
                 })
             return stakings
         except ValueError as e:
-            if e['code'] == -32000:
-                return self.staking_events(initial_block)
-            else:
-                raise
+            return self.staking_events(initial_block)
+            
