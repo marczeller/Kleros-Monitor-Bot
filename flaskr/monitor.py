@@ -11,7 +11,7 @@ from sqlalchemy import func
 import statistics
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kleros.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/kleros.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -122,13 +122,10 @@ def juror(address):
     )
 
     for v in votes:
-        if v[0].vote == 0:
-            v[0].color = '#F7DC6F'
+        if v[0].vote == 0: v[0].color = '#F7DC6F'
         else:
-            if v[0].is_winner():
-                v[0].color = '#27AE60'
-            else:
-                v[0].color = '#F5B7B1'
+            if v[0].is_winner(): v[0].color = '#27AE60'
+            else: v[0].color = '#F5B7B1'
 
     stakes = (db.session.query(JurorStake, Court)
         .filter(func.lower(JurorStake.address) == address)
