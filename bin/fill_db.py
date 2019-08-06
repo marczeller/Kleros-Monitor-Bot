@@ -62,7 +62,7 @@ for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block'))
         subcourt_id = dispute_eth['subcourt_id'],
         current_ruling = dispute_eth['ruling'],
         period = dispute_eth['period'],
-        last_period_change = dispute_eth['last_period_change'],
+        last_period_change = datetime.fromtimestamp(dispute_eth['last_period_change']),
     )
 
     db.session.add(dispute)

@@ -91,6 +91,15 @@ def dispute(id):
     dispute = Dispute.query.get(id)
     rounds = Round.query.filter_by(dispute_id = id).all()
     last_period_change = dispute.last_period_change
+    period_num = dispute.period
+    period_name = {
+    0 : "Evidence",
+    1 : "Commit",
+    2 : "Vote",
+    3 : "Appeal",
+    4 : "Execution",
+    }
+    period = period_name[period_num]
     votes = []
     for r in rounds:
         r.majority_reached = r.majority_reached()
@@ -111,7 +120,7 @@ def dispute(id):
 
     x = len(rounds)
     
-    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=config.get('updated'), last_period_change=last_period_change)
+    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=config.get('updated'), period = period, last_period_change=last_period_change)
 
 @app.route('/juror/<string:address>', methods=['GET'])
 def juror(address):
