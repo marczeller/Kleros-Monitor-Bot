@@ -39,13 +39,11 @@
             data-toggle="tooltip" data-placement="right" aria-hidden="true"></i></th>
           <th class="text-uppercase">
             Ruling <i class="fa fa-question-circle cursor-help ml-1" 
-            title="0: Refuse to arbitrate <br/> 1: Yes <br/> 2: No"
+            title="0: Refuse to arbitrate <br/>1: Option 1 <br/> 2: Option 2"
             data-toggle="tooltip" data-placement="right" aria-hidden="true"></i>
           </th>
           <th class="text-uppercase">
-            Final <i class="fa fa-question-circle cursor-help ml-1" 
-            title="Status of the dispute <br/> Yes : case closed <br/> No : Ongoing or possibility of appeal"
-            data-toggle="tooltip" data-placement="right" aria-hidden="true"></i></th>
+            Dispute Status</th>
           <th class="text-uppercase">
             Creator <i class="fa fa-question-circle cursor-help ml-1" 
             title="Dispute creator public address and TXID, in most cases, it's the challenger"
@@ -62,7 +60,7 @@
         <td class="text-center"><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
         <td><a href="{{ url_for('court', id = dispute.subcourt_id)}}">{{dispute.court_name}}</td>
         <td>{{dispute.current_ruling}}</td>
-        <td>{{'Yes' if dispute.ruled else 'No'}}</td>
+        <td>{{'Case Closed' if dispute.ruled else 'Ongoing'}}</td>
         <td>
           <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
           <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>
