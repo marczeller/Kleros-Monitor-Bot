@@ -16,8 +16,8 @@
   <div>
     <table class="table table-bordered responsive table-sm">
 
-      <tr><td align="center">Final</td><td align="center">Period</td><td align="center">Last Period Change</td></tr>
-      <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}><td align="center">{{'Yes' if dispute.ruled else 'No'}}</td><td align="center">{{dispute['period']}}</td><td align="center"><span class="datetime-string">{{'Case closed' if dispute.ruled else last_period_change}}</span> </td></tr>
+      <tr><td align="center">Dispute Status</td><td align="center">Period</td><td align="center">Last Period Change</td></tr>
+      <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}><td align="center">{{'Case Closed' if dispute.ruled else 'Ongoing'}}</td><td align="center">{{period}}</td><td align="center"><span class="datetime-string">{{last_period_change}}</span> UTC</td></tr>
 
     </table>
   </div>
