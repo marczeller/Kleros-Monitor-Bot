@@ -7,6 +7,8 @@ from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
+from datetime import datetime
+from time import gmtime, strftime
 
 import statistics
 
@@ -88,6 +90,7 @@ def disputes():
 def dispute(id):
     dispute = Dispute.query.get(id)
     rounds = Round.query.filter_by(dispute_id = id).all()
+    last_period_change = dispute.last_period_change
     votes = []
     for r in rounds:
         r.majority_reached = r.majority_reached()
@@ -107,7 +110,8 @@ def dispute(id):
                 else: v.color = '#F5B7B1'
 
     x = len(rounds)
-    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=config.get('updated'))
+    
+    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=config.get('updated'), last_period_change=last_period_change)
 
 @app.route('/juror/<string:address>', methods=['GET'])
 def juror(address):
