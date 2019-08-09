@@ -33,6 +33,9 @@ class Court(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
+    def disputes(self):
+        return Dispute.query.filter(Dispute.subcourt_id == self.id).order_by(Dispute.id.desc())
+
     def jurors(self):
         jurors_query = db.session.execute(
             "SELECT address, staking_amount, MAX(staking_date) as 'date' \
@@ -71,6 +74,22 @@ class Dispute(db.Model):
     created_tx = db.Column(db.String)
     created_date = db.Column(db.DateTime)
 
+    def rounds(self):
+        return Round.query.filter_by(dispute_id = self.id).all()
+
+    def court(self):
+        return Court.query.get(self.subcourt_id)
+
+    def period_name(self):
+        period_name = {
+            0 : "Evidence",
+            1 : "Commit",
+            2 : "Vote",
+            3 : "Appeal",
+            4 : "Execution",
+        }
+        return period_name[self.period]
+
     def delete_recursive(self):
         rounds = Round.query.filter(Round.dispute_id == self.id)
         for r in rounds: r.delete_recursive()
@@ -92,6 +111,9 @@ class Round(db.Model):
     votes_in_each_round = db.Column(db.Integer)
     repartitions_in_each_round = db.Column(db.Integer)
     penalties_in_each_round = db.Column(db.Integer)
+
+    def votes(self):
+        return Vote.query.filter_by(round_id = self.id).all()
 
     def delete_recursive(self):
         votes = Vote.query.filter(Vote.round_id == self.id)

@@ -26,22 +26,15 @@ from flask import (
 @app.route('/court/<int:id>', methods=['GET'])
 def court(id):
     court = Court.query.get(id)
-    disputes = Dispute.query.filter(Dispute.subcourt_id == id).order_by(Dispute.id.desc())
+    disputes = court.disputes()
     jurors = court.jurors()
     jurors_stats = court.juror_stats()
-
-    court_name = {
-    0 : "General Court",
-    1 : "Null",
-    2 : "TCR Court",
-    3 : "Ethfinex Court",
-    4 : "ERC20 Court",
-    }
 
     court_mapping = {
         0: [2, 3, 4],
         2: [3, 4,]
     }
+
     full_jurors = []
     full_jurors_stats = {}
     if id in court_mapping:
@@ -55,8 +48,8 @@ def court(id):
             amounts.append(j['staking_amount'])
 
         courts = Court.query.filter(Court.id.in_(court_mapping[id]))
-        for court in courts:
-            court_jurors = court.jurors()
+        for c in courts:
+            court_jurors = c.jurors()
             for cj in court_jurors:
                 if cj['address'] not in unique_jurors:
                     unique_jurors[cj['address']] = {"staking_amount": cj['staking_amount']}
@@ -71,39 +64,28 @@ def court(id):
         full_jurors = sorted(full_jurors, key=lambda j: j['staking_amount'], reverse=True)
 
     return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=config.get('updated'),
-        jurors_stats=jurors_stats, full_jurors=full_jurors, full_jurors_stats=full_jurors_stats, court_name=court_name[id])
+        jurors_stats=jurors_stats, full_jurors=full_jurors, full_jurors_stats=full_jurors_stats)
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.order_by(Dispute.id.desc()).all()
     for dispute in disputes:
-        court = Court.query.get(dispute.subcourt_id)
-        if court != None:
-            dispute.court_name = court.name
-        else:
-            dispute.court_name = "Court #%" % dispute.subcourt_id
+        court = dispute.court()
+        if court != None: dispute.court_name = court.name
+        else: dispute.court_name = "Court #%" % dispute.subcourt_id
 
     return render_template('monitor/disputes.html', disputes=disputes, last_updated=config.get('updated'))
 
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):
     dispute = Dispute.query.get(id)
-    rounds = Round.query.filter_by(dispute_id = id).all()
-    last_period_change = dispute.last_period_change
-    period_num = dispute.period
-    period_name = {
-    0 : "Evidence",
-    1 : "Commit",
-    2 : "Vote",
-    3 : "Appeal",
-    4 : "Execution",
-    }
-    period = period_name[period_num]
+    dispute.period_name = dispute.period_name()
+    dispute.rounds = dispute.rounds()
     votes = []
-    for r in rounds:
+    for r in dispute.rounds:
         r.majority_reached = r.majority_reached()
-        r.votes = Vote.query.filter_by(round_id = r.id).all()
+        r.votes = r.votes()
         for v in r.votes:
             if v.choice == 1: v.vote_str = 'Yes'
             elif v.choice == 2: v.vote_str = 'No'
@@ -118,17 +100,16 @@ def dispute(id):
                 elif v.choice == r.winning_choice(): v.color = '#D1F2EB'
                 else: v.color = '#F5B7B1'
 
-    x = len(rounds)
-    
-    return render_template('monitor/dispute.html', dispute=dispute, rounds=rounds, x=x, last_updated=config.get('updated'), period = period, last_period_change=last_period_change)
+    return render_template('monitor/dispute.html',
+        dispute=dispute,
+        last_updated=config.get('updated')
+    )
 
 @app.route('/juror/<string:address>', methods=['GET'])
 def juror(address):
 
-    address = address.lower()
-
     votes = (db.session.query(Vote, Round)
-        .filter(func.lower(Vote.account) == address)
+        .filter(func.lower(Vote.account) == address.lower())
         .filter(Vote.round_id == Round.id)
         .order_by(Vote.round_id.desc())
         .all()
@@ -141,7 +122,7 @@ def juror(address):
             else: v[0].color = '#F5B7B1'
 
     stakes = (db.session.query(JurorStake, Court)
-        .filter(func.lower(JurorStake.address) == address)
+        .filter(func.lower(JurorStake.address) == address.lower())
         .filter(Court.id == JurorStake.court_id)
         .order_by(JurorStake.staking_date.desc())
         .all())
