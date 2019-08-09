@@ -24,6 +24,7 @@ def rebuild_db():
     db.drop_all()
     db.create_all()
     db.session.add(Court( id = 0, name = "General Court"))
+    db.session.add(Court( id = 1, name = "Court 1"))
     db.session.add(Court( id = 2, name = "TCR Court"))
     db.session.add(Court( id = 3, name = "Ethfinex Court"))
     db.session.add(Court( id = 4, name = "ERC20 Court"))

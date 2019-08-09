@@ -17,12 +17,16 @@
     <table class="table table-bordered responsive table-sm">
 
       <tr><td align="center">Dispute Status</td><td align="center">Period</td><td align="center">Last Period Change</td></tr>
-      <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}><td align="center">{{'Case Closed' if dispute.ruled else 'Ongoing'}}</td><td align="center">{{period}}</td><td align="center"><span class="datetime-string">{{last_period_change}}</span> UTC</td></tr>
+      <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
+        <td align="center">{{'Case Closed' if dispute.ruled else 'Ongoing'}}</td>
+        <td align="center">{{dispute.period_name}}</td>
+        <td align="center"><span class="datetime-string">{{last_period_change}}</span> UTC</td>
+      </tr>
 
     </table>
   </div>
   <div class="mb-5">
-    {% for r in rounds: %}
+    {% for r in dispute.rounds: %}
     <table class="table table-bordered responsive table-sm">
       <tr bgcolor="#9977f2"><td>Round {{r.round_num}} - {{ 'Majority reached' if r.majority_reached else 'No majority' }}</td><td align="center">Vote</td></tr>
       {% for v in r.votes %}
