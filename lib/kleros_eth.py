@@ -18,11 +18,13 @@ class KlerosEth:
             abi = self.abi
         )
 
-    def dispute_events(self, starting_block = initial_block):
+    def dispute_events(self, starting_block = None):
+        if starting_block == None: starting_block = self.initial_block
         try:
             filter = self.contract.events.DisputeCreation.createFilter(
                 fromBlock=int(starting_block),
-                argument_filters={"topic0": self.dispute_creation_event_topic}
+                # argument_filters={"topic0": self.dispute_creation_event_topic}
+                topics = [self.dispute_creation_event_topic]
             )
             disputes = []
             for event in filter.get_all_entries():
@@ -95,11 +97,12 @@ class KlerosEth:
             'vote': bool(raw_vote[3])
         }
 
-    def staking_events(self, starting_block = initial_block):
+    def staking_events(self, starting_block = None):
+        if starting_block == None: starting_block = self.initial_block
         try:
             filter = self.contract.events.StakeSet.createFilter(
                 fromBlock=int(starting_block),
-                argument_filters={"topic0": self.staking_event_topic}
+                topics = [ self.staking_event_topic ]
             )
             stakings = []
             for staking in filter.get_all_entries():
@@ -114,4 +117,3 @@ class KlerosEth:
             return stakings
         except ValueError as e:
             return self.staking_events(initial_block)
-            

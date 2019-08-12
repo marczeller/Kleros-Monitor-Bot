@@ -38,7 +38,6 @@ for opt, arg in opts:
     if opt in ('-r', '--rebuild'):
         rebuild_db()
 
-print("Fetching ETH price in USD")
 eth_price = makerdao_medianizer.eth_price()
 config.set('eth_price', eth_price)
 print("ETH price is : %s USD" % eth_price)
