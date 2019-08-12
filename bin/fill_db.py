@@ -9,8 +9,10 @@ sys.path.extend(('lib', 'db'))
 import os
 from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake
 from kleros_eth import KlerosEth
+from eth_price import MakerDAO_ETHUSD_Price_feed
 
 kleros_eth = KlerosEth(os.environ["ETH_NODE_URL"])
+eth_price_feed = MakerDAO_ETHUSD_Price_feed(os.environ["ETH_NODE_URL"])
 config = Config()
 
 try:
@@ -35,6 +37,11 @@ def rebuild_db():
 for opt, arg in opts:
     if opt in ('-r', '--rebuild'):
         rebuild_db()
+print("Fetching ETH price in USD")
+eth_price = eth_price_feed.get_price()
+db.session.add(eth_price)
+db.session.commit()
+print("ETH price is : %s USD" % eth_price) 
 
 print("Fetching disputes from block %s" % config.get('dispute_search_block'))
 

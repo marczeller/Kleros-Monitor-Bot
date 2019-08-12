@@ -5,11 +5,11 @@ class MakerDAO_ETHUSD_Price_feed:
     MakerDAO_Medianizer_address = '0x729D19f657BD0614b4985Cf1D82531c67569197B'
 
     def __init__(self, node_url):
-        self.w3 = Web3(HTTPProvider(node_url, request_kwargs={'timeout': 60})) #FIXME Add Exceptions, errors
+        self.w3 = Web3(HTTPProvider(node_url)) #FIXME Add Exceptions, errors
         self.contract = self.w3.eth.contract(
             address = Web3.toChecksumAddress(self.MakerDAO_Medianizer_address),
             abi = self.abi
             )
-    def get_price:
-        price_feed = self.contract.functions.read.call() / 10 ** 18
-        return price_feed
+    def get_price(self):
+        self.price_feed = self.contract.functions.read.call()
+        return self.eth_price
