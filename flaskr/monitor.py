@@ -80,11 +80,8 @@ def disputes():
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):
     dispute = Dispute.query.get(id)
-    dispute.period_name = dispute.period_name()
     dispute.rounds = dispute.rounds()
-    votes = []
     for r in dispute.rounds:
-        r.majority_reached = r.majority_reached()
         r.votes = r.votes()
         for v in r.votes:
             if v.choice == 1: v.vote_str = 'Yes'
@@ -93,11 +90,11 @@ def dispute(id):
 
             if r.majority_reached:
                 if v.choice == 0: v.color = '#F7DC6F'
-                elif v.choice == r.winning_choice(): v.color = '#27AE60'
+                elif v.choice == r.winning_choice: v.color = '#27AE60'
                 else: v.color = '#E74C3C'
             else:
                 if v.choice == 0: v.color = '#FCF3CF'
-                elif v.choice == r.winning_choice(): v.color = '#D1F2EB'
+                elif v.choice == r.winning_choice: v.color = '#D1F2EB'
                 else: v.color = '#F5B7B1'
 
     return render_template('monitor/dispute.html',
@@ -118,7 +115,7 @@ def juror(address):
     for v in votes:
         if v[0].vote == 0: v[0].color = '#F7DC6F'
         else:
-            if v[0].is_winner(): v[0].color = '#27AE60'
+            if v[0].is_winner: v[0].color = '#27AE60'
             else: v[0].color = '#F5B7B1'
 
     stakes = (db.session.query(JurorStake, Court)
