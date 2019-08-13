@@ -58,7 +58,7 @@
       {% for dispute in disputes %}
       <tr onclick="window.location='{{ url_for('dispute', id = dispute.id) }}'" style="cursor: pointer">
         <td class="text-center"><a href="{{ url_for('dispute', id = dispute.id) }}">{{ dispute.id }}</a></td>
-        <td><a href="{{ url_for('court', id = dispute.subcourt_id)}}">{{dispute.court_name}}</td>
+        <td><a href="{{ url_for('court', id = dispute.subcourt_id)}}">{{dispute.court.name}}</td>
         <td>{{dispute.current_ruling}}</td>
         <td>{{'Case Closed' if dispute.ruled else 'Ongoing'}}</td>
         <td>
