@@ -3,7 +3,7 @@
 {% block header %}
   <div class="row">
     <div class="col">
-      <h4>{% block title %}Juror {{ address }}{% endblock %}</h4>
+      <h4>{% block title %}<a href="https://etherscan.io/address/{{ address }}">Juror {{ address }}</a>{% endblock %}</h4>
     </div>
     <div class="col">
       <div align=right>Last updated: <span class="datetime-string">{{last_updated}}</span> UTC</div>
@@ -27,7 +27,7 @@
   </table>
 </div>
 
-<h2>Stakings</h2>
+<h2>Stakings events monitor</h2>
 <div class="mb-5">
   <table class="table table-bordered responsive table-sm">
     <tr><td>Date</td><td>Court</td><td>Amount</td><td>TxID</td></tr>
