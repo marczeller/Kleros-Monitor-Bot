@@ -60,6 +60,7 @@ class Court(db.Model):
             'median': statistics.median(amounts)
         }
 
+
 class Dispute(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_of_choices = db.Column(db.Integer)
@@ -80,14 +81,6 @@ class Dispute(db.Model):
     @property
     def court(self):
         return Court.query.get(self.subcourt_id)
-
-    @property
-    def court_name(self):
-        court = self.court
-        if court.name == "":
-            return "Court %s" % court.id
-        else:
-            return court.name
 
     @property
     def period_name(self):
