@@ -49,12 +49,13 @@
     </tr>
   </table>
 </div>
+
 <div class="mt-2 mb-2">
   <table class="table table-bordered responsive table-sm">
     <tr bgcolor="#9977f2"><td>Address</td><td>Date</td><td>Staking amount</td></tr>
     {% for juror in jurors %}
       <tr>
-        <td><a href="https://etherscan.io/address/{{ juror['address'] }}">{{ juror['address'] }}</a></td>
+        <td><a href={{ url_for('juror', address=juror['address']) }}>{{ juror['address'] }}</a></td>
         <td class="datetime-string">{{ juror['date'] }}</td>
         <td>{{ juror['staking_amount'] }}</td>
       </tr>
@@ -81,7 +82,7 @@
             <td>{{dispute.current_ruling}}</td>
             <td>{{'Yes' if dispute.ruled else 'No'}}</td>
             <td>
-              <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
+              <a href={{ url_for('juror', address=dispute.created_by) }}>{{dispute.created_by[:12]}}...</a>&nbsp;
               <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>&nbsp;
             </td>
             <td>{{dispute.created_date}}</td>

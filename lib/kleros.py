@@ -80,6 +80,7 @@ class Dispute(db.Model):
     def court(self):
         return Court.query.get(self.subcourt_id)
 
+    @property
     def period_name(self):
         period_name = {
             0 : "Evidence",
@@ -124,10 +125,12 @@ class Round(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    @property
     def majority_reached(self):
         votes_cast = Vote.query.filter(Vote.round_id == self.id).filter(Vote.vote == 1).count()
         return votes_cast * 2 >= self.draws_in_round
 
+    @property
     def winning_choice(self):
         votes = Vote.query.filter(Vote.round_id == self.id).count()
         votes_query = db.session.execute(
@@ -135,7 +138,6 @@ class Round(db.Model):
             where round_id = :round_id and vote=1 \
             group by choice order by num_votes desc", {'round_id': self.id}).first()
         return(votes_query[0])
-
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -146,10 +148,11 @@ class Vote(db.Model):
     vote = db.Column(db.Integer)
     date = db.Column(db.DateTime)
 
+    @property
     def is_winner(self):
         round = Round.query.get(self.round_id)
-        if not round.majority_reached(): return False
-        return self.choice == round.winning_choice()
+        if not round.majority_reached: return False
+        return self.choice == round.winning_choice
 
 class Juror(db.Model):
     id = db.Column(db.Integer, primary_key=True)

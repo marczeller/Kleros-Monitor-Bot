@@ -31,7 +31,7 @@
       <tr bgcolor="#9977f2"><td>Round {{r.round_num}} - {{ 'Majority reached' if r.majority_reached else 'No majority' }}</td><td align="center">Vote</td></tr>
       {% for v in r.votes %}
         <tr bgcolor={{v.color}}>
-          <td><a href="https://etherscan.io/address/{{v.account}}">{{v.account}}</a></td>
+          <td><a href={{ url_for('juror', address=v.account) }}>{{v.account}}</a></td>
           <td align="right">{{ v.vote_str }}</td>
         </tr>
       {% endfor %}

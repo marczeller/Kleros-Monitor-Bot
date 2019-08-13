@@ -30,26 +30,26 @@
     <thead>
       <tr>
           <th class="text-uppercase">
-            ID <i class="fa fa-question-circle cursor-help ml-1" 
+            ID <i class="fa fa-question-circle cursor-help ml-1"
             title="Dispute unique ID, click it for vote and jurors information"
             data-toggle="tooltip" data-placement="right" aria-hidden="true"></i></th>
           <th class="text-uppercase">
-            Court <i class="fa fa-question-circle cursor-help ml-1" 
+            Court <i class="fa fa-question-circle cursor-help ml-1"
             title="Find staking distribution and list of related dispute by clicking on any court name"
             data-toggle="tooltip" data-placement="right" aria-hidden="true"></i></th>
           <th class="text-uppercase">
-            Ruling <i class="fa fa-question-circle cursor-help ml-1" 
+            Ruling <i class="fa fa-question-circle cursor-help ml-1"
             title="0: Refuse to arbitrate <br/>1: Option 1 <br/> 2: Option 2"
             data-toggle="tooltip" data-placement="right" aria-hidden="true"></i>
           </th>
           <th class="text-uppercase">
             Dispute Status</th>
           <th class="text-uppercase">
-            Creator <i class="fa fa-question-circle cursor-help ml-1" 
+            Creator <i class="fa fa-question-circle cursor-help ml-1"
             title="Dispute creator public address and TXID, in most cases, it's the challenger"
             data-toggle="tooltip" data-placement="right" aria-hidden="true"></i></th>
           <th class="text-uppercase">
-            Date  <i class="fa fa-question-circle cursor-help ml-1" 
+            Date  <i class="fa fa-question-circle cursor-help ml-1"
             title="Timestamp of the dispute creation"
             data-toggle="tooltip" data-placement="right" aria-hidden="true"></i></th>
       </tr>
@@ -62,7 +62,7 @@
         <td>{{dispute.current_ruling}}</td>
         <td>{{'Case Closed' if dispute.ruled else 'Ongoing'}}</td>
         <td>
-          <a href="https://etherscan.io/address/{{dispute.created_by}}">{{dispute.created_by[:12]}}...</a>&nbsp;
+          <a href={{ url_for('juror', address=dispute.created_by) }}>{{dispute.created_by[:12]}}...</a>&nbsp;
           <a href="https://etherscan.io/tx/{{dispute.created_tx}}">[txid]</a>
         </td>
         <td>{{dispute.created_date}}</td>
