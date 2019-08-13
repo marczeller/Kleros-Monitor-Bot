@@ -45,9 +45,12 @@ print("ETH price is : %s USD" % eth_price)
 print("Fetching disputes from block %s" % config.get('dispute_search_block'))
 
 found_open_dispute = False
+latest_dispute_block = 0
 
 for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block')):
     dispute = Dispute.query.get(dispute_eth['dispute_id'])
+    latest_dispute_block = dispute_eth['block_number']
+
     if dispute != None:
         if dispute.ruled: continue
         dispute.delete_recursive()
@@ -107,6 +110,9 @@ for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block'))
 
             db.session.add(vote)
         db.session.commit()
+
+if not(found_open_dispute):
+    config.set('dispute_search_block', latest_dispute_block - 1)
 
 print("Fetching stakings from block %s" % config.get('staking_search_block'))
 
