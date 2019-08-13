@@ -23,7 +23,6 @@ class KlerosEth:
         try:
             filter = self.contract.events.DisputeCreation.createFilter(
                 fromBlock=int(starting_block),
-                # argument_filters={"topic0": self.dispute_creation_event_topic}
                 topics = [self.dispute_creation_event_topic]
             )
             disputes = []
@@ -37,7 +36,7 @@ class KlerosEth:
                 })
             return disputes
         except ValueError as e:
-            return self.dispute_events(initial_block)
+            return self.dispute_events(starting_block)
 
     def dispute_data(self, dispute_id):
         raw_dispute = self.contract.functions.disputes(dispute_id).call()
@@ -116,4 +115,4 @@ class KlerosEth:
                 })
             return stakings
         except ValueError as e:
-            return self.staking_events(initial_block)
+            return self.staking_events(starting_block)
