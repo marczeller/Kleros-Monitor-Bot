@@ -20,7 +20,7 @@
       <tr bgcolor={{'#90EE90' if dispute.ruled else '#FFFCBB'}}>
         <td align="center">{{'Case Closed' if dispute.ruled else 'Ongoing'}}</td>
         <td align="center">{{dispute.period_name}}</td>
-        <td align="center"><span class="datetime-string">{{last_period_change}}</span> UTC</td>
+        <td align="center"><span class="datetime-string">{{dispute.last_period_change}}</span> UTC</td>
       </tr>
 
     </table>
