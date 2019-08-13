@@ -77,8 +77,17 @@ class Dispute(db.Model):
     def rounds(self):
         return Round.query.filter_by(dispute_id = self.id).all()
 
+    @property
     def court(self):
         return Court.query.get(self.subcourt_id)
+
+    @property
+    def court_name(self):
+        court = self.court
+        if court.name == "":
+            return "Court %s" % court.id
+        else:
+            return court.name
 
     @property
     def period_name(self):

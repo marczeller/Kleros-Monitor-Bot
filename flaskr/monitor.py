@@ -70,11 +70,6 @@ def court(id):
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.order_by(Dispute.id.desc()).all()
-    for dispute in disputes:
-        court = dispute.court()
-        if court != None: dispute.court_name = court.name
-        else: dispute.court_name = "Court #%" % dispute.subcourt_id
-
     return render_template('monitor/disputes.html', disputes=disputes, last_updated=config.get('updated'))
 
 @app.route('/dispute/<int:id>', methods=['GET'])
