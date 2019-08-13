@@ -124,6 +124,6 @@ def juror(address):
         .order_by(JurorStake.staking_date.desc())
         .all())
 
-    disputes = Dispute.query.filter(func.lower(Dispute.created_by) == address).order_by(Dispute.created_date.desc())
+    disputes = Dispute.query.filter(func.lower(Dispute.created_by) == address.lower()).order_by(Dispute.created_date.desc())
 
     return render_template('monitor/juror.html', address=address, votes=votes, stakes = stakes, disputes=disputes, last_updated=config.get('updated'))
