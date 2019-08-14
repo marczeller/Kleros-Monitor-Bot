@@ -4,16 +4,17 @@ import getopt
 import sys
 from datetime import datetime
 from time import gmtime, strftime
+import requests
 sys.path.extend(('lib', 'db'))
 
 import os
-from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake
+
+from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake, Deposit
 from kleros_eth import KlerosEth
 from makerdao_medianizer import MakerDAO_Medianizer
 
 kleros_eth = KlerosEth(os.environ["ETH_NODE_URL"])
 makerdao_medianizer = MakerDAO_Medianizer(os.environ["ETH_NODE_URL"])
-config = Config()
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "r", ["rebuild"])
@@ -30,8 +31,8 @@ def rebuild_db():
     db.session.add(Court( id = 2, name = "TCR Court"))
     db.session.add(Court( id = 3, name = "Ethfinex Court"))
     db.session.add(Court( id = 4, name = "ERC20 Court"))
-    config.set('dispute_search_block', KlerosEth.initial_block)
-    config.set('staking_search_block', KlerosEth.initial_block)
+    Config.set('dispute_search_block', KlerosEth.initial_block)
+    Config.set('staking_search_block', KlerosEth.initial_block)
     db.session.commit()
 
 for opt, arg in opts:
@@ -39,15 +40,15 @@ for opt, arg in opts:
         rebuild_db()
 
 eth_price = makerdao_medianizer.eth_price()
-config.set('eth_price', eth_price)
+Config.set('eth_price', eth_price)
 print("ETH price is : %s USD" % eth_price)
 
-print("Fetching disputes from block %s" % config.get('dispute_search_block'))
+print("Fetching disputes from block %s" % Config.get('dispute_search_block'))
 
 found_open_dispute = False
 latest_dispute_block = 0
 
-for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block')):
+for dispute_eth in kleros_eth.dispute_events(Config.get('dispute_search_block')):
     dispute = Dispute.query.get(dispute_eth['dispute_id'])
     latest_dispute_block = dispute_eth['block_number']
 
@@ -59,7 +60,7 @@ for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block'))
 
     if (not found_open_dispute) and (not dispute_eth['ruled']):
         found_open_dispute = True
-        config.set('dispute_search_block', dispute_eth['block_number'] - 1)
+        Config.set('dispute_search_block', dispute_eth['block_number'] - 1)
 
     print("Creating dispute %s" % dispute_eth['dispute_id'])
 
@@ -112,11 +113,11 @@ for dispute_eth in kleros_eth.dispute_events(config.get('dispute_search_block'))
         db.session.commit()
 
 if not(found_open_dispute):
-    config.set('dispute_search_block', latest_dispute_block - 1)
+    Config.set('dispute_search_block', latest_dispute_block - 1)
 
-print("Fetching stakings from block %s" % config.get('staking_search_block'))
+print("Fetching stakings from block %s" % Config.get('staking_search_block'))
 
-for staking_eth in kleros_eth.staking_events(config.get('staking_search_block')):
+for staking_eth in kleros_eth.staking_events(Config.get('staking_search_block')):
     print("Adding staking in block %s" % staking_eth['block_number'])
     staking = JurorStake(
         address = staking_eth['address'],
@@ -127,6 +128,28 @@ for staking_eth in kleros_eth.staking_events(config.get('staking_search_block'))
     )
     db.session.add(staking)
 
-    config.set('staking_search_block', staking_eth['block_number'] + 1)
+    Config.set('staking_search_block', staking_eth['block_number'] + 1)
 
-config.set('updated', strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+print ("Fetching deposits")
+
+Deposit.query.delete()
+
+deposits_url = "https://api.etherscan.io/api?module=account&action=txlist&address=0x916deaB80DFbc7030277047cD18B233B3CE5b4Ab&startblock=7303699&endblock=99999999&sort=asc&apikey=GAN3HIU7QHKSP27MGXJPAAXUXEKVCU8C4X"
+response = requests.get(deposits_url)
+get_json = response.json()
+items = get_json['result']
+
+for item in items:
+    if item['value'] == '0': continue
+    deposit = Deposit(
+        address = item['from'],
+        cdate = datetime.utcfromtimestamp(int(item['timeStamp'])),
+        amount = int(item['value']) / 10**18,
+        txid = item['hash'],
+        token_contract = "XXX" # FIXME
+    )
+    db.session.add(deposit)
+
+db.session.commit()
+
+Config.set('updated', strftime("%Y-%m-%d %H:%M:%S", gmtime()))
