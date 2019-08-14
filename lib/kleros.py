@@ -2,6 +2,7 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 import statistics
 
@@ -16,16 +17,18 @@ class Config(db.Model):
     option = db.Column(db.String)
     value = db.Column(db.String)
 
-    def get(self, db_key):
-        query = self.query.filter(self.__class__.option == db_key).first()
+    @classmethod
+    def get(cls, db_key):
+        query = cls.query.filter(cls.option == db_key).first()
         if query == None: return None
         return query.value
 
-    def set(self, db_key, db_val):
-        query = self.query.filter(self.__class__.option == db_key)
+    @classmethod
+    def set(cls, db_key, db_val):
+        query = cls.query.filter(cls.option == db_key)
         for item in query: db.session.delete(item)
         db.session.commit()
-        new_option = self.__class__(option = db_key, value = db_val)
+        new_option = cls(option = db_key, value = db_val)
         db.session.add(new_option)
         db.session.commit()
 
@@ -166,7 +169,6 @@ class Juror(db.Model):
         for staking in stakings_query:
             s = dict(staking.items())
             stakings.append(s)
-
         return stakings
 
 class JurorStake(db.Model):
@@ -176,3 +178,15 @@ class JurorStake(db.Model):
     staking_date = db.Column(db.DateTime)
     staking_amount = db.Column(db.Float)
     txid = db.Column(db.String)
+
+class Deposit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String)
+    cdate = db.Column(db.DateTime)
+    amount = db.Column(db.Float)
+    txid = db.Column(db.String)
+    token_contract = db.Column(db.String) # FIXME
+
+    @classmethod
+    def total(cls):
+        return cls.query.with_entities(func.sum(cls.amount)).all()[0][0]

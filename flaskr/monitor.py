@@ -17,7 +17,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/kleros.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-config = Config()
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -63,14 +62,14 @@ def court(id):
         full_jurors = [{'address': address, 'staking_amount': juror['staking_amount']} for address, juror in unique_jurors.items()]
         full_jurors = sorted(full_jurors, key=lambda j: j['staking_amount'], reverse=True)
 
-    return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=config.get('updated'),
+    return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=Config.get('updated'),
         jurors_stats=jurors_stats, full_jurors=full_jurors, full_jurors_stats=full_jurors_stats)
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.order_by(Dispute.id.desc()).all()
-    return render_template('monitor/disputes.html', disputes=disputes, last_updated=config.get('updated'))
+    return render_template('monitor/disputes.html', disputes=disputes, last_updated=Config.get('updated'))
 
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):
@@ -94,7 +93,7 @@ def dispute(id):
 
     return render_template('monitor/dispute.html',
         dispute=dispute,
-        last_updated=config.get('updated')
+        last_updated=Config.get('updated')
     )
 
 @app.route('/juror/<string:address>', methods=['GET'])
@@ -121,4 +120,4 @@ def juror(address):
 
     disputes = Dispute.query.filter(func.lower(Dispute.created_by) == address.lower()).order_by(Dispute.created_date.desc())
 
-    return render_template('monitor/juror.html', address=address, votes=votes, stakes = stakes, disputes=disputes, last_updated=config.get('updated'))
+    return render_template('monitor/juror.html', address=address, votes=votes, stakes = stakes, disputes=disputes, last_updated=Config.get('updated'))
