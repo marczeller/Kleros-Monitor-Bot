@@ -20,16 +20,14 @@ result = get_json['result']
 value_dump = []
 result_len = len(result)
 for i in range(0,result_len):
-	temp = get_json['result'][i]['from']
-	if temp != address:
-		temp = get_json['result'][i]['value']
-		if temp != '0':
-			value_dump.append(int(temp))
+	from_address = get_json['result'][i]['from']
+	if from_address != address:
+		value_check = get_json['result'][i]['value']
+		if value_check != '0':
+			value_dump.append(int(value_check))
 
 val_len = len(value_dump)
-total = 0
-for i in range(0,val_len):
-	total += value_dump[i]
+total = sum(value_dump)
 
 total_ETH = total / 10 ** 18
 total_USD = total_ETH * eth_price
