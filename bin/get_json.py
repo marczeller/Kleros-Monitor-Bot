@@ -38,6 +38,6 @@ for i in range(0,val_len):
 total_ETH = total / 10 ** 18
 total_USD = total_ETH * eth_price
 
-print("total_ETH deposited : %3.f ETH" % total_ETH)
-print("eth_price is %2.f USD" % eth_price)
-print("total_USD deposited %3.f USD" % total_USD)
+print("total_ETH deposited : %.2f ETH" % total_ETH)
+print("eth_price is %.2f USD" % eth_price)
+print("total_USD deposited %.2f USD" % total_USD)
