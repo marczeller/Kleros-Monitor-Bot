@@ -4,7 +4,7 @@ import getopt
 import sys
 from datetime import datetime
 from time import gmtime, strftime
-import requests
+
 sys.path.extend(('lib', 'db'))
 
 import os
@@ -12,6 +12,7 @@ import os
 from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake, Deposit
 from kleros_eth import KlerosEth
 from makerdao_medianizer import MakerDAO_Medianizer
+from etherscan import Etherscan
 
 kleros_eth = KlerosEth(os.environ["ETH_NODE_URL"])
 makerdao_medianizer = MakerDAO_Medianizer(os.environ["ETH_NODE_URL"])
@@ -134,13 +135,7 @@ print ("Fetching deposits")
 
 Deposit.query.delete()
 
-deposits_url = "https://api.etherscan.io/api?module=account&action=txlist&address=0x916deaB80DFbc7030277047cD18B233B3CE5b4Ab&startblock=7303699&endblock=99999999&sort=asc&apikey=GAN3HIU7QHKSP27MGXJPAAXUXEKVCU8C4X"
-response = requests.get(deposits_url)
-get_json = response.json()
-items = get_json['result']
-
-for item in items:
-    if item['value'] == '0': continue
+for item in Etherscan.deposits("0x916deaB80DFbc7030277047cD18B233B3CE5b4Ab"):
     deposit = Deposit(
         address = item['from'],
         cdate = datetime.utcfromtimestamp(int(item['timeStamp'])),
