@@ -1,10 +1,7 @@
 #!/usr/bin/python3
 
 #TO DO convert me into a lib class and connect that into fill_db.py
-import getopt
 import sys
-from datetime import datetime
-from time import gmtime, strftime
 sys.path.extend(('lib', 'db'))
 import os
 import requests
