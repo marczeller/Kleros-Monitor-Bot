@@ -12,11 +12,15 @@ result = get_json['result']
 value_dump = []
 result_len = len(result)
 for i in range(0,result_len):
-	temp = get_json['result'][i]['value']
-	if temp == '0':
+	temp = get_json['result'][i]['from']
+	if temp == address:
 		continue
 	else:
-		value_dump.append(int(temp))
+		temp = get_json['result'][i]['value']
+		if temp == '0':
+			continue
+		else:
+			value_dump.append(int(temp))
 
 val_len = len(value_dump)
 total = 0
@@ -24,4 +28,3 @@ for i in range(0,val_len):
 	total += value_dump[i]
 
 print(total / 10 ** 18)
-
