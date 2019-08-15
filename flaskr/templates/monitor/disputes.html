@@ -21,6 +21,12 @@
 
 {% block content %}
 <div class="row mb-3 mt-1">
+  <table class="table table-bordered responsive table-sm">
+    <tr><td align="center">ETH Deposited in Kleros Contracts</td><td>ETH Price</td><td>USD passed though Kleros</td></tr>
+    <tr><td align="center">{{total_ETH}}</td><td>${{eth_price}}</td><td>${{total_ETH * eth_price}}</td></tr>
+      </table>
+  </div>
+<div class="row mb-3 mt-1">
   <div class="col">
     <input type="text" class="form-control" id="search-dispute" placeholder="Search by dispute ID / Court Name / Date / Anything!">
   </div>
