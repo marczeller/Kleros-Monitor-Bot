@@ -43,15 +43,16 @@ class Court(db.Model):
     @property
     def jurors(self):
         jurors_query = db.session.execute(
-            "SELECT DISTINCT(account) from vote, round, dispute \
+            "SELECT DISTINCT(account) as address, count(vote.id) from vote, round, dispute \
             WHERE dispute.subcourt_id = :court_id \
             AND vote.round_id = round.id \
-            AND round.dispute_id = dispute.id",
+            AND round.dispute_id = dispute.id \
+            GROUP BY address",
             {'court_id': self.id}
         )
         jurors = []
         for jq in jurors_query:
-            jurors.append(jq[0])
+            jurors.append({'address' : jq[0], 'votes' : jq[1]})
         return jurors
 
     def jurors_stakings(self):
@@ -177,6 +178,23 @@ class Vote(db.Model):
 class Juror(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String)
+
+    @classmethod
+    def list(cls):
+        jurors_query = db.session.execute(
+            "SELECT DISTINCT(vote.account), count(vote.id) from vote, round, dispute \
+            WHERE vote.round_id = round.id \
+            AND round.dispute_id = dispute.id \
+            GROUP BY vote.account"
+        )
+        jurors = []
+        for jq in jurors_query:
+            jurors.append({
+                'address':jq[0],
+                'votes': jq[1]
+            })
+        return jurors
+
 
     def stakings(self):
         stakings_query = JurorStake.query.filter(JurorStake.address == self.address).order_by(JurorStake.staking_date.desc())
