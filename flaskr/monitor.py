@@ -26,7 +26,7 @@ from flask import (
 def court(id):
     court = Court.query.get(id)
     disputes = court.disputes()
-    jurors = court.jurors()
+    jurors = court.juror_stakings()
     jurors_stats = court.juror_stats()
 
     court_mapping = {

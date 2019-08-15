@@ -40,7 +40,21 @@ class Court(db.Model):
     def disputes(self):
         return Dispute.query.filter(Dispute.subcourt_id == self.id).order_by(Dispute.id.desc())
 
+    @property
     def jurors(self):
+        jurors_query = db.session.execute(
+            "SELECT DISTINCT(account) from vote, round, dispute \
+            WHERE dispute.subcourt_id = :court_id \
+            AND vote.round_id = round.id \
+            AND round.dispute_id = dispute.id",
+            {'court_id': self.id}
+        )
+        jurors = []
+        for jq in jurors_query:
+            jurors.append(jq[0])
+        return jurors
+
+    def jurors_stakings(self):
         jurors_query = db.session.execute(
             "SELECT address, staking_amount, MAX(staking_date) as 'date' \
             FROM juror_stake \
