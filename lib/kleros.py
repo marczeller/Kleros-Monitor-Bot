@@ -35,6 +35,7 @@ class Config(db.Model):
 class Court(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+    address = db.Column(db.String)
 
     def disputes(self):
         return Dispute.query.filter(Dispute.subcourt_id == self.id).order_by(Dispute.id.desc())
