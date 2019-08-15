@@ -26,5 +26,5 @@ class Etherscan:
         items = get_json['result']
         filtered_items = []
         for item in items:
-            if item['value'] != '0': filtered_items.append(item)
+            if item['value'] != '0' and item['isError'] != '1' and item['to'] == address : filtered_items.append(item)
         return filtered_items
