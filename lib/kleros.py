@@ -72,7 +72,7 @@ class Court(db.Model):
 
     def juror_stats(self):
         amounts = []
-        for juror in self.jurors(): amounts.append(juror['staking_amount'])
+        for juror in self.jurors_stakings(): amounts.append(juror['staking_amount'])
         return {
             'length': len(amounts),
             'mean': statistics.mean(amounts),

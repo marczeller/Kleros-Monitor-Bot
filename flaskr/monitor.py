@@ -26,7 +26,7 @@ from flask import (
 def court(id):
     court = Court.query.get(id)
     disputes = court.disputes()
-    jurors = court.juror_stakings()
+    jurors = court.jurors_stakings()
     jurors_stats = court.juror_stats()
 
     court_mapping = {
@@ -48,7 +48,7 @@ def court(id):
 
         courts = Court.query.filter(Court.id.in_(court_mapping[id]))
         for c in courts:
-            court_jurors = c.jurors()
+            court_jurors = c.jurors_stakings()
             for cj in court_jurors:
                 if cj['address'] not in unique_jurors:
                     unique_jurors[cj['address']] = {"staking_amount": cj['staking_amount']}
