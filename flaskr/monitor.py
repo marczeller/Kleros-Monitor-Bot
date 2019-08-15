@@ -67,9 +67,15 @@ def court(id):
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
+
 def disputes():
     disputes = Dispute.query.order_by(Dispute.id.desc()).all()
-    return render_template('monitor/disputes.html', disputes=disputes, last_updated=Config.get('updated'), total_ETH = Deposit.total(), eth_price = float(Config.get('eth_price')))
+    total_ETH = Deposit.total()
+    round_eth = round(total_ETH, 2)
+    eth_price = float(Config.get('eth_price'))
+    round_price = round(eth_price, 2)
+    total_in_USD = round(round_eth * round_price, 2)
+    return render_template('monitor/disputes.html', disputes=disputes, last_updated=Config.get('updated'), round_eth=round_eth, round_price=round_price, total_in_USD=total_in_USD)
 
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):
