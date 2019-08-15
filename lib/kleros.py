@@ -35,6 +35,7 @@ class Config(db.Model):
 class Court(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+    address = db.Column(db.String)
 
     def disputes(self):
         return Dispute.query.filter(Dispute.subcourt_id == self.id).order_by(Dispute.id.desc())
@@ -185,6 +186,7 @@ class Deposit(db.Model):
     cdate = db.Column(db.DateTime)
     amount = db.Column(db.Float)
     txid = db.Column(db.String)
+    court_id = db.Column(db.Integer, db.ForeignKey("court.id"), nullable=False)
     token_contract = db.Column(db.String) # FIXME
 
     @classmethod

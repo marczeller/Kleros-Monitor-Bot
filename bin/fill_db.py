@@ -27,7 +27,8 @@ except getopt.GetoptError as err:
 def rebuild_db():
     db.drop_all()
     db.create_all()
-    db.session.add(Court( id = 0, name = "General Court"), address = "0x0d67440946949fe293b45c52efd8a9b3d51e2522")
+
+    db.session.add(Court( id = 0, name = "General Court", address = "0x0d67440946949fe293b45c52efd8a9b3d51e2522"))
     db.session.add(Court( id = 1, name = "Court 1", address = ""))
     db.session.add(Court( id = 2, name = "TCR Court", address = "0x916deaB80DFbc7030277047cD18B233B3CE5b4Ab"))
     db.session.add(Court( id = 3, name = "Ethfinex Court", address = "0x916deab80dfbc7030277047cd18b233b3ce5b4ab"))
@@ -135,15 +136,19 @@ print ("Fetching deposits")
 
 Deposit.query.delete()
 
-for item in Etherscan.deposits("0x916deaB80DFbc7030277047cD18B233B3CE5b4Ab"):
-    deposit = Deposit(
-        address = item['from'],
-        cdate = datetime.utcfromtimestamp(int(item['timeStamp'])),
-        amount = int(item['value']) / 10**18,
-        txid = item['hash'],
-        token_contract = "XXX" # FIXME
-    )
-    db.session.add(deposit)
+for court in Court.query.all():
+    if court.address == "": continue
+    print("Fetching deposits for Court %s" % court.name)
+    for item in Etherscan.deposits("0x916deaB80DFbc7030277047cD18B233B3CE5b4Ab"):
+        deposit = Deposit(
+            address = item['from'],
+            cdate = datetime.utcfromtimestamp(int(item['timeStamp'])),
+            amount = int(item['value']) / 10**18,
+            txid = item['hash'],
+            token_contract = "XXX", # FIXME
+            court_id = court.id
+        )
+        db.session.add(deposit)
 
 db.session.commit()
 
