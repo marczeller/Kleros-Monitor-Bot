@@ -27,10 +27,6 @@ except getopt.GetoptError as err:
 def rebuild_db():
     db.drop_all()
     db.create_all()
-<<<<<<< HEAD
-
-=======
->>>>>>> 6a8aa318d1dd2a28eed769f6c9513aa4b14eb66f
     db.session.add(Court( id = 0, name = "General Court", address = "0x0d67440946949fe293b45c52efd8a9b3d51e2522"))
     db.session.add(Court( id = 1, name = "Court 1", address = ""))
     db.session.add(Court( id = 2, name = "TCR Court", address = "0xebcf3bca271b26ae4b162ba560e243055af0e679"))
@@ -141,8 +137,8 @@ Deposit.query.delete()
 
 for court in Court.query.all():
     if court.address == "": continue
-    print("Fetching deposits for Court %s" % court.name)
-    for item in Etherscan.deposits("0x916deaB80DFbc7030277047cD18B233B3CE5b4Ab"):
+    print("Fetching deposits for %s" % court.name)
+    for item in Etherscan.deposits(court.address):
         deposit = Deposit(
             address = item['from'],
             cdate = datetime.utcfromtimestamp(int(item['timeStamp'])),
