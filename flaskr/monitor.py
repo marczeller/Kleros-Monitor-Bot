@@ -3,7 +3,7 @@
 import sys
 sys.path.extend(('lib', 'db'))
 
-from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake
+from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake, Deposit
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
@@ -69,7 +69,7 @@ def court(id):
 @app.route('/disputes', methods=['GET'])
 def disputes():
     disputes = Dispute.query.order_by(Dispute.id.desc()).all()
-    return render_template('monitor/disputes.html', disputes=disputes, last_updated=Config.get('updated'))
+    return render_template('monitor/disputes.html', disputes=disputes, last_updated=Config.get('updated'), total_ETH = Deposit.total(), eth_price = float(Config.get('eth_price')))
 
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):
