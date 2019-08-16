@@ -3,7 +3,7 @@
 import sys
 sys.path.extend(('lib', 'db'))
 
-from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake, Deposit
+from kleros import db, Dispute, Round, Vote, Config, Court, JurorStake, Deposit, Juror
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
@@ -25,9 +25,13 @@ from flask import (
 @app.route('/court/<int:id>', methods=['GET'])
 def court(id):
     court = Court.query.get(id)
+    court_num = court
+    voting_jurors = court_num.jurors
+    voting_jurors_num = len(voting_jurors)
     disputes = court.disputes()
     jurors = court.jurors_stakings()
     jurors_stats = court.juror_stats()
+
 
     court_mapping = {
         0: [2, 3, 4],
@@ -63,7 +67,7 @@ def court(id):
         full_jurors = sorted(full_jurors, key=lambda j: j['staking_amount'], reverse=True)
 
     return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=Config.get('updated'),
-        jurors_stats=jurors_stats, full_jurors=full_jurors, full_jurors_stats=full_jurors_stats)
+        jurors_stats=jurors_stats, full_jurors=full_jurors, full_jurors_stats=full_jurors_stats, voting_jurors_num=voting_jurors_num)
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
@@ -75,7 +79,8 @@ def disputes():
     eth_price = float(Config.get('eth_price'))
     round_price = round(eth_price, 2)
     total_in_USD = round(round_eth * round_price, 2)
-    return render_template('monitor/disputes.html', disputes=disputes, last_updated=Config.get('updated'), round_eth=round_eth, round_price=round_price, total_in_USD=total_in_USD)
+    unique_voting_jurors = Juror.list()
+    return render_template('monitor/disputes.html', disputes=disputes, last_updated=Config.get('updated'), round_eth=round_eth, round_price=round_price, total_in_USD=total_in_USD, voting_jurors=len(unique_voting_jurors))
 
 @app.route('/dispute/<int:id>', methods=['GET'])
 def dispute(id):

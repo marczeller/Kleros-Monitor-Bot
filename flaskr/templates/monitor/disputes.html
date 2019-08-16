@@ -22,8 +22,9 @@
 {% block content %}
 <div class="row mb-3 mt-1">
   <table class="table table-bordered responsive table-sm">
-    <tr><td align="center">ETH Deposited in Kleros Contracts</td><td>ETH Price</td><td>USD passed though Kleros</td></tr>
-    <tr><td align="center">{{round_eth}}</td><td align="center">${{round_price}}</td ><td align="center">${{total_in_USD}}</td></tr>
+    <tr><td align="center">ETH Deposited in Kleros Contracts</td><td align="center">ETH Price</td><td align="center">USD passed though Kleros</td align="center"><td align="center">Voting jurors</td></tr>
+    <tr><td align="center">{{round_eth}} ETH</td><td align="center">${{round_price}}</td ><td align="center">${{total_in_USD}}</td><td align="center">{{voting_jurors}}</td></tr>
+    <tr></tr>
       </table>
   </div>
 <div class="row mb-3 mt-1">
