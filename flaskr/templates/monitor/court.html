@@ -52,12 +52,12 @@
 
 <div class="mt-2 mb-2">
   <table class="table table-bordered responsive table-sm">
-    <tr bgcolor="#9977f2"><td>Address</td><td>Date</td><td>Staking amount</td></tr>
-    {% for juror in jurors %}
+    <tr bgcolor="#9977f2"><td>Address</td><td>Staking (Court-specific) </td><td>Staking (including subCourts)</td></tr>
+    {% for staking in staking_data %}
       <tr>
-        <td><a href={{ url_for('juror', address=juror['address']) }}>{{ juror['address'] }}</a></td>
-        <td class="datetime-string">{{ juror['date'] }}</td>
-        <td>{{juror['staking_amount']}}</td>
+        <td><a href={{ url_for('juror', address=staking[0]) }}>{{ staking[0] }}</a></td>
+        <td>{{ staking[1] }}</td>
+        <td>{{staking[2]}}</td>
       </tr>
     {% endfor %}
   </table>

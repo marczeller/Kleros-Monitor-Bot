@@ -2,7 +2,7 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy.sql.expression import func
 
 import statistics
 
@@ -52,21 +52,17 @@ class Court(db.Model):
 
     @property
     def jurors(self):
-
-        jurors_query = db.session.execute(
-            "SELECT DISTINCT(account) as address, count(vote.id) from vote, round, dispute \
-            WHERE dispute.subcourt_id = :court_id \
-            AND vote.round_id = round.id \
-            AND round.dispute_id = dispute.id \
-            GROUP BY address",
-            {'court_id': self.id}
-        )
+        court_ids = [self.id]
+        for c in self.children_ids(): court_ids.append(c)
+        juror_data = db.session.query(JurorStake.address, func.max(JurorStake.staking_date)) \
+        .filter(JurorStake.court_id.in_(court_ids)) \
+        .group_by(JurorStake.address).all()
         jurors = []
-        for jq in jurors_query:
-            jurors.append(Juror(jq[0]))
+        for j in juror_data: jurors.append(Juror(j[0]))
         return jurors
 
     def jurors_stakings(self):
+
         jurors_query = db.session.execute(
             "SELECT address, staking_amount, MAX(staking_date) as 'date' \
             FROM juror_stake \
@@ -231,7 +227,7 @@ class Juror():
         if court_id in stakings:
             court_only_stakings = stakings[court_id].staking_amount
         else:
-            court_only_stakings = 0
+            court_only_stakings = 0.0
 
         court_and_children = court_only_stakings
 

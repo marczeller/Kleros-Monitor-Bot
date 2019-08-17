@@ -25,10 +25,28 @@ from flask import (
 @app.route('/court/<int:id>', methods=['GET'])
 def court(id):
     court = Court.query.get(id)
+    disputes = court.disputes()
+
+    staking_data = []
+    for juror in court.jurors:
+        juror_data = juror.current_amount_in_court(court.id)
+        if juror_data['court_and_children'] == 0: continue
+        staking_data.append([juror.address, juror_data['court_only'], juror_data['court_and_children']])
+
+    staking_data = sorted(staking_data, key=lambda x: x[2], reverse=True)
+
+    return render_template('monitor/court.html',
+        court=court,
+        disputes=court.disputes(),
+        staking_data = staking_data,
+        last_updated=Config.get('updated'),
+        jurors_stats=[], full_jurors=[], full_jurors_stats=[], voting_jurors_num=[]
+    )
+
+'''
     court_num = court
     voting_jurors = court_num.jurors
     voting_jurors_num = len(voting_jurors)
-    disputes = court.disputes()
     jurors = court.jurors_stakings()
     jurors_stats = court.juror_stats()
 
@@ -68,6 +86,9 @@ def court(id):
 
     return render_template('monitor/court.html', court=court, disputes=disputes, jurors=jurors, last_updated=Config.get('updated'),
         jurors_stats=jurors_stats, full_jurors=full_jurors, full_jurors_stats=full_jurors_stats, voting_jurors_num=voting_jurors_num)
+'''
+
+
 
 @app.route('/', methods=['GET'])
 @app.route('/disputes', methods=['GET'])
