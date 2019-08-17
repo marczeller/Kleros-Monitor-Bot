@@ -232,7 +232,7 @@ class Juror():
             court = Court.query.get(court_id)
             if court == None: continue
             record = {'court_only': stakings[court_id].staking_amount}
-            parents = court.parent_ids()
+            parents = court.parent_ids([])
             staking_with_parents = 0
             for p in court.parent_ids([]):
                 if p in stakings:
