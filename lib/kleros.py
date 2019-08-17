@@ -41,12 +41,14 @@ class Court(db.Model):
     def disputes(self):
         return Dispute.query.filter(Dispute.subcourt_id == self.id).order_by(Dispute.id.desc())
 
-    def parent_ids(self, list):
-        list.append(self.id)
-        if self.parent != None:
-            parent = Court.query.get(self.parent)
-            list = parent.parent_ids(list)
-        return list
+    def children_ids(self):
+        children_ids = []
+        children = Court.query.filter(Court.parent == self.id)
+        for child in children:
+            children_ids.append(child.id)
+            for grand_child in child.children_ids():
+                children_ids.append(grand_child)
+        return children_ids
 
     @property
     def jurors(self):
@@ -232,12 +234,11 @@ class Juror():
             court = Court.query.get(court_id)
             if court == None: continue
             record = {'court_only': stakings[court_id].staking_amount}
-            parents = court.parent_ids([])
-            staking_with_parents = 0
-            for p in court.parent_ids([]):
+            staking_with_children = stakings[court_id].staking_amount
+            for p in court.children_ids():
                 if p in stakings:
-                    staking_with_parents += stakings[p].staking_amount
-            record['court_and_parents'] = staking_with_parents
+                    staking_with_children += stakings[p].staking_amount
+            record['court_and_children'] = staking_with_children
             amounts[court_id] = record
         return amounts
 
