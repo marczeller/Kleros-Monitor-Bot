@@ -226,21 +226,25 @@ class Juror():
             stakings[sq[1]] = JurorStake.query.get(sq[0])
         return stakings
 
-    @property
-    def current_amounts_per_court(self):
+    def current_amount_in_court(self, court_id):
         stakings = self.current_stakings_per_court
-        amounts = {}
-        for court_id in stakings:
-            court = Court.query.get(court_id)
-            if court == None: continue
-            record = {'court_only': stakings[court_id].staking_amount}
-            staking_with_children = stakings[court_id].staking_amount
-            for p in court.children_ids():
-                if p in stakings:
-                    staking_with_children += stakings[p].staking_amount
-            record['court_and_children'] = staking_with_children
-            amounts[court_id] = record
-        return amounts
+        if court_id in stakings:
+            court_only_stakings = stakings[court_id].staking_amount
+        else:
+            court_only_stakings = 0
+
+        court_and_children = court_only_stakings
+
+        court = Court.query.get(court_id)
+        for child_id in court.children_ids():
+            if child_id in stakings:
+                court_and_children += stakings[child_id].staking_amount
+
+        return {
+            'court_only': court_only_stakings,
+            'court_and_children': court_and_children
+        }
+
 
 class JurorStake(db.Model):
     id = db.Column(db.Integer, primary_key=True)
