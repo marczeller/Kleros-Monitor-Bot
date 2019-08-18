@@ -55,7 +55,7 @@
     <tr bgcolor="#9977f2"><td>Address</td><td>Votes in this court</td><td>Staking (Court-specific) </td><td>Staking (including subCourts)</td></tr>
     {% for staking in court.staking_data %}
       <tr>
-        <td><a href={{ url_for('juror', address=staking[0]) }}>{{ staking['address'] }}</a></td>
+        <td><a href={{ url_for('juror', address=staking['address']) }}>{{ staking['address'] }}</a></td>
         <td>{{ staking['votes_in_court']}}</td>
         <td>{{ staking['court_only'] }}</td>
         <td>{{staking['court_and_children']}}</td>
