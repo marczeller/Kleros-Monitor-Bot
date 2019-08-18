@@ -25,20 +25,25 @@ from flask import (
 @app.route('/court/<int:id>', methods=['GET'])
 def court(id):
     court = Court.query.get(id)
-    disputes = court.disputes()
+    court.disputes = court.disputes()
 
     staking_data = []
     for juror in court.jurors:
         juror_data = juror.current_amount_in_court(court.id)
-        if juror_data['court_and_children'] == 0: continue
-        staking_data.append([juror.address, juror_data['court_only'], juror_data['court_and_children']])
+        votes_in_court = juror.votes_in_court(court.id)
+        if juror_data['court_and_children'] == 0 and votes_in_court == 0: continue
+        staking_data.append({
+            'address': juror.address,
+            'votes_in_court': votes_in_court,
+            'court_only': juror_data['court_only'],
+            'court_and_children': juror_data['court_and_children']
+        })
 
-    staking_data = sorted(staking_data, key=lambda x: x[2], reverse=True)
+    court.staking_data = sorted(staking_data,
+        key=lambda x: (x['court_and_children'], x['votes_in_court']), reverse=True)
 
     return render_template('monitor/court.html',
         court=court,
-        disputes=court.disputes(),
-        staking_data = staking_data,
         last_updated=Config.get('updated'),
         jurors_stats=[], full_jurors=[], full_jurors_stats=[], voting_jurors_num=[]
     )

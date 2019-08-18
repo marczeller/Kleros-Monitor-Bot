@@ -202,6 +202,18 @@ class Juror():
             })
         return jurors
 
+    def votes_in_court(self, court_id):
+        votes_in_court = db.session.execute(
+            "SELECT count(vote.id) from vote, round, dispute \
+            WHERE vote.account = :address \
+            AND vote.round_id = round.id \
+            AND round.dispute_id = dispute.id \
+            AND dispute.subcourt_id = :subcourt_id",
+            {'address': self.address, 'subcourt_id' : court_id}
+        )
+
+        return votes_in_court.first()[0]
+
     @property
     def stakings(self):
         stakings_query = JurorStake.query.filter(JurorStake.address == self.address).order_by(JurorStake.staking_date.desc())
