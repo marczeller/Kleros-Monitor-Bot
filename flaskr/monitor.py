@@ -41,10 +41,12 @@ def court(id):
 
     court.staking_data = sorted(staking_data,
         key=lambda x: (x['court_and_children'], x['votes_in_court']), reverse=True)
+    num_Jurors = len(court.jurors) - 1
 
     return render_template('monitor/court.html',
         court=court,
         last_updated=Config.get('updated'),
+        num_Jurors=num_Jurors,
         jurors_stats=[], full_jurors=[], full_jurors_stats=[], voting_jurors_num=[]
     )
 
