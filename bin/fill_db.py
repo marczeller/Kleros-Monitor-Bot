@@ -167,4 +167,9 @@ for court in Court.query.all():
 
 db.session.commit()
 
-Config.set('updated', strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+updated = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
+Config.set('updated', updated)
+
+print("Set updated: %s" % updated)
+
