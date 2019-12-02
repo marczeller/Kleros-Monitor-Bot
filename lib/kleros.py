@@ -27,7 +27,6 @@ class Config(db.Model):
     def set(cls, db_key, db_val):
         query = cls.query.filter(cls.option == db_key)
         for item in query: db.session.delete(item)
-        db.session.commit()
         new_option = cls(option = db_key, value = db_val)
         db.session.add(new_option)
         db.session.commit()

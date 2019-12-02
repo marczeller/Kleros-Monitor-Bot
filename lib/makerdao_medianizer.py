@@ -8,7 +8,7 @@ class MakerDAO_Medianizer:
     contract_address = '0x729D19f657BD0614b4985Cf1D82531c67569197B'
 
     def __init__(self, node_url):
-        self.w3 = Web3(HTTPProvider(node_url)) #FIXME Add Exceptions, errors
+        self.w3 = Web3(Web3.WebsocketProvider(node_url)) #FIXME Add Exceptions, errors
         self.contract = self.w3.eth.contract(
             address = Web3.toChecksumAddress(self.contract_address),
             abi = self.abi

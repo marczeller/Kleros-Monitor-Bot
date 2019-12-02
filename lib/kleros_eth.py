@@ -11,8 +11,10 @@ class KlerosEth:
 
     max_court_id = 4 # FIXME this should not be hardcoded, but I don't know where to get the info from yet
 
+    filter_block_size = 100
+
     def __init__(self, node_url):
-        self.w3 = Web3(HTTPProvider(node_url, request_kwargs={'timeout': 60})) #FIXME Add Exceptions, errors
+        self.w3 = Web3(Web3.WebsocketProvider(node_url, websocket_kwargs={'timeout': 60})) #FIXME Add Exceptions, errors
         self.contract = self.w3.eth.contract(
             address = Web3.toChecksumAddress(self.kleros_address),
             abi = self.abi
@@ -20,23 +22,23 @@ class KlerosEth:
 
     def dispute_events(self, starting_block = None):
         if starting_block == None: starting_block = self.initial_block
-        try:
-            filter = self.contract.events.DisputeCreation.createFilter(
-                fromBlock=int(starting_block),
-                topics = [self.dispute_creation_event_topic]
-            )
-            disputes = []
-            for event in filter.get_all_entries():
-                disputes.append({
-                    'dispute_id' : event['args']['_disputeID'],
-                    'date' : self.event_date(event),
-                    'creator': self.event_creator(event),
-                    'txid': event['transactionHash'].hex(),
-                    'block_number': event['blockNumber']
-                })
-            return disputes
-        except ValueError as e:
-            return self.dispute_events(starting_block)
+        starting_block = int(starting_block)
+        disputes = []
+
+        filter = self.contract.events.DisputeCreation.createFilter(
+           fromBlock=starting_block,
+           toBlock=starting_block + self.filter_block_size,
+           topics = [self.dispute_creation_event_topic]
+        )
+        for event in filter.get_all_entries():
+            disputes.append({
+                'dispute_id' : event['args']['_disputeID'],
+                'date' : self.event_date(event),
+                'creator': self.event_creator(event),
+                'txid': event['transactionHash'].hex(),
+                'block_number': event['blockNumber']
+            })
+        return disputes
 
     def dispute_data(self, dispute_id):
         raw_dispute = self.contract.functions.disputes(dispute_id).call()
@@ -101,6 +103,7 @@ class KlerosEth:
         try:
             filter = self.contract.events.StakeSet.createFilter(
                 fromBlock=int(starting_block),
+                toBlock=int(starting_block)+1000,
                 topics = [ self.staking_event_topic ]
             )
             stakings = []
