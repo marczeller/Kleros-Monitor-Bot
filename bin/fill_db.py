@@ -39,32 +39,7 @@ def rebuild_db():
     Config.set('staking_search_block', KlerosEth.initial_block)
     db.session.commit()
 
-for opt, arg in opts:
-    if opt in ('-r', '--rebuild'):
-        rebuild_db()
-
-eth_price = makerdao_medianizer.eth_price()
-Config.set('eth_price', eth_price)
-print("ETH price is : %s USD" % eth_price)
-
-print("Fetching disputes from block %s" % Config.get('dispute_search_block'))
-
-found_open_dispute = False
-latest_dispute_block = 0
-
-for dispute_eth in kleros_eth.dispute_events(Config.get('dispute_search_block')):
-    dispute = Dispute.query.get(dispute_eth['dispute_id'])
-    latest_dispute_block = dispute_eth['block_number']
-
-    if dispute != None:
-        if dispute.ruled: continue
-        dispute.delete_recursive()
-
-    dispute_eth.update(kleros_eth.dispute_data(dispute_eth['dispute_id']))
-
-    if (not found_open_dispute) and (not dispute_eth['ruled']):
-        found_open_dispute = True
-        Config.set('dispute_search_block', dispute_eth['block_number'] - 1)
+def create_dispute(dispute_eth):
 
     print("Creating dispute %s" % dispute_eth['dispute_id'])
 
@@ -82,7 +57,7 @@ for dispute_eth in kleros_eth.dispute_events(Config.get('dispute_search_block'))
 
     db.session.add(dispute)
     db.session.commit()
-
+ 
     rounds = kleros_eth.dispute_rounds(dispute_eth['dispute_id'])
 
     for round_num in range(0, len(rounds)):
@@ -114,10 +89,50 @@ for dispute_eth in kleros_eth.dispute_events(Config.get('dispute_search_block'))
             )
 
             db.session.add(vote)
-        db.session.commit()
+            db.session.commit()
 
-if not(found_open_dispute):
-    Config.set('dispute_search_block', latest_dispute_block - 1)
+
+for opt, arg in opts:
+    if opt in ('-r', '--rebuild'):
+        rebuild_db()
+
+eth_price = makerdao_medianizer.eth_price()
+Config.set('eth_price', eth_price) 
+print("ETH price is : %s USD" % eth_price)
+
+print("Fetching disputes from block %s" % Config.get('dispute_search_block'))
+
+current_block = Config.get('dispute_search_block')
+if (current_block) == None:
+    current_block = 0
+current_block = int(current_block)
+end_block = int(kleros_eth.w3.eth.blockNumber)
+found_open_dispute = False
+
+while current_block < end_block:
+
+    print("At %s" % current_block)
+
+    for dispute_eth in kleros_eth.dispute_events(current_block):
+        dispute = Dispute.query.get(dispute_eth['dispute_id'])
+        latest_dispute_block = dispute_eth['block_number']
+
+        # Buggy case, will never get closed
+
+        if dispute != None:
+            if dispute.ruled: continue
+            dispute.delete_recursive()
+
+        dispute_eth.update(kleros_eth.dispute_data(dispute_eth['dispute_id']))
+        create_dispute(dispute_eth)
+
+        if int(dispute_eth['dispute_id']) not in (105,107,108): # Broken cases
+            if(not dispute_eth['ruled']):
+                found_open_dispute = True
+    
+    if (not found_open_dispute): 
+        Config.set('dispute_search_block', current_block - 1)
+    current_block += 100
 
 print("Fetching stakings from block %s" % Config.get('staking_search_block'))
 

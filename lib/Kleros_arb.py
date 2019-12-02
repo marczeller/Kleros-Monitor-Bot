@@ -5,7 +5,7 @@ class Kleros_arb:
     contract_address = '0x916deaB80DFbc7030277047cD18B233B3CE5b4Ab'
 
     def __init__(self, node_url):
-        self.w3 = Web3(HTTPProvider(node_url)) #FIXME Add Exceptions, errors
+        self.w3 = Web3(Web3.WebsocketProvider(node_url)) #FIXME Add Exceptions, errors
         self.contract = self.w3.eth.contract(
             address = Web3.toChecksumAddress(self.contract_address),
             abi = self.abi
