@@ -111,8 +111,6 @@ found_open_dispute = False
 
 while current_block < end_block:
 
-    print("At %s" % current_block)
-
     for dispute_eth in kleros_eth.dispute_events(current_block):
         dispute = Dispute.query.get(dispute_eth['dispute_id'])
         latest_dispute_block = dispute_eth['block_number']
