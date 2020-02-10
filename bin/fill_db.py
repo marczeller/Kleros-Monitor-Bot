@@ -35,6 +35,7 @@ def rebuild_db():
     db.session.add(Court( id = 5, parent = 1, name = "", address = ""))
     db.session.add(Court( id = 6, parent = 1, name = "", address = ""))
     db.session.add(Court( id = 7, parent = 1, name = "", address = ""))
+    db.session.add(Court( id = 8, parent = 1, name = "Onboarding Court", address = ""))
     Config.set('dispute_search_block', KlerosEth.initial_block)
     Config.set('staking_search_block', KlerosEth.initial_block)
     db.session.commit()
