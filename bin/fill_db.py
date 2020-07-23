@@ -35,7 +35,6 @@ def rebuild_db():
     db.session.add(Court( id = 5, parent = 1, name = "", address = ""))
     db.session.add(Court( id = 6, parent = 1, name = "", address = ""))
     db.session.add(Court( id = 7, parent = 1, name = "", address = ""))
-    db.session.add(Court( id = 8, parent = 1, name = "Onboarding Court", address = ""))
     Config.set('dispute_search_block', KlerosEth.initial_block)
     Config.set('staking_search_block', KlerosEth.initial_block)
     db.session.commit()
@@ -131,7 +130,7 @@ while current_block < end_block:
     
     if (not found_open_dispute): 
         Config.set('dispute_search_block', current_block - 1)
-    current_block += 100
+    current_block += kleros_eth.filter_block_size
 
 print("Fetching stakings from block %s" % Config.get('staking_search_block'))
 

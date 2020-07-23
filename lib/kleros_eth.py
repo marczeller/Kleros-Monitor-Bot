@@ -11,10 +11,10 @@ class KlerosEth:
 
     max_court_id = 4 # FIXME this should not be hardcoded, but I don't know where to get the info from yet
 
-    filter_block_size = 100
+    filter_block_size = 30
 
     def __init__(self, node_url):
-        self.w3 = Web3(Web3.WebsocketProvider(node_url, websocket_kwargs={'timeout': 60})) #FIXME Add Exceptions, errors
+        self.w3 = Web3(Web3.WebsocketProvider(node_url, websocket_kwargs={'timeout': 600})) #FIXME Add Exceptions, errors
         self.contract = self.w3.eth.contract(
             address = Web3.toChecksumAddress(self.kleros_address),
             abi = self.abi
@@ -25,19 +25,24 @@ class KlerosEth:
         starting_block = int(starting_block)
         disputes = []
 
-        filter = self.contract.events.DisputeCreation.createFilter(
-           fromBlock=starting_block,
-           toBlock=starting_block + self.filter_block_size,
-           topics = [self.dispute_creation_event_topic]
-        )
-        for event in filter.get_all_entries():
+        print("Fetching dispute events for block %s" % starting_block)
+
+        for event in self.w3.eth.getLogs({
+            'fromBlock': starting_block,
+            'toBlock': starting_block + self.filter_block_size,
+            'topics': [self.dispute_creation_event_topic]
+                }):
+
+            dispute_id = int(event['topics'][1].hex(), 16)
+   
             disputes.append({
-                'dispute_id' : event['args']['_disputeID'],
+                'dispute_id' : dispute_id,
                 'date' : self.event_date(event),
                 'creator': self.event_creator(event),
                 'txid': event['transactionHash'].hex(),
                 'block_number': event['blockNumber']
             })
+
         return disputes
 
     def dispute_data(self, dispute_id):
@@ -101,13 +106,21 @@ class KlerosEth:
     def staking_events(self, starting_block = None):
         if starting_block == None: starting_block = self.initial_block
         try:
-            filter = self.contract.events.StakeSet.createFilter(
-                fromBlock=int(starting_block),
-                toBlock=int(starting_block)+1000,
-                topics = [ self.staking_event_topic ]
-            )
             stakings = []
-            for staking in filter.get_all_entries():
+            for staking in self.w3.eth.getLogs({
+                'fromBlock': int(starting_block),
+                'toBlock': int(starting_block)+1000,
+                'topics': [ self.staking_event_topic ]}
+                ):
+
+                print(staking)
+                print(event['topics'][0].hex())
+                print(event['topics'][1].hex())
+                print(event['topics'][2].hex())
+                print(event['topics'][3].hex())
+                print(event['topics'][4].hex())
+
+
                 stakings.append({
                     'address': staking['args']['_address'],
                     'staked': staking['args']['_newTotalStake'] / 10**18,
